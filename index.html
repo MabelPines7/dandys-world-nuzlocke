@@ -213,6 +213,23 @@ footer a{color:var(--mint)}
 .chance-stock[hidden]{display:none}
 .chance-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,244,251,.08);border:2px solid rgba(255,244,251,.28);border-radius:12px;padding:5px 6px 5px 12px}
 .chance-row-label{font-weight:700;font-size:14px;color:#ffe9f7}
+.cc-stock{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.cc-stock-title{font-weight:800;font-size:14px;color:#ffe9f7}
+.cc-tiles{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+.cc-tile{display:flex;flex-direction:column;align-items:center;gap:2px;width:108px;padding:8px 4px 6px;background:none;border:0;text-align:center;color:inherit}
+button.cc-tile{cursor:pointer;font:inherit;border-radius:14px}
+button.cc-tile:hover .cc-frame{border-color:#ffb703}
+.cc-frame{width:76px;height:76px;border:3px solid #1a1022;border-radius:14px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 0 rgba(26,16,34,.35)}
+.cc-frame img{width:100%;height:100%;object-fit:cover;display:block}
+.cc-glyph{font-size:38px;line-height:1}
+.cc-tile.selected .cc-frame{border-color:#ffb703;box-shadow:0 0 0 3px #ffb703,3px 3px 0 rgba(26,16,34,.35)}
+.cc-tile.unavailable{opacity:.45;filter:grayscale(.8)}
+.cc-tile-label{font-weight:700;font-size:13px;line-height:1.25}
+.cc-tile-pct{font-weight:800;font-size:13px}
+.cc-tile-reason{font-size:11px;font-weight:700;color:#c0233a;line-height:1.25}
+.cc-entry-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0}
+.cc-entry-row [data-cc-thumb]{width:28px;height:28px;vertical-align:middle}
+.extra-cc{flex-basis:100%;margin-top:2px}
 .badge{background:var(--ink);color:#fff;border-radius:999px;padding:1px 8px;font-size:12px;min-width:22px;text-align:center}
 .ch-prog{padding:12px 14px;display:flex;align-items:center;gap:14px}
 .ch-prog .num{font-family:var(--fh);font-size:34px;line-height:1;color:#fff;-webkit-text-stroke:1.5px var(--ink);text-shadow:3px 3px 0 var(--ink)}
@@ -541,8 +558,10 @@ footer a{color:var(--mint)}
           <button type="button" class="btn mint" id="spinRevival" data-spin="revival">Revival spin <span class="badge" id="credRevival">0</span></button>
           <button type="button" class="btn pink" id="spinChance" data-spin="chance">🎲 Chance spin <span class="badge" id="credChance">0</span></button>
           <button type="button" class="btn sky" id="spinTarget" data-spin="target">🎯 Targeted revival <span class="badge" id="credTarget">0</span></button>
-          <button type="button" class="btn mint" id="spinChoice" data-spin="choice">✨ Choice <span class="badge" id="credChoice">0</span></button></div>
+          <button type="button" class="btn mint" id="spinChoice" data-spin="choice">✨ Choice <span class="badge" id="credChoice">0</span></button>
+          <button type="button" class="btn lilac" id="spinChoiceChance" data-spin="choicechance">🎲 Choice chance <span class="badge" id="credChoiceChance">0</span></button></div>
         <div class="chance-stock" id="chanceStock" hidden></div>
+        <div class="cc-stock" id="ccStock" hidden></div>
         <label class="free"><input type="checkbox" id="freeSpin"> <span>Free spin <small>(spin without using a credit)</small></span></label>
       </div>
       <div class="ch-prog">
@@ -592,7 +611,7 @@ footer a{color:var(--mint)}
   </footer>
 </div>
 
-<!-- Challenge editor --> <dialog id="chDlg"> <form method="dialog" id="chForm"> <div class="mh" style="background:var(--mint)"><div><h2 id="chDlgTitle">New challenge</h2><p id="chDlgHint">Finish it to earn a reward.</p></div></div> <div class="mb"> <label for="chTitle">Title</label> <input type="text" id="chTitle" maxlength="80" required placeholder="e.g. Survive 10 floors with Poppy" autocomplete="off"> <label for="chDesc" style="margin-top:12px">Description <span class="small">(optional · up to 3,000 characters)</span></label> <textarea id="chDesc" maxlength="3000" rows="6" placeholder="Add all the rules and details here…"></textarea> <fieldset class="state-pick" id="chCategory"><legend>Challenge tab</legend> <label class="st-unlocked"><input type="radio" name="chCategory" value="toon" checked><span>🎭 Toon challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="trinket"><span>💍 Trinket challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="team"><span>🏅 Team goal</span></label> </fieldset> <fieldset class="state-pick" id="teamTierWrap"><legend>Rarity / badge tier</legend> <label class="st-locked" id="tierNoneLabel"><input type="radio" name="teamTier" value="none"><span>None (default title color)</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="bronze" checked><span>🥉 Bronze</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="silver"><span>🥈 Silver</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="gold"><span>🥇 Gold</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="iridescent"><span>🌈 Iridescent</span></label> <p class="ch-help" id="teamTierHint">Bronze badge · no reward.</p> </fieldset> <fieldset class="state-pick" id="chType"><legend>Progress — pick any combination</legend> <label class="st-unlocked"><input type="checkbox" name="chModes" value="goal"><span>☑ One-time goal</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="checklist" checked><span>☑ Checklist</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="counter"><span>🔢 Counters</span></label> <p class="ch-help">Combine modes freely — e.g. Counters with a Checklist attached. At least one mode must stay selected.</p> </fieldset> <div id="chTargetRow" class="counter-editor" hidden><div class="counter-editor-head"><strong>Counter goals</strong><button type="button" class="btn ghost" id="addCounterRow">＋ Add counter</button></div><div id="chCounterRows"></div><p class="ch-help">Add up to 20 counters. Each needs a label and target, and each counter counts as one condition (see “conditions met” below).</p></div> <div id="chChecklistRow" class="checklist-editor"><strong class="chlist-title">Checklists</strong><div id="chListEditors"></div><button type="button" class="btn ghost" id="addChecklistList">＋ Add checklist</button><p class="ch-help">Give each checklist a name and its items, one per line (up to 100 items across all lists). Check off each step as you complete it. Use Exclude for items that do not apply; every included item counts as one condition. On the card, each checklist can be shown or hidden on its own.</p></div> <p id="chGoalHelp" class="ch-help" hidden>Tick the challenge's main checkbox when the goal itself is done — the goal counts as one condition.</p> <div id="chReqRow"><label for="chReqCount">Complete when <input type="number" id="chReqCount" min="0" max="999" step="1" inputmode="numeric" style="width:80px"> conditions are met</label><p class="ch-help">Leave blank (or 0) to require <b>all</b> conditions. Each included checklist item, each counter, and the goal itself each count as one condition — e.g. set 2 to complete when any 2 of 3 conditions are met.</p></div> <fieldset class="state-pick" id="chIconKind"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="chIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="chIconEmojiRow" hidden><label for="chIconEmoji">Emoji</label> <input type="text" id="chIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🔥"></div> <div id="chIconSpriteRow" hidden><label for="chIconSprite">Sprite</label> <select id="chIconSprite"></select></div> <div id="chIconUploadRow" hidden><label for="chIconFile">Custom image</label> <input type="file" id="chIconFile" accept="image/*"> <p class="ch-help" id="chIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the challenge.</p><img id="chIconPreview" class="ch-icon-img" alt="" hidden></div> <fieldset class="state-pick reward-pick" id="chRewardWrap"><legend>Default spin (used when Reward = Default)</legend> <label class="st-unlocked"><input type="radio" name="chReward" value="spin" checked><span>🎭 Toon spin</span></label> <label class="st-locked"><input type="radio" name="chReward" value="none"><span>No reward</span></label> <p class="ch-help" id="chRewardHint">A completed Toon challenge earns a Toon spin.</p> </fieldset> <fieldset class="state-pick" id="chRewardPickWrap"><legend>Reward</legend> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="default" checked><span>↩ Default for this tab/tier</span></label> <label class="st-locked"><input type="radio" name="chRewardPick" value="none"><span>No reward</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="toon"><span>🎭 Toon spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="trinket"><span>💍 Trinket spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="revival"><span>🎰 Revival Spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="choice"><span>✨ Your choice…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="chance"><span>🎲 Revival chance…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="custom"><span>🎁 Custom reward…</span></label> <p class="ch-help">The reward is yours to choose, whatever the rarity — rarity stays as the badge/title color. “Default” keeps the standard reward above (tab spin, or the badge-tier reward for team goals).</p> </fieldset> <div id="chRewardChanceRow" hidden><label for="chRewardChance">Revival success chance</label> <input type="number" id="chRewardChance" min="1" max="99" step="1" value="50" style="width:80px"> % <p class="ch-help">Completing this challenge earns one revival chance at this success rate. Spin it from the wheel panel: success earns a Revival Spin, failure uses it up.</p></div> <div id="chRewardTextRow" hidden><label for="chRewardText">Custom reward text</label> <input type="text" id="chRewardText" maxlength="80" placeholder="e.g. Winner picks tonight's snack" autocomplete="off"> <p class="ch-help">Shown as the earned reward on the challenge card. The site displays it — it can't automate made-up effects.</p></div> <fieldset class="state-pick" id="chChoiceOptionsWrap" hidden><legend>Choice options — what “Your choice” can pick</legend> <label class="st-unlocked"><input type="checkbox" name="chChoiceOpt" value="toon"><span>🎭 New Toon spin</span></label> <label class="st-unlocked"><input type="checkbox" name="chChoiceOpt" value="trinket"><span>💍 New Trinket spin</span></label> <label class="st-unlocked"><input type="checkbox" name="chChoiceOpt" value="revival"><span>🎰 Revival spin (random)</span></label> <label class="st-unlocked"><input type="checkbox" name="chChoiceOpt" value="target"><span>🎯 Revive a specific Toon or Trinket</span></label> <p class="ch-help">When this challenge's reward is “Your choice”, the player picks one of these. Tick at least one — if none are ticked, Toon + Trinket are used.</p> </fieldset> <div id="chExtrasWrap" style="margin-top:14px"><strong class="chlist-title">Extra rewards <span class="small">(optional · up to 3 · granted in addition to the reward above)</span></strong><div id="chExtraRows"></div><button type="button" class="btn ghost" id="addExtraReward">＋ Add reward</button><p class="ch-help">Extra rewards are granted when the challenge is completed, alongside the main reward. A “Choice” extra becomes a Choice credit in the wheel panel — spend it there to pick from its options. A targeted revival lets the player pick the exact Toon or Trinket to revive.</p></div> <div id="chMissionRow"><label for="chMission">Mission pack group <span class="small">(optional)</span></label> <select id="chMission"></select> <p class="ch-help">Put this challenge in a mission subgroup (see the Mission Packs tab). While it is in a subgroup with a shared counter, its counters can link to that shared counter.</p></div> <div id="chExcludeRow"><label><input type="checkbox" id="chExcluded"> Exclude from completion totals</label> <p class="ch-help">An excluded challenge still works and earns its reward — it just doesn't count toward 100% completion anywhere.</p></div> <p class="small" id="chErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"> <button type="button" class="btn ghost" id="chCancel">Cancel</button> <button type="submit" class="btn mint" id="chSave">Save</button> </div> </form> </dialog> <!-- Mission pack editor --> <dialog id="packDlg"> <form method="dialog" id="packForm"> <div class="mh" style="background:var(--lilac)"><div><h2 id="packDlgTitle">New mission pack</h2><p id="packDlgHint">Name the pack, and give it an icon if you like.</p></div></div> <div class="mb"> <label for="packName">Pack name</label> <input type="text" id="packName" maxlength="60" autocomplete="off" placeholder="e.g. Floor Milestones"> <fieldset class="state-pick" id="packIconKindWrap"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="packIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="packIconEmojiRow" hidden><label for="packIconEmoji">Emoji</label> <input type="text" id="packIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🗺"></div> <div id="packIconSpriteRow" hidden><label for="packIconSprite">Sprite</label> <select id="packIconSprite"></select></div> <div id="packIconUploadRow" hidden><label for="packIconFile">Custom image</label> <input type="file" id="packIconFile" accept="image/*"> <p class="ch-help" id="packIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the pack.</p><img id="packIconPreview" class="ch-icon-img" alt="" hidden></div> <p class="small" id="packErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"><button type="button" class="btn ghost" id="packCancel">Cancel</button><button type="submit" class="btn mint" id="packSave">Save pack</button></div> </form> </dialog> <!-- Subgroup editor --> <dialog id="subDlg"> <form method="dialog" id="subForm"> <div class="mh" style="background:var(--sky)"><div><h2 id="subDlgTitle">Edit subgroup</h2><p id="subDlgHint">Rename the subgroup, and manage its shared counter if it has one.</p></div></div> <div class="mb"> <label for="subName">Subgroup name</label> <input type="text" id="subName" maxlength="60" autocomplete="off" placeholder="e.g. Survival"> <fieldset id="subSharedWrap"><legend>Shared counter (optional)</legend> <label for="subSharedLabel">Label</label> <input type="text" id="subSharedLabel" maxlength="40" autocomplete="off" placeholder="e.g. Floors Survived — leave empty for none"> <label for="subSharedValue">Value</label> <input type="number" id="subSharedValue" min="0" max="1000000" step="1" inputmode="numeric"> <p class="ch-help" id="subSharedNote">One shared value drives every 🔗 linked counter in this subgroup. Changing the value updates the linked challenges right away.</p> <button type="button" class="btn ghost sm" id="subSharedRemove" hidden>Remove shared counter</button> </fieldset> <fieldset id="subIconKindWrap"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="subIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="subIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="subIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="subIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="subIconEmojiRow" hidden><label for="subIconEmoji">Emoji</label> <input type="text" id="subIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🗺"></div> <div id="subIconSpriteRow" hidden><label for="subIconSprite">Sprite</label> <select id="subIconSprite"></select></div> <div id="subIconUploadRow" hidden><label for="subIconFile">Custom image</label> <input type="file" id="subIconFile" accept="image/*"> <p class="ch-help" id="subIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the subgroup.</p><img id="subIconPreview" class="ch-icon-img" alt="" hidden></div> <p class="small" id="subErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"><button type="button" class="btn ghost" id="subCancel">Cancel</button><button type="submit" class="btn mint" id="subSave">Save subgroup</button></div> </form> </dialog> <dialog id="revivalDlg" class="revival-dlg"><form method="dialog" id="revivalForm"><div class="mh" style="background:var(--pink)"><div><h2 id="revivalDialogTitle">Choose your spin</h2><p id="revivalDialogPrompt">Pick a Toon or Trinket spin for this completed challenge.</p></div></div><div class="mb"><p id="revivalSourceRow">Reward from <strong id="revivalChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="revivalKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="revivalKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="revivalErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="revivalCancel">Cancel</button><button type="submit" class="btn mint" id="revivalChoose">Earn this spin</button></div></form></dialog> <dialog id="choiceDlg" class="revival-dlg"><form method="dialog" id="choiceForm"><div class="mh" style="background:var(--pink)"><div><h2 id="choiceDialogTitle">Choose your Iridescent reward</h2><p id="choiceDialogPrompt">Pick a New Toon or a New Trinket spin for this completed team goal.</p></div></div><div class="mb"><p>Reward from <strong id="choiceChallenge"></strong></p><fieldset class="revival-choices" id="choiceOptions"><legend class="small">Choose one</legend><label><input type="radio" name="choiceKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="choiceKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="choiceErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="choiceCancel">Choose later</button><button type="submit" class="btn mint" id="choiceChoose">Earn this reward</button></div></form></dialog> <dialog id="targetDlg" class="revival-dlg"><form method="dialog" id="targetForm"><div class="mh" style="background:var(--pink)"><div><h2 id="targetDialogTitle">🎯 Revive a specific one</h2><p id="targetDialogPrompt">Pick exactly which eliminated Toon or Trinket to bring back — no wheel, your pick is final.</p></div></div><div class="mb"><div id="targetList"></div><p class="small" id="targetErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="targetCancel">Cancel</button></div></form></dialog> <!-- Spinner -->
+<!-- Challenge editor --> <dialog id="chDlg"> <form method="dialog" id="chForm"> <div class="mh" style="background:var(--mint)"><div><h2 id="chDlgTitle">New challenge</h2><p id="chDlgHint">Finish it to earn a reward.</p></div></div> <div class="mb"> <label for="chTitle">Title</label> <input type="text" id="chTitle" maxlength="80" required placeholder="e.g. Survive 10 floors with Poppy" autocomplete="off"> <label for="chDesc" style="margin-top:12px">Description <span class="small">(optional · up to 3,000 characters)</span></label> <textarea id="chDesc" maxlength="3000" rows="6" placeholder="Add all the rules and details here…"></textarea> <fieldset class="state-pick" id="chCategory"><legend>Challenge tab</legend> <label class="st-unlocked"><input type="radio" name="chCategory" value="toon" checked><span>🎭 Toon challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="trinket"><span>💍 Trinket challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="team"><span>🏅 Team goal</span></label> </fieldset> <fieldset class="state-pick" id="teamTierWrap"><legend>Rarity / badge tier</legend> <label class="st-locked" id="tierNoneLabel"><input type="radio" name="teamTier" value="none"><span>None (default title color)</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="bronze" checked><span>🥉 Bronze</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="silver"><span>🥈 Silver</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="gold"><span>🥇 Gold</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="iridescent"><span>🌈 Iridescent</span></label> <p class="ch-help" id="teamTierHint">Bronze badge · no reward.</p> </fieldset> <fieldset class="state-pick" id="chType"><legend>Progress — pick any combination</legend> <label class="st-unlocked"><input type="checkbox" name="chModes" value="goal"><span>☑ One-time goal</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="checklist" checked><span>☑ Checklist</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="counter"><span>🔢 Counters</span></label> <p class="ch-help">Combine modes freely — e.g. Counters with a Checklist attached. At least one mode must stay selected.</p> </fieldset> <div id="chTargetRow" class="counter-editor" hidden><div class="counter-editor-head"><strong>Counter goals</strong><button type="button" class="btn ghost" id="addCounterRow">＋ Add counter</button></div><div id="chCounterRows"></div><p class="ch-help">Add up to 20 counters. Each needs a label and target, and each counter counts as one condition (see “conditions met” below).</p></div> <div id="chChecklistRow" class="checklist-editor"><strong class="chlist-title">Checklists</strong><div id="chListEditors"></div><button type="button" class="btn ghost" id="addChecklistList">＋ Add checklist</button><p class="ch-help">Give each checklist a name and its items, one per line (up to 100 items across all lists). Check off each step as you complete it. Use Exclude for items that do not apply; every included item counts as one condition. On the card, each checklist can be shown or hidden on its own.</p></div> <p id="chGoalHelp" class="ch-help" hidden>Tick the challenge's main checkbox when the goal itself is done — the goal counts as one condition.</p> <div id="chReqRow"><label for="chReqCount">Complete when <input type="number" id="chReqCount" min="0" max="999" step="1" inputmode="numeric" style="width:80px"> conditions are met</label><p class="ch-help">Leave blank (or 0) to require <b>all</b> conditions. Each included checklist item, each counter, and the goal itself each count as one condition — e.g. set 2 to complete when any 2 of 3 conditions are met.</p></div> <fieldset class="state-pick" id="chIconKind"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="chIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="chIconEmojiRow" hidden><label for="chIconEmoji">Emoji</label> <input type="text" id="chIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🔥"></div> <div id="chIconSpriteRow" hidden><label for="chIconSprite">Sprite</label> <select id="chIconSprite"></select></div> <div id="chIconUploadRow" hidden><label for="chIconFile">Custom image</label> <input type="file" id="chIconFile" accept="image/*"> <p class="ch-help" id="chIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the challenge.</p><img id="chIconPreview" class="ch-icon-img" alt="" hidden></div> <fieldset class="state-pick reward-pick" id="chRewardWrap"><legend>Default spin (used when Reward = Default)</legend> <label class="st-unlocked"><input type="radio" name="chReward" value="spin" checked><span>🎭 Toon spin</span></label> <label class="st-locked"><input type="radio" name="chReward" value="none"><span>No reward</span></label> <p class="ch-help" id="chRewardHint">A completed Toon challenge earns a Toon spin.</p> </fieldset> <fieldset class="state-pick" id="chRewardPickWrap"><legend>Reward</legend> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="default" checked><span>↩ Default for this tab/tier</span></label> <label class="st-locked"><input type="radio" name="chRewardPick" value="none"><span>No reward</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="toon"><span>🎭 Toon spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="trinket"><span>💍 Trinket spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="revival"><span>🎰 Revival Spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="choice"><span>✨ Your choice…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="chance"><span>🎲 Revival chance…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="choicechance"><span>🎲 Choice chance…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="custom"><span>🎁 Custom reward…</span></label> <p class="ch-help">The reward is yours to choose, whatever the rarity — rarity stays as the badge/title color. “Default” keeps the standard reward above (tab spin, or the badge-tier reward for team goals).</p> </fieldset> <div id="chRewardChanceRow" hidden><label for="chRewardChance">Revival success chance</label> <input type="number" id="chRewardChance" min="1" max="99" step="1" value="50" style="width:80px"> % <p class="ch-help">Completing this challenge earns one revival chance at this success rate. Spin it from the wheel panel: success earns a Revival Spin, failure uses it up.</p></div> <div id="chRewardTextRow" hidden><label for="chRewardText">Custom reward text</label> <input type="text" id="chRewardText" maxlength="80" placeholder="e.g. Winner picks tonight's snack" autocomplete="off"> <p class="ch-help">Shown as the earned reward on the challenge card. The site displays it — it can't automate made-up effects.</p></div> <div id="chChoiceChanceRow" class="cc-editor-block" hidden><fieldset class="state-pick" id="chCCModeWrap"><legend>Choice chance — how it plays</legend> <label class="st-unlocked"><input type="radio" name="chCCMode" value="pick" checked><span>🎯 Pick one of them</span></label> <label class="st-unlocked"><input type="radio" name="chCCMode" value="all"><span>🎲 Roll all of them</span></label> </fieldset> <div id="chCCRows" class="cc-entries"></div><button type="button" class="btn ghost" id="addCCRow" data-add-cc>＋ Add gamble</button><p class="ch-help">Each gamble rolls its own % when the credit is spent. A gamble's prize can be a random Toon/Trinket — or one specific item you name. In “Pick one”, the player chooses a single gamble to roll; in “Roll all”, every gamble rolls. 100% always succeeds.</p></div> <fieldset class="state-pick" id="chChoiceOptionsWrap" hidden><legend>Choice options — what “Your choice” can pick</legend> <label class="st-unlocked"><input type="checkbox" name="chChoiceOpt" value="toon"><span>🎭 New Toon spin</span></label> <label class="st-unlocked"><input type="checkbox" name="chChoiceOpt" value="trinket"><span>💍 New Trinket spin</span></label> <label class="st-unlocked"><input type="checkbox" name="chChoiceOpt" value="revival"><span>🎰 Revival spin (random)</span></label> <label class="st-unlocked"><input type="checkbox" name="chChoiceOpt" value="target"><span>🎯 Revive a specific Toon or Trinket</span></label> <p class="ch-help">When this challenge's reward is “Your choice”, the player picks one of these. Tick at least one — if none are ticked, Toon + Trinket are used.</p> </fieldset> <div id="chExtrasWrap" style="margin-top:14px"><strong class="chlist-title">Extra rewards <span class="small">(optional · up to 3 · granted in addition to the reward above)</span></strong><div id="chExtraRows"></div><button type="button" class="btn ghost" id="addExtraReward">＋ Add reward</button><p class="ch-help">Extra rewards are granted when the challenge is completed, alongside the main reward. A “Choice” extra becomes a Choice credit in the wheel panel — spend it there to pick from its options. A targeted revival lets the player pick the exact Toon or Trinket to revive.</p></div> <div id="chMissionRow"><label for="chMission">Mission pack group <span class="small">(optional)</span></label> <select id="chMission"></select> <p class="ch-help">Put this challenge in a mission subgroup (see the Mission Packs tab). While it is in a subgroup with a shared counter, its counters can link to that shared counter.</p></div> <div id="chExcludeRow"><label><input type="checkbox" id="chExcluded"> Exclude from completion totals</label> <p class="ch-help">An excluded challenge still works and earns its reward — it just doesn't count toward 100% completion anywhere.</p></div> <p class="small" id="chErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"> <button type="button" class="btn ghost" id="chCancel">Cancel</button> <button type="submit" class="btn mint" id="chSave">Save</button> </div> </form> </dialog> <!-- Mission pack editor --> <dialog id="packDlg"> <form method="dialog" id="packForm"> <div class="mh" style="background:var(--lilac)"><div><h2 id="packDlgTitle">New mission pack</h2><p id="packDlgHint">Name the pack, and give it an icon if you like.</p></div></div> <div class="mb"> <label for="packName">Pack name</label> <input type="text" id="packName" maxlength="60" autocomplete="off" placeholder="e.g. Floor Milestones"> <fieldset class="state-pick" id="packIconKindWrap"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="packIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="packIconEmojiRow" hidden><label for="packIconEmoji">Emoji</label> <input type="text" id="packIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🗺"></div> <div id="packIconSpriteRow" hidden><label for="packIconSprite">Sprite</label> <select id="packIconSprite"></select></div> <div id="packIconUploadRow" hidden><label for="packIconFile">Custom image</label> <input type="file" id="packIconFile" accept="image/*"> <p class="ch-help" id="packIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the pack.</p><img id="packIconPreview" class="ch-icon-img" alt="" hidden></div> <p class="small" id="packErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"><button type="button" class="btn ghost" id="packCancel">Cancel</button><button type="submit" class="btn mint" id="packSave">Save pack</button></div> </form> </dialog> <!-- Subgroup editor --> <dialog id="subDlg"> <form method="dialog" id="subForm"> <div class="mh" style="background:var(--sky)"><div><h2 id="subDlgTitle">Edit subgroup</h2><p id="subDlgHint">Rename the subgroup, and manage its shared counter if it has one.</p></div></div> <div class="mb"> <label for="subName">Subgroup name</label> <input type="text" id="subName" maxlength="60" autocomplete="off" placeholder="e.g. Survival"> <fieldset id="subSharedWrap"><legend>Shared counter (optional)</legend> <label for="subSharedLabel">Label</label> <input type="text" id="subSharedLabel" maxlength="40" autocomplete="off" placeholder="e.g. Floors Survived — leave empty for none"> <label for="subSharedValue">Value</label> <input type="number" id="subSharedValue" min="0" max="1000000" step="1" inputmode="numeric"> <p class="ch-help" id="subSharedNote">One shared value drives every 🔗 linked counter in this subgroup. Changing the value updates the linked challenges right away.</p> <button type="button" class="btn ghost sm" id="subSharedRemove" hidden>Remove shared counter</button> </fieldset> <fieldset id="subIconKindWrap"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="subIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="subIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="subIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="subIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="subIconEmojiRow" hidden><label for="subIconEmoji">Emoji</label> <input type="text" id="subIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🗺"></div> <div id="subIconSpriteRow" hidden><label for="subIconSprite">Sprite</label> <select id="subIconSprite"></select></div> <div id="subIconUploadRow" hidden><label for="subIconFile">Custom image</label> <input type="file" id="subIconFile" accept="image/*"> <p class="ch-help" id="subIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the subgroup.</p><img id="subIconPreview" class="ch-icon-img" alt="" hidden></div> <p class="small" id="subErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"><button type="button" class="btn ghost" id="subCancel">Cancel</button><button type="submit" class="btn mint" id="subSave">Save subgroup</button></div> </form> </dialog> <dialog id="revivalDlg" class="revival-dlg"><form method="dialog" id="revivalForm"><div class="mh" style="background:var(--pink)"><div><h2 id="revivalDialogTitle">Choose your spin</h2><p id="revivalDialogPrompt">Pick a Toon or Trinket spin for this completed challenge.</p></div></div><div class="mb"><p id="revivalSourceRow">Reward from <strong id="revivalChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="revivalKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="revivalKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="revivalErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="revivalCancel">Cancel</button><button type="submit" class="btn mint" id="revivalChoose">Earn this spin</button></div></form></dialog> <dialog id="choiceDlg" class="revival-dlg"><form method="dialog" id="choiceForm"><div class="mh" style="background:var(--pink)"><div><h2 id="choiceDialogTitle">Choose your Iridescent reward</h2><p id="choiceDialogPrompt">Pick a New Toon or a New Trinket spin for this completed team goal.</p></div></div><div class="mb"><p>Reward from <strong id="choiceChallenge"></strong></p><fieldset class="revival-choices" id="choiceOptions"><legend class="small">Choose one</legend><label><input type="radio" name="choiceKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="choiceKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="choiceErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="choiceCancel">Choose later</button><button type="submit" class="btn mint" id="choiceChoose">Earn this reward</button></div></form></dialog> <dialog id="targetDlg" class="revival-dlg"><form method="dialog" id="targetForm"><div class="mh" style="background:var(--pink)"><div><h2 id="targetDialogTitle">🎯 Revive a specific one</h2><p id="targetDialogPrompt">Pick exactly which eliminated Toon or Trinket to bring back — no wheel, your pick is final.</p></div></div><div class="mb"><div id="targetList"></div><p class="small" id="targetErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="targetCancel">Cancel</button></div></form></dialog> <dialog id="ccDlg" class="revival-dlg"><form method="dialog" id="ccForm"><div class="mh" style="background:var(--pink)"><div><h2 id="ccDialogTitle">🎲 Choice chance</h2><p id="ccDialogPrompt">Pick one gamble to roll.</p></div></div><div class="mb"><p>Reward from <strong id="ccChallenge"></strong></p><p class="small" id="ccSummary"></p><div class="cc-tiles" id="ccTiles"></div><p class="small" id="ccErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="ccCancel">Not now</button><button type="submit" class="btn mint" id="ccRoll">🎲 Roll</button></div></form></dialog> <!-- Spinner -->
 <dialog id="spinDlg" class="spin-dlg">
   <div class="mh" style="background:var(--yellow)"><div><h2 id="spinTitle">Spinning…</h2><p id="spinSub"></p></div></div>
   <div class="mb">
@@ -678,9 +697,9 @@ const TEAM_TIERS = ['bronze','silver','gold','iridescent'];
 const TEAM_TIER_REWARD = {bronze:'none', silver:'none', gold:'revival', iridescent:'choice'};
 const TEAM_TIER_HINT = {bronze:'Bronze badge · default reward: none (change it under Reward below).', silver:'Silver badge · default reward: none (change it under Reward below).', gold:'Gold badge · default reward: one Revival Spin (change it under Reward below). It only revives an eliminated Toon or Trinket; it is not a Toon or Trinket spin.', iridescent:'Iridescent badge · default reward: one spin of your choice — a New Toon or a New Trinket (change it under Reward below).'};
 const REWARDS = ['spin','none'];
-const SPIN_KINDS = ['toon','trinket','revival','chance','target','choice'];
+const SPIN_KINDS = ['toon','trinket','revival','chance','target','choice','choicechance'];
 /* Kinds that can be stored on a claimed challenge (rewardKind): spin kinds plus 'custom' (a free-text reward with no spin credit). */
-const CLAIM_KINDS = ['toon','trinket','revival','chance','custom','target'];
+const CLAIM_KINDS = ['toon','trinket','revival','chance','custom','target','choicechance'];
 /* What a "Your choice" reward can offer. 'revival' = a Revival Spin credit
    (random, existing pool flow); 'target' = a targeted-revival credit that
    revives one specific eliminated Toon/Trinket. Default — also the fallback
@@ -694,7 +713,7 @@ function sanitizeChoiceOptions(raw){
 }
 /* Extra rewards granted IN ADDITION to a challenge's primary reward (max 3).
    Each entry: {kind, pct? (chance), text? (custom), options? (choice)}. */
-const EXTRA_REWARD_KINDS = ['toon','trinket','revival','target','chance','custom','choice'];
+const EXTRA_REWARD_KINDS = ['toon','trinket','revival','target','chance','custom','choice','choicechance'];
 function sanitizeExtraRewards(raw){
   if (!Array.isArray(raw)) return [];
   const out = [];
@@ -704,11 +723,63 @@ function sanitizeExtraRewards(raw){
     if (e.kind === 'chance') entry.pct = clampInt(e.pct, 1, 99, 50);
     if (e.kind === 'custom') entry.text = String(e.text || '').trim().slice(0, 80);
     if (e.kind === 'choice') entry.options = sanitizeChoiceOptions(e.options);
+    if (e.kind === 'choicechance'){ const cc = sanitizeChoiceChance(e); entry.mode = cc.mode; entry.entries = cc.entries; }
     out.push(entry);
   }
   return out;
 }
-const REWARD_PICKS = ['default','none','toon','trinket','revival','choice','chance','custom'];
+/* ---------- Choice chance rewards ----------
+   A choice-chance reward is a small set of gambles plus a play mode:
+   'pick' = the player picks ONE gamble and rolls only it; 'all' = every
+   gamble rolls independently (a bundle). Each gamble is {pct, prize, item?}:
+   pct is a DECIMAL (0.1–100, 1 decimal place — e.g. 0.5%), prize is one of
+   CC_PRIZES, and for the collection prizes (CC_ITEM_PRIZES) an optional item
+   name makes the prize that exact Toon/Trinket (SET) instead of a random one
+   from its pool. A granted credit snapshots the sanitized config. */
+const CC_PRIZES = ['any-revival','toon-revival','trinket-revival','specific','new-toon','new-trinket'];
+const CC_ITEM_PRIZES = {'toon-revival':'toons', 'trinket-revival':'trinkets', 'new-toon':'toons', 'new-trinket':'trinkets'};
+const CC_PRIZE_LABEL = {'any-revival':'Random revival (Toon or Trinket)', 'toon-revival':'Random Toon revival', 'trinket-revival':'Random Trinket revival', 'specific':'Specific revival (pick the exact one)', 'new-toon':'New Toon unlock', 'new-trinket':'New Trinket unlock'};
+function clampCCPct(v, d = 50){ const n = Number(v); return Number.isFinite(n) ? Math.min(100, Math.max(0.1, Math.round(n * 10) / 10)) : d; }
+function fmtPct(p){ const n = Math.round(Number(p) * 10) / 10; return Number.isFinite(n) ? String(n) : '50'; }
+/* Two fixed "mystery" artworks for random gambles in the choice-chance tiles:
+   one for a random Toon, one for a random Trinket. */
+const CC_MYSTERY_TOON_IMG = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#43305e"/><circle cx="50" cy="36" r="16" fill="#1d1428"/><path d="M20 92c2-18 13-27 30-27s28 9 30 27z" fill="#1d1428"/><text x="50" y="49" font-family="Verdana,Arial,sans-serif" font-size="30" font-weight="bold" fill="#ffe9f7" text-anchor="middle">?</text></svg>');
+const CC_MYSTERY_TRINKET_IMG = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#274d5e"/><path d="M65 12a16 16 0 0 0-15.4 19.6L24.8 56.4a11 11 0 1 0 15.6 15.6l24.8-24.8A16 16 0 0 0 84.8 31.6l-11.3 11.3-10-2.7-2.7-10z" fill="#101d24"/><text x="76" y="90" font-family="Verdana,Arial,sans-serif" font-size="30" font-weight="bold" fill="#ffe9f7" text-anchor="middle">?</text></svg>');
+function sanitizeCCEntry(e){
+  if (!e || typeof e !== 'object' || !CC_PRIZES.includes(e.prize)) return null;
+  const entry = {pct:clampCCPct(e.pct, 50), prize:e.prize};
+  const coll = CC_ITEM_PRIZES[e.prize];
+  if (coll && typeof e.item === 'string' && ITEMS[coll].has(e.item)) entry.item = e.item;
+  return entry;
+}
+function sanitizeChoiceChance(raw){
+  const fallback = () => ({mode:'pick', entries:[{pct:50, prize:'any-revival'}]});
+  if (!raw || typeof raw !== 'object') return fallback();
+  const entries = (Array.isArray(raw.entries) ? raw.entries : []).map(sanitizeCCEntry).filter(Boolean).slice(0, 4);
+  if (!entries.length) return fallback();
+  return {mode:raw.mode === 'all' ? 'all' : 'pick', entries};
+}
+/* One gamble as compact text, e.g. "0.5% Waxwell revival", "10% Random
+   Trinket revival", "100% New Trinket". Shared by badges, panel rows and
+   the spend dialog. */
+function ccEntryText(entry){
+  if (!entry) return '';
+  const p = `${fmtPct(entry.pct)}%`;
+  switch (entry.prize){
+    case 'any-revival': return `${p} Random revival`;
+    case 'toon-revival': return entry.item ? `${p} ${entry.item} revival` : `${p} Random Toon revival`;
+    case 'trinket-revival': return entry.item ? `${p} ${entry.item} revival` : `${p} Random Trinket revival`;
+    case 'specific': return `${p} Specific revival`;
+    case 'new-toon': return entry.item ? `${p} ${entry.item} unlock` : `${p} New Toon`;
+    case 'new-trinket': return entry.item ? `${p} ${entry.item} unlock` : `${p} New Trinket`;
+  }
+  return p;
+}
+function ccSummary(config){
+  const cc = sanitizeChoiceChance(config);
+  return `${cc.mode === 'all' ? 'Roll all' : 'Pick one'}: ${cc.entries.map(ccEntryText).join(cc.mode === 'all' ? ' + ' : ' · ')}`;
+}
+const REWARD_PICKS = ['default','none','toon','trinket','revival','choice','chance','custom','choicechance'];
 /* Effective reward for a challenge. A per-challenge Reward pick (feature: choose
    your reward) wins over the default derivation: team tier map for team goals,
    category spin / stored 'spin'|'none' for the rest. */
@@ -853,6 +924,7 @@ function sanitizeChallenge(o, seen){
   const rewardChance = clampInt(o.rewardChance, 1, 99, 50);
   const rewardText = String(o.rewardText || '').slice(0, 80);
   const choiceOptions = sanitizeChoiceOptions(o.choiceOptions);
+  const choiceChance = sanitizeChoiceChance(o.choiceChance);
   const extraRewards = sanitizeExtraRewards(o.extraRewards);
   /* Per-entry claim state, parallel to extraRewards. Whether a claim is real
      is reconciled against live grants in normalizeRun; here we only carry the
@@ -864,7 +936,7 @@ function sanitizeChallenge(o, seen){
   });
   const tierSet = category==='team' ? true : !!o.tierSet;
   const effReward = challengeReward({category, teamTier, reward, rewardPick});
-  return {id, title, desc:String(o.desc||'').slice(0,3000), category, teamTier, type:legacyTypeForModes(modes), modes, requiredCount, icon:sanitizeIcon(o.icon), goalDone, target, value, counters, counterRestore, checklistRestore, collapsed:!!o.collapsed, itemsCollapsed:!!o.itemsCollapsed, items, listState, done, reward, rewardPick, rewardChance, rewardText, choiceOptions, extraRewards, extraState, excluded:!!o.excluded, tierSet, claimed:done && effReward!=='none' && !!o.claimed, rewardKind, rewardGrantId:o.rewardGrantId ? String(o.rewardGrantId).slice(0,40) : null};
+  return {id, title, desc:String(o.desc||'').slice(0,3000), category, teamTier, type:legacyTypeForModes(modes), modes, requiredCount, icon:sanitizeIcon(o.icon), goalDone, target, value, counters, counterRestore, checklistRestore, collapsed:!!o.collapsed, itemsCollapsed:!!o.itemsCollapsed, items, listState, done, reward, rewardPick, rewardChance, rewardText, choiceOptions, choiceChance, extraRewards, extraState, excluded:!!o.excluded, tierSet, claimed:done && effReward!=='none' && !!o.claimed, rewardKind, rewardGrantId:o.rewardGrantId ? String(o.rewardGrantId).slice(0,40) : null};
 }
 const toMaps = r => ({toons:new Map(Object.entries(r.status.toons)), trinkets:new Map(Object.entries(r.status.trinkets))});
 
@@ -937,12 +1009,13 @@ function normalizeRun(r, fallbackName){
     return 'toon';
   };
   out.spins = Array.isArray(r.spins) ? r.spins.filter(g => g && (SPIN_KINDS.includes(g.kind) || g.kind==='either')).slice(0,500)
-    .map(g => { const kind = migratedSpinKind(g); const grant = {id:String(g.id||uid()).slice(0,40), kind, challengeId:g.challengeId ? String(g.challengeId).slice(0,40) : null, title:g.title ? String(g.title).slice(0,80) : null, ts:isoOr(g.ts)}; if (kind === 'chance') grant.pct = clampInt(g.pct, 1, 99, 50); if (kind === 'choice') grant.options = sanitizeChoiceOptions(g.options); if (Number.isInteger(g.extraIndex)) grant.extraIndex = clampInt(g.extraIndex, 0, 2, 0); return grant; }) : [];
-  out.history = Array.isArray(r.history) ? r.history.filter(h => h && ((KINDS.includes(h.kind) && ITEMS[h.kind].has(h.name)) || (h.chanceRoll && typeof h.challengeRoll === 'object'))).slice(0,1000)
+    .map(g => { const kind = migratedSpinKind(g); const grant = {id:String(g.id||uid()).slice(0,40), kind, challengeId:g.challengeId ? String(g.challengeId).slice(0,40) : null, title:g.title ? String(g.title).slice(0,80) : null, ts:isoOr(g.ts)}; if (kind === 'chance') grant.pct = clampInt(g.pct, 1, 99, 50); if (kind === 'choice') grant.options = sanitizeChoiceOptions(g.options); if (kind === 'choicechance') grant.cc = sanitizeChoiceChance(g.cc); if (Number.isInteger(g.extraIndex)) grant.extraIndex = clampInt(g.extraIndex, 0, 2, 0); return grant; }) : [];
+  out.history = Array.isArray(r.history) ? r.history.filter(h => h && ((KINDS.includes(h.kind) && ITEMS[h.kind].has(h.name)) || (h.chanceRoll && typeof h.chanceRoll === 'object') || (h.ccRoll && typeof h.ccRoll === 'object'))).slice(0,1000)
     .map(h => {
       const challenge = h.challengeId ? challengeById.get(String(h.challengeId)) : null;
       const reward = challenge ? challengeReward(challenge) : null;
-      if (h.chanceRoll && typeof h.challengeRoll === 'object') return {id:String(h.id||uid()).slice(0,40), kind:null, name:null, challenge:h.challenge ? String(h.challenge).slice(0,80) : null, challengeId:h.challengeId ? String(h.challengeId).slice(0,40) : null, spinKind:'chance', spinPoolKind:null, free:!!h.free, chanceRoll:{pct:clampInt(h.chanceRoll.pct, 1, 99, 50), success:!!h.challengeRoll.success}, ts:isoOr(h.ts)};
+      if (h.chanceRoll && typeof h.chanceRoll === 'object') return {id:String(h.id||uid()).slice(0,40), kind:null, name:null, challenge:h.challenge ? String(h.challenge).slice(0,80) : null, challengeId:h.challengeId ? String(h.challengeId).slice(0,40) : null, spinKind:'chance', spinPoolKind:null, free:!!h.free, chanceRoll:{pct:clampInt(h.chanceRoll.pct, 1, 99, 50), success:!!h.chanceRoll.success}, ts:isoOr(h.ts)};
+      if (h.ccRoll && typeof h.ccRoll === 'object') return {id:String(h.id||uid()).slice(0,40), kind:null, name:null, challenge:h.challenge ? String(h.challenge).slice(0,80) : null, challengeId:h.challengeId ? String(h.challengeId).slice(0,40) : null, spinKind:'choiceChance', spinPoolKind:null, free:!!h.free, ccRoll:{pct:clampCCPct(h.ccRoll.pct, 50), prize:CC_PRIZES.includes(h.ccRoll.prize) ? h.ccRoll.prize : 'any-revival', item:(typeof h.ccRoll.item === 'string' && (ITEMS.toons.has(h.ccRoll.item) || ITEMS.trinkets.has(h.ccRoll.item))) ? h.ccRoll.item : null, success:!!h.ccRoll.success}, ts:isoOr(h.ts)};
       const migratedKind = h.spinKind==='targetRevive' ? 'targetRevive' : (SPIN_KINDS.includes(h.spinKind) ? h.spinKind : (['toon','trinket','revival'].includes(reward) ? reward : null));
       return {id:String(h.id||uid()).slice(0,40), kind:h.kind, name:h.name, challenge:h.challenge ? String(h.challenge).slice(0,80) : null, challengeId:h.challengeId ? String(h.challengeId).slice(0,40) : null, spinKind:migratedKind, spinPoolKind:['toon','trinket'].includes(h.spinPoolKind) ? h.spinPoolKind : null, free:!!h.free, ts:isoOr(h.ts)};
     }) : [];
@@ -958,6 +1031,7 @@ function normalizeRun(r, fallbackName){
     }
   }
   for (const h of out.history){
+    if (!h.kind || !h.name) continue; /* roll records (chance / choice chance) carry no item — nothing to backfill */
     if (h.challengeId && out.status[h.kind][h.name]==='unlocked' && !out.spinUnlocks[h.kind][h.name]) out.spinUnlocks[h.kind][h.name] = {historyId:h.id, challengeId:h.challengeId};
   }
   const eligible = new Set(out.challenges.filter(c => c.done && (challengeReward(c)!=='none' || (c.extraState || []).some(s => s && s.claimed))).map(c => c.id));
@@ -978,7 +1052,7 @@ function normalizeRun(r, fallbackName){
          only history from the primary reward's own kinds proves it was used —
          an extra reward's spin must not mark the primary as claimed. */
       const reward=challengeReward(c);
-      const primaryKinds = reward==='choice' ? sanitizeChoiceOptions(c.choiceOptions) : reward==='chance' ? ['chance','revival'] : [reward];
+      const primaryKinds = reward==='choice' ? sanitizeChoiceOptions(c.choiceOptions) : reward==='chance' ? ['chance','revival'] : reward==='choicechance' ? ['choiceChance','toon','trinket','revival','target'] : [reward];
       const grant = out.spins.find(g => g.challengeId===c.id && g.extraIndex===undefined);
       const used = out.history.find(h => h.challengeId===c.id && primaryKinds.some(k => (k==='target' ? 'targetRevive' : k)===h.spinKind));
       if (grant || used) c.claimed=true;
@@ -1356,7 +1430,7 @@ $('#fileIn').addEventListener('change', async e => {
 });
 
 /* ================= Challenges ================= */
-const REWARD_LABEL = {toon:'Toon spin', trinket:'Trinket spin', revival:'Revival Spin', choice:'Your choice', chance:'Revival chance', custom:'Custom reward', target:'Targeted revival', none:'No reward'};
+const REWARD_LABEL = {toon:'Toon spin', trinket:'Trinket spin', revival:'Revival Spin', choice:'Your choice', chance:'Revival chance', custom:'Custom reward', target:'Targeted revival', choicechance:'Choice chance', none:'No reward'};
 /* Short labels naming what a "Your choice" reward can actually pick — shared
    by the card badge and the extra-reward badges, so a choice badge always
    lists the configured options instead of vaguely implying anything goes. */
@@ -1373,6 +1447,7 @@ function extraBadgeLabel(entry, claimed){
     case 'chance': return claimed ? `✓ Revival chance (${clampInt(entry.pct, 1, 99, 50)}%) earned` : `🎲 Revival chance (${clampInt(entry.pct, 1, 99, 50)}%)`;
     case 'custom': return claimed ? `✓ Reward earned: ${entry.text || 'Custom reward'}` : `🎁 ${entry.text || 'Custom reward'}`;
     case 'choice': return claimed ? '✓ Choice reward earned' : `✨ Choice: ${choiceOptionsText(entry.options)}`;
+    case 'choicechance': return claimed ? '✓ Choice chance earned' : `🎲 Choice chance: ${ccSummary(entry)}`;
   }
   return '';
 }
@@ -1380,6 +1455,7 @@ function extraBadgeLabel(entry, claimed){
 function rewardLabelFor(c){
   const reward = challengeReward(c);
   if (reward === 'chance') return `Revival chance (${clampInt(c.rewardChance, 1, 99, 50)}%)`;
+  if (reward === 'choicechance') return `Choice chance (${ccSummary(c.choiceChance)})`;
   if (reward === 'custom') return c.rewardText ? `Reward: ${c.rewardText}` : 'Custom reward';
   return REWARD_LABEL[reward] || 'No reward';
 }
@@ -1419,6 +1495,7 @@ function grantFor(ch, kind){
   if (!accepted) return null;
   const grant = {id:uid(), kind, challengeId:ch.id, title:ch.title, ts:new Date().toISOString()};
   if (kind === 'chance') grant.pct = clampInt(ch.rewardChance, 1, 99, 50);
+  if (kind === 'choicechance') grant.cc = sanitizeChoiceChance(ch.choiceChance);
   run.spins.push(grant); ch.claimed=true; ch.rewardKind=kind; ch.rewardGrantId=grant.id;
   return grant;
 }
@@ -1439,6 +1516,7 @@ function grantExtraReward(ch, index){
   const grant = {id:uid(), kind:entry.kind, challengeId:ch.id, title:ch.title, ts:new Date().toISOString(), extraIndex:index};
   if (entry.kind === 'chance') grant.pct = clampInt(entry.pct, 1, 99, 50);
   if (entry.kind === 'choice') grant.options = sanitizeChoiceOptions(entry.options);
+  if (entry.kind === 'choicechance') grant.cc = sanitizeChoiceChance(entry);
   run.spins.push(grant);
   st.claimed = true; st.grantId = grant.id;
   return grant;
@@ -1590,6 +1668,19 @@ function openTargetDialog(){
     dlg.showModal();
   });
 }
+/* Apply a targeted-revival pick: flip the item back to unlocked and record
+   the spin-history entry with revival provenance. Shared by the targeted-
+   revival credit flow and the choice-chance 'specific' prize (which passes
+   its own attribution and consumes no target credit). Returns the history
+   entry, or null when the pick is no longer eliminated. The caller saves
+   and re-renders. */
+function applyTargetedRevive(pick, src){
+  if (!pick || stateOf(pick.kind, pick.name) !== 'eliminated') return null;
+  const entry = {id:uid(), kind:pick.kind, spinKind:'targetRevive', spinPoolKind:pick.kind==='toons' ? 'toon' : 'trinket', name:pick.name, challenge:src && src.title ? src.title : null, challengeId:src && src.challengeId ? src.challengeId : null, free:!!(src && src.free), ts:new Date().toISOString()};
+  run.history.unshift(entry);
+  setState(pick.kind, pick.name, 'unlocked', true, null, {historyId:entry.id, challengeId:entry.challengeId, previousState:'eliminated'});
+  return entry;
+}
 async function startTargetRevive(challengeId = null){
   let grant = null;
   if (!view.free){
@@ -1600,9 +1691,8 @@ async function startTargetRevive(challengeId = null){
   if (!pick) return; /* cancelled or nothing eliminated: credit not consumed */
   if (stateOf(pick.kind, pick.name) !== 'eliminated') return; /* changed while the dialog was open */
   if (grant){ const i = run.spins.indexOf(grant); if (i >= 0) run.spins.splice(i, 1); }
-  const entry = {id:uid(), kind:pick.kind, spinKind:'targetRevive', spinPoolKind:pick.kind==='toons' ? 'toon' : 'trinket', name:pick.name, challenge:grant ? grant.title : null, challengeId:grant ? grant.challengeId : null, free:!grant, ts:new Date().toISOString()};
-  run.history.unshift(entry);
-  setState(pick.kind, pick.name, 'unlocked', true, null, {historyId:entry.id, challengeId:entry.challengeId, previousState:'eliminated'});
+  const entry = applyTargetedRevive(pick, {challengeId:grant ? grant.challengeId : null, title:grant ? grant.title : null, free:!grant});
+  if (!entry) return;
   saveRun(); renderAll(); renderHistory(); renderSpinPanel();
   /* Undo mirrors the spin dialog's Undo: re-eliminate, drop the history
      entry, and refund the credit that was spent. */
@@ -1636,6 +1726,8 @@ async function afterChange(ch, wasDone, previousReward=challengeReward(ch)){
     toast(`✔ “${ch.title}” complete! Revival Spin earned.`, () => startSpin('revival', ch.id), 'Spin now');
   } else if (granted && reward==='chance'){
     toast(`✔ “${ch.title}” complete! Revival chance (${clampInt(ch.rewardChance, 1, 99, 50)}%) earned.`, () => startSpin('chance', ch.id), 'Spin now');
+  } else if (granted && reward==='choicechance'){
+    toast(`✔ “${ch.title}” complete! Choice chance earned.`, () => startSpin('choicechance', ch.id), 'Spin now');
   } else if (granted && reward==='custom'){
     toast(`✔ “${ch.title}” complete! Reward earned: ${ch.rewardText || 'Custom reward'}`);
   } else if (granted && (reward==='toon' || reward==='trinket')){
@@ -1778,8 +1870,9 @@ function challengeCardMarkup(c, i, listLen, opts){
       if (reward==='revival') rewardText=c.claimed ? 'Revival Spin earned' : 'Revival Spin · revives an eliminated Toon or Trinket';
       if (reward==='choice') rewardText=c.claimed ? ({toon:'Toon spin earned', trinket:'Trinket spin earned', revival:'Revival Spin earned', target:'Targeted revival earned'})[c.rewardKind] || 'Toon spin earned' : `Reward — your choice · Pick one: ${choiceOptionsText(c.choiceOptions)}`;
       if (reward==='chance') rewardText=c.claimed ? `Revival chance (${clampInt(c.rewardChance,1,99,50)}%) earned` : `Revival chance (${clampInt(c.rewardChance,1,99,50)}%)`;
+      if (reward==='choicechance') rewardText=c.claimed ? 'Choice chance earned' : `Choice chance · ${ccSummary(c.choiceChance)}`;
       if (reward==='custom') rewardText=c.claimed ? `Reward earned: ${c.rewardText || 'Custom reward'}` : `Reward: ${c.rewardText || 'Custom reward'}`;
-      const badgeIcon=reward==='chance' ? '🎲 ' : reward==='custom' ? '🎁 ' : '🎰 ';
+      const badgeIcon=(reward==='chance' || reward==='choicechance') ? '🎲 ' : reward==='custom' ? '🎁 ' : '🎰 ';
       const rew=reward==='none' ? `<span class="rew none">${esc(rewardText)}</span>`
         : `<span class="rew ${c.claimed?'claimed':''}">${c.claimed ? '✓ ' : badgeIcon}${esc(rewardText)}</span>`;
       const extraBadges=(c.extraRewards || []).map((entry, xi) => {
@@ -2055,6 +2148,7 @@ function syncRewardPick(){
   const pick=radioVal('chRewardPick')||'default';
   $('#chRewardChanceRow').hidden=pick!=='chance';
   $('#chRewardTextRow').hidden=pick!=='custom';
+  $('#chChoiceChanceRow').hidden=pick!=='choicechance';
   syncChoiceOptions();
   chMbRestoreScroll(_sy);
 }
@@ -2072,8 +2166,96 @@ function syncChoiceOptions(){
   const wrap=$('#chChoiceOptionsWrap'); if (wrap) wrap.hidden=!primaryResolvesToChoice();
   chMbRestoreScroll(_sy);
 }
+/* ---------- Choice chance gamble editor rows ----------
+   One row per gamble: a decimal % (0.1–100), a prize select, and — for the
+   collection prizes — a Random/Specific selector with an item dropdown
+   (plus a tiny sprite preview). The same row builder serves the primary
+   reward config (#chCCRows) and each extra reward's inline config. */
+function ccItemOptions(coll, selected){
+  return DATA[coll].map(it => `<option value="${esc(it.name)}" ${it.name === selected ? 'selected' : ''}>${esc(it.name)}</option>`).join('');
+}
+function ccEntryRowHTML(entry){
+  const e = sanitizeCCEntry(entry) || {pct:50, prize:'any-revival'};
+  const coll = CC_ITEM_PRIZES[e.prize];
+  const it = e.item && coll ? ITEMS[coll].get(e.item) : null;
+  return `<div class="cc-entry-row">
+    <span><input type="number" data-cc-pct min="0.1" max="100" step="0.1" value="${e.pct}" style="width:78px" aria-label="Gamble success chance"> %</span>
+    <select data-cc-prize aria-label="Gamble prize">${CC_PRIZES.map(p => `<option value="${p}" ${p === e.prize ? 'selected' : ''}>${CC_PRIZE_LABEL[p]}</option>`).join('')}</select>
+    <span data-cc-itemwrap ${coll ? '' : 'hidden'}><select data-cc-itemmode aria-label="Random or a specific item"><option value="random" ${e.item ? '' : 'selected'}>Random</option><option value="specific" ${e.item ? 'selected' : ''}>Specific:</option></select> <select data-cc-item aria-label="Specific item" ${e.item ? '' : 'hidden'}>${coll ? ccItemOptions(coll, e.item) : ''}</select> <img data-cc-thumb class="ch-icon-img" alt="" ${it ? `src="${it.src}"` : 'hidden'}></span>
+    <button type="button" class="ibtn del" data-remove-cc aria-label="Remove gamble">🗑</button>
+  </div>`;
+}
+function syncCCEntryRow(row){
+  if (!row) return;
+  const prize = row.querySelector('[data-cc-prize]').value;
+  const coll = CC_ITEM_PRIZES[prize];
+  const wrap = row.querySelector('[data-cc-itemwrap]');
+  if (wrap) wrap.hidden = !coll;
+  if (!coll) return;
+  const modeSel = row.querySelector('[data-cc-itemmode]'), itemSel = row.querySelector('[data-cc-item]'), thumb = row.querySelector('[data-cc-thumb]');
+  const specific = modeSel.value === 'specific';
+  const prev = itemSel.value;
+  itemSel.innerHTML = ccItemOptions(coll, ITEMS[coll].has(prev) ? prev : null);
+  itemSel.hidden = !specific;
+  const it = specific ? ITEMS[coll].get(itemSel.value) : null;
+  if (it){ thumb.src = it.src; thumb.hidden = false; } else thumb.hidden = true;
+}
+function syncCCButtons(block){
+  if (!block) return;
+  const rows = block.querySelectorAll('.cc-entry-row').length;
+  const add = block.querySelector('[data-add-cc]');
+  if (add){ add.disabled = rows >= 4; add.textContent = rows >= 4 ? 'Max 4 gambles' : '＋ Add gamble'; }
+  block.querySelectorAll('[data-remove-cc]').forEach(b => b.disabled = rows <= 1);
+}
+function renderCCEntries(box, entries){
+  if (!box) return;
+  box.innerHTML = (entries && entries.length ? entries : [{pct:50, prize:'any-revival'}]).map(ccEntryRowHTML).join('');
+  box.querySelectorAll('.cc-entry-row').forEach(syncCCEntryRow);
+  syncCCButtons(box.closest('.cc-editor-block'));
+}
+function readCCEntries(box){
+  const out = [];
+  if (!box) return out;
+  for (const row of box.querySelectorAll('.cc-entry-row')){
+    const prize = row.querySelector('[data-cc-prize]').value;
+    const entry = {pct:row.querySelector('[data-cc-pct]').value, prize};
+    const coll = CC_ITEM_PRIZES[prize];
+    const modeSel = row.querySelector('[data-cc-itemmode]');
+    if (coll && modeSel && modeSel.value === 'specific') entry.item = row.querySelector('[data-cc-item]').value;
+    out.push(entry);
+  }
+  return out;
+}
+/* Delegated wiring shared by the primary choice-chance block and the
+   extra-rewards list: prize/item changes re-sync a row; add/remove
+   buttons maintain 1–4 gamble rows per block. */
+function wireCCContainer(scope){
+  if (!scope) return;
+  scope.addEventListener('change', e => {
+    const row = e.target.closest('.cc-entry-row');
+    if (row && e.target.closest('[data-cc-prize],[data-cc-itemmode],[data-cc-item]')) syncCCEntryRow(row);
+  });
+  scope.addEventListener('click', e => {
+    const rm = e.target.closest('[data-remove-cc]');
+    if (rm){
+      const block = rm.closest('.cc-editor-block'), row = rm.closest('.cc-entry-row');
+      if (block && row && block.querySelectorAll('.cc-entry-row').length > 1){ row.remove(); syncCCButtons(block); }
+      return;
+    }
+    const add = e.target.closest('[data-add-cc]');
+    if (add){
+      const block = add.closest('.cc-editor-block'), box = block && block.querySelector('.cc-entries');
+      if (box && box.querySelectorAll('.cc-entry-row').length < 4){
+        box.insertAdjacentHTML('beforeend', ccEntryRowHTML({pct:50, prize:'any-revival'}));
+        const rows = box.querySelectorAll('.cc-entry-row');
+        syncCCEntryRow(rows[rows.length - 1]);
+        syncCCButtons(block);
+      }
+    }
+  });
+}
 /* ---------- Extra rewards editor (up to 3 entries) ---------- */
-const EXTRA_KIND_LABEL = {toon:'🎭 Toon spin', trinket:'💍 Trinket spin', revival:'🎰 Revival Spin', target:'🎯 Targeted revival (pick one)', chance:'🎲 Revival chance', custom:'🎁 Custom reward', choice:'✨ Choice credit'};
+const EXTRA_KIND_LABEL = {toon:'🎭 Toon spin', trinket:'💍 Trinket spin', revival:'🎰 Revival Spin', target:'🎯 Targeted revival (pick one)', chance:'🎲 Revival chance', custom:'🎁 Custom reward', choice:'✨ Choice credit', choicechance:'🎲 Choice chance'};
 const CHOICE_OPTION_SHORT = {toon:'Toon', trinket:'Trinket', revival:'Revival', target:'Targeted'};
 function extraRowHTML(entry){
   const kind=EXTRA_REWARD_KINDS.includes(entry && entry.kind) ? entry.kind : 'toon';
@@ -2084,6 +2266,7 @@ function extraRowHTML(entry){
     <input type="text" data-extra-text maxlength="80" placeholder="Custom reward text" value="${kind==='custom' ? esc(entry.text || '') : ''}" aria-label="Custom reward text" ${kind==='custom'?'':'hidden'}>
     <span class="extra-opts" data-extra-opts ${kind==='choice'?'':'hidden'}>${CHOICE_OPTION_KINDS.map(k => `<label class="small"><input type="checkbox" data-extra-opt value="${k}" ${opts.includes(k)?'checked':''}> ${CHOICE_OPTION_SHORT[k]}</label>`).join('')}</span>
     <button type="button" class="ibtn del" data-remove-extra aria-label="Remove extra reward">🗑</button>
+    ${(() => { const cfg = sanitizeChoiceChance(entry); return `<div class="extra-cc cc-editor-block" data-extra-cc ${kind==='choicechance'?'':'hidden'}><label class="small">Plays as <select data-extra-cc-mode aria-label="Choice chance mode"><option value="pick" ${cfg.mode==='pick'?'selected':''}>Pick one</option><option value="all" ${cfg.mode==='all'?'selected':''}>Roll all</option></select></label><div class="cc-entries" data-extra-cc-rows>${cfg.entries.map(ccEntryRowHTML).join('')}</div><button type="button" class="btn ghost sm" data-add-cc>＋ Add gamble</button></div>`; })()}
   </div>`;
 }
 function syncExtraAddBtn(){
@@ -2094,6 +2277,8 @@ function syncExtraAddBtn(){
 function renderExtraEditor(entries){
   const box=$('#chExtraRows'); if (!box) return;
   box.innerHTML=(entries || []).map(entry => extraRowHTML(entry)).join('');
+  box.querySelectorAll('.cc-entry-row').forEach(syncCCEntryRow);
+  box.querySelectorAll('.cc-editor-block').forEach(syncCCButtons);
   syncExtraAddBtn();
 }
 function readExtraEditor(){
@@ -2104,6 +2289,7 @@ function readExtraEditor(){
     if (kind==='chance') entry.pct=clampInt(row.querySelector('[data-extra-pct]').value, 1, 99, 50);
     if (kind==='custom') entry.text=row.querySelector('[data-extra-text]').value.trim().slice(0,80);
     if (kind==='choice') entry.options=sanitizeChoiceOptions([...row.querySelectorAll('[data-extra-opt]:checked')].map(x => x.value));
+    if (kind==='choicechance'){ const cc=sanitizeChoiceChance({mode:row.querySelector('[data-extra-cc-mode]').value, entries:readCCEntries(row.querySelector('[data-extra-cc-rows]'))}); entry.mode=cc.mode; entry.entries=cc.entries; }
     out.push(entry);
   }
   return sanitizeExtraRewards(out);
@@ -2115,8 +2301,11 @@ $('#chExtraRows').addEventListener('change', e => {
   row.querySelector('[data-extra-pct-wrap]').hidden=kind!=='chance';
   row.querySelector('[data-extra-text]').hidden=kind!=='custom';
   row.querySelector('[data-extra-opts]').hidden=kind!=='choice';
+  const ccw=row.querySelector('[data-extra-cc]'); if (ccw) ccw.hidden=kind!=='choicechance';
   chMbRestoreScroll(_sy);
 });
+wireCCContainer($('#chExtraRows'));
+wireCCContainer($('#chChoiceChanceRow'));
 $('#chExtraRows').addEventListener('click', e => {
   const rm=e.target.closest('[data-remove-extra]'); if (!rm) return;
   rm.closest('.extra-reward-row').remove(); syncExtraAddBtn();
@@ -2210,6 +2399,9 @@ function openChEditor(ch, missionTarget=null){
   $('#chRewardText').value=ch ? (ch.rewardText || '') : '';
   const editChoiceOpts=sanitizeChoiceOptions(ch ? ch.choiceOptions : undefined);
   document.querySelectorAll('input[name="chChoiceOpt"]').forEach(r => r.checked=editChoiceOpts.includes(r.value));
+  const editCC=sanitizeChoiceChance(ch ? ch.choiceChance : undefined);
+  setRadio('chCCMode', editCC.mode);
+  renderCCEntries($('#chCCRows'), editCC.entries);
   renderExtraEditor(ch ? (ch.extraRewards || []) : []);
   $('#chExcluded').checked=ch ? !!ch.excluded : false;
   buildMissionOptions();
@@ -2377,6 +2569,7 @@ $('#chForm').addEventListener('submit',async e=>{
   const rewardText=$('#chRewardText').value.trim().slice(0,80);
   if (rewardPick==='custom' && !rewardText){ $('#chErr').textContent='Type the custom reward text, or choose a different reward.'; $('#chRewardText').focus(); return; }
   const choiceOptions=sanitizeChoiceOptions([...document.querySelectorAll('input[name="chChoiceOpt"]:checked')].map(r => r.value));
+  const choiceChance=sanitizeChoiceChance({mode:radioVal('chCCMode')||'pick', entries:readCCEntries($('#chCCRows'))});
   for (const row of $('#chExtraRows').querySelectorAll('.extra-reward-row')){
     if (row.querySelector('[data-extra-kind]').value==='custom' && !row.querySelector('[data-extra-text]').value.trim()){ $('#chErr').textContent='Type the text for each custom extra reward, or remove that extra reward.'; row.querySelector('[data-extra-text]').focus(); return; }
   }
@@ -2420,11 +2613,11 @@ $('#chForm').addEventListener('submit',async e=>{
   else if (iconKind==='upload'){ if (!chIconUploadData){ $('#chErr').textContent='Choose an image for the icon, or choose a different icon option.'; return; } icon={kind:'upload',value:chIconUploadData}; }
   icon=sanitizeIcon(icon);
   if (iconKind!=='none' && !icon){ $('#chErr').textContent='That icon could not be saved — try a different one.'; return; }
-  if (isNew){ ch={id:uid(),title,desc:'',category,teamTier,tierSet,type,modes,requiredCount,icon,goalDone:false,target:10,value:0,counters:counterConfigs,counterRestore:null,collapsed:false,itemsCollapsed:false,listState:[],items:[],done:false,reward,rewardPick,rewardChance,rewardText,choiceOptions,extraRewards,extraState:[],excluded,claimed:false,rewardKind:null,rewardGrantId:null,checklistRestore:null}; run.challenges.push(ch); }
+  if (isNew){ ch={id:uid(),title,desc:'',category,teamTier,tierSet,type,modes,requiredCount,icon,goalDone:false,target:10,value:0,counters:counterConfigs,counterRestore:null,collapsed:false,itemsCollapsed:false,listState:[],items:[],done:false,reward,rewardPick,rewardChance,rewardText,choiceOptions,choiceChance,extraRewards,extraState:[],excluded,claimed:false,rewardKind:null,rewardGrantId:null,checklistRestore:null}; run.challenges.push(ch); }
   const was=ch.done, previousReward=challengeReward(ch), counterConfigChanged=ch.type!==type || JSON.stringify(modesOf(ch))!==JSON.stringify(modes) || (ch.counters||[]).length!==counterConfigs.length || (ch.counters||[]).some((counter,index)=>counter.id!==counterConfigs[index]?.id || counter.target!==counterConfigs[index]?.target);
   const nextItems=modes.includes('checklist') ? checklistItems : ch.items;
   const checklistConfigChanged=(ch.items||[]).length!==nextItems.length || (ch.items||[]).some((item,index)=>item.text!==nextItems[index]?.text || item.excluded!==nextItems[index]?.excluded || (item.list||'Checklist')!==(nextItems[index]?.list||'Checklist'));
-  Object.assign(ch,{title,desc:$('#chDesc').value.trim().slice(0,3000),category,teamTier,tierSet,type,modes,requiredCount,icon,counters:counterConfigs,items:nextItems,reward,rewardPick,rewardChance,rewardText,choiceOptions,extraRewards,excluded});
+  Object.assign(ch,{title,desc:$('#chDesc').value.trim().slice(0,3000),category,teamTier,tierSet,type,modes,requiredCount,icon,counters:counterConfigs,items:nextItems,reward,rewardPick,rewardChance,rewardText,choiceOptions,choiceChance,extraRewards,excluded});
   if (modes.includes('checklist') && Array.isArray(ch.listState)){ const listNames=new Set(nextItems.map(item=>item.list||'Checklist')); ch.listState=ch.listState.filter(e=>e && listNames.has(e.name)); }
   if (counterConfigChanged) ch.counterRestore=null;
   if (counterConfigChanged || checklistConfigChanged) ch.checklistRestore=null;
@@ -2439,6 +2632,7 @@ $('#chForm').addEventListener('submit',async e=>{
   }
   const liveGrant=ch.rewardGrantId ? run.spins.find(g=>g.id===ch.rewardGrantId) : null;
   if (liveGrant && liveGrant.kind==='chance') liveGrant.pct=rewardChance;
+  if (liveGrant && liveGrant.kind==='choicechance') liveGrant.cc=choiceChance;
   await applyMembership(ch, selectedMissionTarget());
   if (isNew) toast(`Added “${title}”`);
 });
@@ -2467,7 +2661,7 @@ function chanceStock(){
 const chanceRowLabel = r => `${r.count} Chance Spin${r.count === 1 ? '' : 's'} Left (${r.pct}%)`;
 function firstChanceGrant(pct){ return run.spins.find(g => g.kind === 'chance' && chancePctOf(g) === pct) || null; }
 function renderSpinPanel(){
-  const t = credits('toon'), r = credits('trinket'), v = credits('revival'), cn = credits('chance'), tg = credits('target'), ch = credits('choice'), total = t + r + v + cn + tg + ch;
+  const t = credits('toon'), r = credits('trinket'), v = credits('revival'), cn = credits('chance'), tg = credits('target'), ch = credits('choice'), ccn = credits('choicechance'), total = t + r + v + cn + tg + ch + ccn;
   $('#creditTotal').textContent = `${total} spin${total===1?'':'s'}`;
   $('#credToon').textContent = view.free ? '∞' : t;
   $('#credTrinket').textContent = view.free ? '∞' : r;
@@ -2475,11 +2669,16 @@ function renderSpinPanel(){
   const credChanceEl = $('#credChance'); if (credChanceEl) credChanceEl.textContent = view.free ? '∞' : cn;
   const credTargetEl = $('#credTarget'); if (credTargetEl) credTargetEl.textContent = view.free ? '∞' : tg;
   const credChoiceEl = $('#credChoice'); if (credChoiceEl) credChoiceEl.textContent = view.free ? '∞' : ch;
+  const credCCEl = $('#credChoiceChance'); if (credCCEl) credCCEl.textContent = ccn;
   $('#creditChips').textContent = total
-    ? `Credits: ${t} toon · ${r} trinket · ${v} revival · ${cn} chance · ${tg} targeted revival · ${ch} choice.${view.free ? ' Free spin is on — credits are not used.' : ''}`
+    ? `Credits: ${t} toon · ${r} trinket · ${v} revival · ${cn} chance · ${tg} targeted revival · ${ch} choice · ${ccn} choice chance.${view.free ? ' Free spin is on — credits are not used.' : ''}`
     : (view.free ? 'Free spin is on — spins won’t use credits.' : 'Complete a challenge or team goal to earn a spin (or turn on Free spin).');
-  const spinButtons = {toon:'spinToon', trinket:'spinTrinket', revival:'spinRevival', chance:'spinChance', target:'spinTarget', choice:'spinChoice'};
+  const spinButtons = {toon:'spinToon', trinket:'spinTrinket', revival:'spinRevival', chance:'spinChance', target:'spinTarget', choice:'spinChoice', choicechance:'spinChoiceChance'};
   for (const k of SPIN_KINDS) $('#' + spinButtons[k]).disabled = !view.free && !credits(k);
+  /* Choice-chance credits carry their own configs and are spent from the
+     list below (the generic button just opens the first one); Free spin
+     has no config to roll, so the button stays disabled in free mode. */
+  const ccBtn = $('#spinChoiceChance'); if (ccBtn) ccBtn.disabled = view.free || !ccn;
   /* Per-% chance stock list. Free spin doesn't use stock (fixed 50%), so the
      list only shows in normal mode, and only while chance credits are held. */
   const stockEl = $('#chanceStock');
@@ -2488,10 +2687,23 @@ function renderSpinPanel(){
     stockEl.hidden = !stock.length;
     stockEl.innerHTML = stock.map(r => `<div class="chance-row"><span class="chance-row-label">${esc(chanceRowLabel(r))}</span><button type="button" class="btn pink sm" data-chance-pct="${r.pct}">Spin</button></div>`).join('');
   }
+  /* Choice Chance Spins: one row per stocked credit — the configs differ,
+     so unlike plain chance credits they are NOT fungible and each row
+     spends its own credit. Hidden in free mode and when none are stocked. */
+  const ccEl = $('#ccStock');
+  if (ccEl){
+    const list = view.free ? [] : run.spins.filter(g => g.kind === 'choicechance');
+    ccEl.hidden = !list.length;
+    ccEl.innerHTML = list.length ? `<div class="cc-stock-title">🎲 Choice Chance Spins</div>` + list.map(g => `<div class="chance-row"><span class="chance-row-label">${esc(ccSummary(g.cc))}</span><button type="button" class="btn pink sm" data-cc-spin="${esc(g.id)}">Spin</button></div>`).join('') : '';
+  }
 }
 $('#chanceStock').addEventListener('click', e => {
   const b = e.target.closest('[data-chance-pct]');
   if (b) startChanceSpin(null, Number(b.dataset.chancePct));
+});
+$('#ccStock').addEventListener('click', e => {
+  const b = e.target.closest('[data-cc-spin]');
+  if (b){ const g = run.spins.find(x => x.id === b.dataset.ccSpin); if (g) startChoiceChanceSpin(null, g); }
 });
 $('#freeSpin').addEventListener('change', e => { view.free = e.target.checked; renderSpinPanel(); });
 function takeCredit(kind, challengeId){
@@ -2504,14 +2716,18 @@ document.querySelectorAll('[data-spin]').forEach(b => b.addEventListener('click'
 
 let spinCtx = null, spinAnim = null, tickRaf = 0;
 const stripX = () => { const m = getComputedStyle($('#strip')).transform; if (!m || m === 'none') return 0; const v = m.match(/matrix(3d)?\(([^)]+)\)/); if (!v) return 0; const a = v[2].split(',').map(Number); return v[1] ? a[12] : a[4]; };
-async function startSpin(kind, challengeId = null){
+async function startSpin(kind, challengeId = null, fixedPoolKind = null){
   if (!SPIN_KINDS.includes(kind)) return;
   if (kind === 'chance'){ await startChanceSpin(challengeId); return; }
   if (kind === 'choice'){ await startChoiceSpin(challengeId); return; }
   if (kind === 'target'){ await startTargetRevive(challengeId); return; }
+  if (kind === 'choicechance'){ await startChoiceChanceSpin(challengeId); return; }
   let revivalPoolKind=null;
   if (kind==='revival' && poolFor('revival').length){
-    revivalPoolKind=await chooseRevivalPool();
+    /* fixedPoolKind: a choice-chance prize fixes the revival pool — no
+       pool-choice dialog. If that pool has since emptied, the generic
+       empty-pool branch below reports the credit as unused (it is). */
+    revivalPoolKind = fixedPoolKind || await chooseRevivalPool();
     if (!revivalPoolKind) return;
   }
   const dlg = $('#spinDlg');
@@ -2579,6 +2795,50 @@ async function startSpin(kind, challengeId = null){
   }
   startTicks(step, reel.clientWidth / 2);
 }
+/* Shared spin-dialog chrome for the verdict reels (revival chance and
+   choice chance): reset the dialog, set its title/subtitle. The caller
+   sets spinCtx and then runs animateVerdictReel. */
+function prepSpinDlgChrome(title, sub){
+  stopTicks();
+  if (spinAnim){ try { spinAnim.cancel(); } catch {} spinAnim = null; }
+  ['#spinResult','#spinEmpty','#spinUndo','#spinAgain'].forEach(s => $(s).hidden = true);
+  $('#reel').hidden = false; $('#reel').classList.remove('landed'); $('#spinSkip').hidden = false; $('#strip').innerHTML = ''; $('#confetti').innerHTML = '';
+  $('#spinTitle').textContent = title;
+  $('#spinSub').textContent = sub;
+}
+/* The ✓/✗ verdict reel: the outcome is rolled first, then the reel lands
+   on a tile of the rolled type. onLand runs when the reel settles. Shared
+   by revival-chance spins and choice-chance rolls. */
+function animateVerdictReel(success, pct, onLand){
+  const rm = reduceMotion();
+  const N = rm ? 18 : 40, W_INDEX = N - 4, tiles = [];
+  for (let i = 0; i < N; i++) tiles.push(i === W_INDEX ? success : Math.random() * 100 < pct);
+  $('#strip').innerHTML = tiles.map((s, i) => `<div class="tile ${s ? 'success' : 'fail'}${i === W_INDEX ? ' winner' : ''}"><span class="tile-verdict">${s ? '✓ SUCCESS' : '✗ FAIL'}</span></div>`).join('');
+  const dlg = $('#spinDlg');
+  if (!dlg.open) dlg.showModal();
+  const strip = $('#strip'), reel = $('#reel');
+  const tileW = strip.children[0].getBoundingClientRect().width, step = tileW + 12;
+  const jitter = (randInt(70) - 35) / 100 * tileW * 0.6;
+  const x = -(W_INDEX * step) + (reel.clientWidth / 2 - tileW / 2) + jitter;
+  const over = rm ? 0 : -Math.min(step * 0.28, 40);
+  const dur = rm ? 1800 : 3500;
+  strip.style.transform = 'translateX(0px)';
+  const frames = rm
+    ? [{transform:'translateX(0px)', easing:'cubic-bezier(.35,.1,.2,1)'}, {transform:`translateX(${x}px)`}]
+    : [{transform:'translateX(0px)', easing:'cubic-bezier(.32,.08,.12,1)', offset:0},
+       {transform:`translateX(${x + over}px)`, easing:'cubic-bezier(.4,0,.4,1)', offset:.86},
+       {transform:`translateX(${x}px)`, offset:1}];
+  if (typeof strip.animate === 'function'){
+    spinAnim = strip.animate(frames, {duration:dur, fill:'forwards'});
+    spinAnim.onfinish = () => { strip.style.transform = `translateX(${x}px)`; spinAnim = null; onLand(); };
+  } else {
+    strip.style.transition = `transform ${dur}ms cubic-bezier(.1,.55,.18,1)`;
+    requestAnimationFrame(() => requestAnimationFrame(() => { strip.style.transform = `translateX(${x}px)`; }));
+    const t = setTimeout(() => { strip.style.transition = ''; spinAnim = null; onLand(); }, dur + 30);
+    spinAnim = {finish(){ clearTimeout(t); strip.style.transition = ''; strip.style.transform = `translateX(${x}px)`; spinAnim = null; onLand(); }, cancel(){ clearTimeout(t); }};
+  }
+  startTicks(step, reel.clientWidth / 2);
+}
 /* ================= Revival chance spin =================
    A chance credit is a gamble: the outcome is rolled first (at the credit's
    success %), then the reel — ✓ SUCCESS / ✗ FAIL tiles like the other wheels —
@@ -2602,42 +2862,10 @@ async function startChanceSpin(challengeId = null, pctWanted = null){
   let credit = null;
   if (!view.free){ const index = run.spins.indexOf(grant); credit = {grant, index}; run.spins.splice(index, 1); }
   const success = randInt(100) < pct;
-  const dlg = $('#spinDlg');
-  stopTicks();
-  if (spinAnim){ try { spinAnim.cancel(); } catch {} spinAnim = null; }
-  ['#spinResult','#spinEmpty','#spinUndo','#spinAgain'].forEach(s => $(s).hidden = true);
-  $('#reel').hidden = false; $('#reel').classList.remove('landed'); $('#spinSkip').hidden = false; $('#strip').innerHTML = ''; $('#confetti').innerHTML = '';
-  $('#spinTitle').textContent = '🎲 Revival chance…';
-  $('#spinSub').textContent = credit ? `Revival chance (${pct}%) from “${credit.grant.title || 'challenge'}” — success earns a Revival Spin` : 'Free revival chance (50%) — success earns a Revival Spin';
+  prepSpinDlgChrome('🎲 Revival chance…', credit ? `Revival chance (${pct}%) from “${credit.grant.title || 'challenge'}” — success earns a Revival Spin` : 'Free revival chance (50%) — success earns a Revival Spin');
   renderSpinPanel();
   spinCtx = {kind:'chance', chanceRoll:true, pct, success, credit};
-  const rm = reduceMotion();
-  const N = rm ? 18 : 40, W_INDEX = N - 4, tiles = [];
-  for (let i = 0; i < N; i++) tiles.push(i === W_INDEX ? success : randInt(100) < pct);
-  $('#strip').innerHTML = tiles.map((s, i) => `<div class="tile ${s ? 'success' : 'fail'}${i === W_INDEX ? ' winner' : ''}"><span class="tile-verdict">${s ? '✓ SUCCESS' : '✗ FAIL'}</span></div>`).join('');
-  if (!dlg.open) dlg.showModal();
-  const strip = $('#strip'), reel = $('#reel');
-  const tileW = strip.children[0].getBoundingClientRect().width, step = tileW + 12;
-  const jitter = (randInt(70) - 35) / 100 * tileW * 0.6;
-  const x = -(W_INDEX * step) + (reel.clientWidth / 2 - tileW / 2) + jitter;
-  const over = rm ? 0 : -Math.min(step * 0.28, 40);
-  const dur = rm ? 1800 : 3500;
-  strip.style.transform = 'translateX(0px)';
-  const frames = rm
-    ? [{transform:'translateX(0px)', easing:'cubic-bezier(.35,.1,.2,1)'}, {transform:`translateX(${x}px)`}]
-    : [{transform:'translateX(0px)', easing:'cubic-bezier(.32,.08,.12,1)', offset:0},
-       {transform:`translateX(${x + over}px)`, easing:'cubic-bezier(.4,0,.4,1)', offset:.86},
-       {transform:`translateX(${x}px)`, offset:1}];
-  if (typeof strip.animate === 'function'){
-    spinAnim = strip.animate(frames, {duration:dur, fill:'forwards'});
-    spinAnim.onfinish = () => { strip.style.transform = `translateX(${x}px)`; spinAnim = null; landChanceSpin(); };
-  } else {
-    strip.style.transition = `transform ${dur}ms cubic-bezier(.1,.55,.18,1)`;
-    requestAnimationFrame(() => requestAnimationFrame(() => { strip.style.transform = `translateX(${x}px)`; }));
-    const t = setTimeout(() => { strip.style.transition = ''; spinAnim = null; landChanceSpin(); }, dur + 30);
-    spinAnim = {finish(){ clearTimeout(t); strip.style.transition = ''; strip.style.transform = `translateX(${x}px)`; spinAnim = null; landChanceSpin(); }, cancel(){ clearTimeout(t); }};
-  }
-  startTicks(step, reel.clientWidth / 2);
+  animateVerdictReel(success, pct, landChanceSpin);
 }
 async function landChanceSpin(){
   stopTicks();
@@ -2672,6 +2900,260 @@ async function landChanceSpin(){
   saveRun(); renderSpinPanel();
   spinCtx = null;
   setTimeout(() => { if ($('#spinDlg').open) $('#spinDlg').close(); startSpin('revival', src ? src.challengeId : null); }, 1100);
+}
+/* ================= Choice chance spins =================
+   Spending a choice-chance credit: the player first sees the gamble tiles
+   in #ccDlg. 'pick' mode rolls ONE chosen gamble; 'all' mode rolls every
+   available gamble in turn (one verdict reel each). The credit is consumed
+   only once a roll actually happens — when every gamble's pool is empty,
+   nothing is consumed and the dialog says why. Each roll is logged as a
+   'choiceChance' history entry (non-undoable, like revival-chance rolls);
+   each success resolves its prize through the existing flows. */
+const rollPct = pct => Math.random() * 100 < pct;
+/* Can this gamble pay out right now? SET entries depend on their named
+   item's state; random ones on their pool being non-empty. */
+function ccEntryAvailability(entry){
+  const ok = {available:true, reason:''};
+  const no = reason => ({available:false, reason});
+  if (!entry) return no('Invalid gamble');
+  const item = entry.item || null;
+  switch (entry.prize){
+    case 'any-revival':
+      return poolFor('revival').length ? ok : no('Nothing is eliminated');
+    case 'toon-revival':
+      if (item) return stateOf('toons', item) === 'eliminated' ? ok : no(`${item} is not eliminated`);
+      return poolFor('revival', 'toon').length ? ok : no('No eliminated Toons');
+    case 'trinket-revival':
+      if (item) return stateOf('trinkets', item) === 'eliminated' ? ok : no(`${item} is not eliminated`);
+      return poolFor('revival', 'trinket').length ? ok : no('No eliminated Trinkets');
+    case 'specific':
+      return poolFor('revival').length ? ok : no('Nothing is eliminated');
+    case 'new-toon':
+      if (item) return stateOf('toons', item) === 'locked' ? ok : no(`${item} is not locked`);
+      return poolFor('toon').length ? ok : no('No locked Toons');
+    case 'new-trinket':
+      if (item) return stateOf('trinkets', item) === 'locked' ? ok : no(`${item} is not locked`);
+      return poolFor('trinket').length ? ok : no('No locked Trinkets');
+  }
+  return no('Invalid gamble');
+}
+function ccTileLabel(entry){
+  const coll = CC_ITEM_PRIZES[entry.prize];
+  if (entry.item && coll) return entry.item;
+  switch (entry.prize){
+    case 'any-revival': return 'Random Toon or Trinket';
+    case 'toon-revival': return 'Random Toon revival';
+    case 'trinket-revival': return 'Random Trinket revival';
+    case 'specific': return 'Specific revival (you pick)';
+    case 'new-toon': return 'Random Toon unlock';
+    case 'new-trinket': return 'Random Trinket unlock';
+  }
+  return 'Gamble';
+}
+/* One framed tile: the prize image in a bordered frame, with the label and
+   the % printed BELOW the frame (the "Example B" presentation). SET entries
+   show the item's own sprite; random entries show the fixed mystery art
+   for their collection; 'specific' shows a target glyph. */
+function ccTileMarkup(entry, index, mode, avail){
+  const coll = CC_ITEM_PRIZES[entry.prize];
+  let frame;
+  if (entry.item && coll){ const it = ITEMS[coll].get(entry.item); frame = it ? `<img src="${it.src}" alt="">` : '<span class="cc-glyph">?</span>'; }
+  else if (entry.prize === 'specific') frame = '<span class="cc-glyph">🎯</span>';
+  else if (entry.prize === 'any-revival' || entry.prize === 'toon-revival' || entry.prize === 'new-toon') frame = `<img src="${CC_MYSTERY_TOON_IMG}" alt="">`;
+  else frame = `<img src="${CC_MYSTERY_TRINKET_IMG}" alt="">`;
+  const unavailable = !!(avail && !avail.available);
+  const inner = `<span class="cc-frame">${frame}</span><span class="cc-tile-label">${esc(ccTileLabel(entry))}</span><span class="cc-tile-pct">${fmtPct(entry.pct)}%</span>${unavailable ? `<span class="cc-tile-reason">${esc(avail.reason)}</span>` : ''}`;
+  return mode === 'pick'
+    ? `<button type="button" class="cc-tile${unavailable ? ' unavailable' : ''}" data-cc-tile="${index}" ${unavailable ? 'disabled' : ''} aria-pressed="false">${inner}</button>`
+    : `<div class="cc-tile${unavailable ? ' unavailable' : ''}">${inner}</div>`;
+}
+function ccTilesMarkup(cc, avails){
+  return cc.entries.map((e, i) => ccTileMarkup(e, i, cc.mode, avails[i])).join('');
+}
+/* The spend dialog. Resolves with the entries to roll (one picked entry in
+   'pick' mode; every available entry in 'all' mode), or null when the
+   player backs out or nothing can roll — in which case the credit stays
+   unspent. */
+function openCCDialog(grant){
+  const cc = sanitizeChoiceChance(grant.cc);
+  return new Promise(resolve => {
+    const dlg = $('#ccDlg');
+    $('#ccDialogTitle').textContent = '🎲 Choice chance';
+    $('#ccDialogPrompt').textContent = cc.mode === 'all' ? 'Every gamble below rolls — some may hit, some may miss.' : 'Pick one gamble to roll.';
+    $('#ccChallenge').textContent = grant.title || 'Choice chance credit';
+    $('#ccSummary').textContent = ccSummary(cc);
+    $('#ccErr').textContent = '';
+    const avails = cc.entries.map(ccEntryAvailability);
+    const anyAvail = avails.some(a => a.available);
+    $('#ccTiles').innerHTML = ccTilesMarkup(cc, avails);
+    const rollBtn = $('#ccRoll');
+    let selected = -1;
+    if (!anyAvail){
+      $('#ccErr').textContent = 'None of these gambles can pay out right now — their pools are empty. Your credit is not used.';
+      rollBtn.disabled = true;
+    } else if (cc.mode === 'pick'){
+      rollBtn.disabled = true;
+      $('#ccTiles').onclick = e => {
+        const t = e.target.closest('[data-cc-tile]'); if (!t || t.disabled) return;
+        selected = Number(t.dataset.ccTile);
+        document.querySelectorAll('#ccTiles .cc-tile').forEach(el => { const on = Number(el.dataset.ccTile) === selected; el.classList.toggle('selected', on); el.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+        rollBtn.disabled = selected < 0;
+      };
+    } else {
+      rollBtn.disabled = false;
+      $('#ccTiles').onclick = null;
+    }
+    const finish = v => { $('#ccForm').onsubmit = null; $('#ccCancel').onclick = null; $('#ccTiles').onclick = null; dlg.oncancel = null; if (dlg.open) dlg.close(); resolve(v); };
+    $('#ccForm').onsubmit = e => {
+      e.preventDefault();
+      if (!anyAvail){ finish(null); return; }
+      if (cc.mode === 'pick'){
+        if (selected < 0){ $('#ccErr').textContent = 'Pick a gamble tile first.'; return; }
+        finish([cc.entries[selected]]);
+      } else finish(cc.entries.filter((_, i) => avails[i].available));
+    };
+    $('#ccCancel').onclick = () => finish(null);
+    dlg.oncancel = e => { e.preventDefault(); finish(null); };
+    dlg.showModal();
+  });
+}
+async function startChoiceChanceSpin(challengeId = null, grantWanted = null){
+  if (view.free){ toast('Choice chance credits are earned from challenges — turn off Free spin to spend one.'); return; }
+  const grant = grantWanted || (challengeId ? run.spins.find(g => g.kind === 'choicechance' && g.challengeId === challengeId) : null) || run.spins.find(g => g.kind === 'choicechance') || null;
+  if (!grant){ toast('No Choice chance credits — complete a challenge with a Choice chance reward to earn one.'); renderSpinPanel(); return; }
+  const plan = await openCCDialog(grant);
+  if (!plan || !plan.length) return; /* backed out, or nothing could roll: credit unspent */
+  const i = run.spins.indexOf(grant); if (i < 0) return;
+  run.spins.splice(i, 1);
+  saveRun(); renderSpinPanel();
+  ccSession = {grant, queue: plan.slice(), results: []};
+  ccNextRoll();
+}
+let ccSession = null;
+function ccNextRoll(){
+  const s = ccSession; if (!s) return;
+  const entry = s.queue.shift();
+  if (!entry){
+    const total = s.results.length, hits = s.results.filter(r => r.success).length;
+    ccSession = null;
+    saveRun(); renderAll(); renderHistory(); renderSpinPanel();
+    if (total) toast(`🎲 Choice chance done — ${hits} of ${total} gamble${total === 1 ? '' : 's'} hit.`);
+    return;
+  }
+  /* Pools can change while a bundle resolves (an earlier prize may revive
+     the last eliminated Toon), so availability is re-checked per roll. */
+  const avail = ccEntryAvailability(entry);
+  if (!avail.available){
+    s.results.push({entry, success:false, skipped:true});
+    toast(`⏭ Skipped ${ccEntryText(entry)} — ${avail.reason.toLowerCase()}.`);
+    ccNextRoll();
+    return;
+  }
+  const success = rollPct(entry.pct);
+  const src = {challengeId:s.grant.challengeId, title:s.grant.title, extraIndex:s.grant.extraIndex};
+  prepSpinDlgChrome('🎲 Choice chance…', `${ccEntryText(entry)} · from “${s.grant.title || 'challenge'}”`);
+  renderSpinPanel();
+  spinCtx = {kind:'choicechance', ccRoll:true, entry, success, src};
+  animateVerdictReel(success, entry.pct, landCCReel);
+}
+function landCCReel(){
+  stopTicks();
+  if (!spinCtx || !spinCtx.ccRoll || spinCtx.landed) return;
+  spinCtx.landed = true;
+  const {entry, success, src} = spinCtx;
+  $('#spinSkip').hidden = true;
+  $('#reel').classList.add('landed');
+  const w = $('#strip .winner'); if (w) w.classList.add('win');
+  $('#spinUndo').hidden = true; /* choice-chance rolls are never undoable */
+  $('#spinAgain').hidden = true;
+  $('#spinImg').hidden = true;
+  run.history.unshift({id:uid(), kind:null, name:null, spinKind:'choiceChance', spinPoolKind:null, challenge:src.title, challengeId:src.challengeId, free:false, ccRoll:{pct:entry.pct, prize:entry.prize, item:entry.item || null, success}, ts:new Date().toISOString()});
+  if (ccSession) ccSession.results.push({entry, success});
+  saveRun(); renderHistory(); renderSpinPanel();
+  $('#spinTitle').textContent = success ? '🎉 Success!' : '💔 It failed…';
+  $('#spinName').textContent = success ? `${ccEntryText(entry)} — you won it!` : `${ccEntryText(entry)} — no prize this time.`;
+  $('#spinFrom').textContent = `Choice chance · from “${src.title || 'challenge'}”`;
+  $('#spinResult').hidden = false;
+  spinCtx = null;
+  setTimeout(async () => {
+    if ($('#spinDlg').open) $('#spinDlg').close();
+    if (success) await resolveCCPrize(entry, src);
+    ccNextRoll();
+  }, 1500);
+}
+function whenSpinDlgClosed(){
+  return new Promise(res => {
+    const dlg = $('#spinDlg');
+    if (!dlg.open) return res();
+    const h = () => { dlg.removeEventListener('close', h); res(); };
+    dlg.addEventListener('close', h);
+  });
+}
+/* Run a prize wheel and wait until its dialog closes, so a bundle's next
+   roll never starts over a prize spin that is still on screen. */
+async function runPrizeSpin(kind, challengeId, fixedPoolKind){
+  await startSpin(kind, challengeId, fixedPoolKind);
+  await whenSpinDlgClosed();
+}
+/* Resolve one successful gamble's prize through the existing flows. src
+   carries the earning challenge's attribution ({challengeId, title,
+   extraIndex}); converted credits keep it, so a later revoke of that
+   challenge still removes them while unspent, and no other credit of the
+   player is ever touched. */
+async function resolveCCPrize(entry, src){
+  const coll = CC_ITEM_PRIZES[entry.prize];
+  if (entry.item && coll){
+    /* SET prize: the exact item is predetermined — no wheel, no pick. */
+    const item = entry.item, isRevival = entry.prize === 'toon-revival' || entry.prize === 'trinket-revival';
+    if (isRevival){
+      if (stateOf(coll, item) !== 'eliminated') return;
+      const rec = {id:uid(), kind:coll, spinKind:'revival', spinPoolKind:coll === 'toons' ? 'toon' : 'trinket', name:item, challenge:src.title, challengeId:src.challengeId, free:false, ts:new Date().toISOString()};
+      run.history.unshift(rec);
+      setState(coll, item, 'unlocked', true, null, {historyId:rec.id, challengeId:src.challengeId, previousState:'eliminated'});
+      saveRun(); renderAll(); renderHistory(); renderSpinPanel();
+      toast(`🎉 ${item} revived!`);
+    } else {
+      if (stateOf(coll, item) !== 'locked') return;
+      const rec = {id:uid(), kind:coll, spinKind:entry.prize === 'new-toon' ? 'toon' : 'trinket', spinPoolKind:null, name:item, challenge:src.title, challengeId:src.challengeId, free:false, ts:new Date().toISOString()};
+      run.history.unshift(rec);
+      setState(coll, item, 'unlocked', true, null, {historyId:rec.id, challengeId:src.challengeId});
+      saveRun(); renderAll(); renderHistory(); renderSpinPanel();
+      toast(`🎉 ${item} unlocked!`);
+    }
+    return;
+  }
+  const converted = kind => {
+    const g = {id:uid(), kind, challengeId:src.challengeId, title:src.title, ts:new Date().toISOString()};
+    if (Number.isInteger(src.extraIndex)) g.extraIndex = src.extraIndex;
+    run.spins.push(g); saveRun(); renderSpinPanel();
+  };
+  switch (entry.prize){
+    case 'any-revival':
+      converted('revival');
+      await runPrizeSpin('revival', src.challengeId, null); /* player picks the pool, like a won revival chance */
+      return;
+    case 'toon-revival':
+    case 'trinket-revival':
+      converted('revival');
+      await runPrizeSpin('revival', src.challengeId, entry.prize === 'toon-revival' ? 'toon' : 'trinket'); /* pool fixed */
+      return;
+    case 'specific': {
+      if (!poolFor('revival').length){ toast('Nothing is eliminated — the specific revival fizzled.'); return; }
+      const pick = await openTargetDialog();
+      if (!pick){ toast('No pick made — the specific revival was lost.'); return; }
+      const rec = applyTargetedRevive(pick, src);
+      if (rec){ saveRun(); renderAll(); renderHistory(); renderSpinPanel(); toast(`🎯 ${pick.name} revived!`); }
+      return;
+    }
+    case 'new-toon':
+      converted('toon');
+      await runPrizeSpin('toon', src.challengeId, null);
+      return;
+    case 'new-trinket':
+      converted('trinket');
+      await runPrizeSpin('trinket', src.challengeId, null);
+      return;
+  }
 }
 function startTicks(step, centre){
   // pointer flicks each time a new tile passes under it
@@ -2730,7 +3212,7 @@ function renderHistory(){
   $('#clearHist').disabled = !h.length;
   if (!h.length){ ol.innerHTML = '<li class="empty">No spins yet. Your lucky draws will show up here.</li>'; return; }
   const fmt = ts => { try { return new Date(ts).toLocaleString([], {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'}); } catch { return ts; } };
-  ol.innerHTML = h.map(e => { if (e.chanceRoll) return `<li><div><div class="ht">🎲 Revival chance (${clampInt(e.chanceRoll.pct, 1, 99, 50)}%) — ${e.chanceRoll.success ? 'succeeded' : 'failed'}</div><div class="hs">${e.free ? 'Free chance spin' : `From “${esc(e.challenge || 'challenge')}”`} · ${esc(fmt(e.ts))}</div></div></li>`; const it = ITEMS[e.kind].get(e.name);
+  ol.innerHTML = h.map(e => { if (e.chanceRoll) return `<li><div><div class="ht">🎲 Revival chance (${clampInt(e.chanceRoll.pct, 1, 99, 50)}%) — ${e.chanceRoll.success ? 'succeeded' : 'failed'}</div><div class="hs">${e.free ? 'Free chance spin' : `From “${esc(e.challenge || 'challenge')}”`} · ${esc(fmt(e.ts))}</div></div></li>`; if (e.ccRoll) return `<li><div><div class="ht">🎲 Choice chance — ${esc(ccEntryText({pct:e.ccRoll.pct, prize:e.ccRoll.prize, item:e.ccRoll.item}))} · ${e.ccRoll.success ? 'succeeded' : 'failed'}</div><div class="hs">${e.free ? 'Free choice chance' : `From “${esc(e.challenge || 'challenge')}”`} · ${esc(fmt(e.ts))}</div></div></li>`; const it = ITEMS[e.kind].get(e.name);
     const spinLabel=e.spinKind==='targetRevive' ? 'Targeted revival 🎯' : e.spinKind==='revival' ? `Revival Spin${e.spinPoolKind ? ' · '+(e.spinPoolKind==='toon'?'Toon':'Trinket')+' pool' : ''}` : e.spinKind==='toon' ? 'Toon spin' : e.spinKind==='trinket' ? 'Trinket spin' : (e.kind==='toons'?'Toon spin':'Trinket spin');
     return `<li><img src="${it.src}" alt=""><div><div class="ht">${esc(e.name)} <span class="hs">(${e.kind==='toons'?'toon':'trinket'})</span></div>
       <div class="hs">${e.free ? `Free ${spinLabel}` : `From “${esc(e.challenge || 'challenge')}” · ${spinLabel}`} · ${esc(fmt(e.ts))}</div></div></li>`; }).join('');
