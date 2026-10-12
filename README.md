@@ -17,9 +17,11 @@ app to back it up or move it between devices.
 - **Custom challenge icons** — per challenge: an emoji, any toon or
   trinket sprite, or your own uploaded image (shrunk automatically).
 - **Team-goal rarity tabs** — All / Bronze / Silver / Gold / Iridescent.
-- **Friends tab** — import a friend's share code to see a snapshot of
-  their progress next to yours. Snapshots update when you import a
-  newer code; progress is not live-synced (this is a static site).
+- **Friends tab** — two ways to follow other people's progress:
+  a *live group* (create one or join with a group code — progress then
+  syncs in real time through a free Supabase project; the group code
+  is the group's shared password), and *snapshots* (import a friend's
+  share code to see their progress as of that moment).
 - **Drag to reorder** — drag challenges by the ⠿ handle (works with
   touch) instead of clicking the arrow buttons over and over. The
   arrows still work too.
