@@ -1790,7 +1790,7 @@ function friendProgressText(c){
   return parts.filter(Boolean).join(' · ') || 'No progress details';
 }
 function renderFriends(){
-  const tab = $('#tabFriends'); if (tab) tab.textContent = friends.length ? String(friends.length) : '';
+  const tab = $('#tabFriends'); if (tab) { const fDone = friends.reduce((n,f)=>n + ((f.run && Array.isArray(f.run.challenges)) ? f.run.challenges.filter(c=>c.done).length : 0), 0); const fTotal = friends.reduce((n,f)=>n + ((f.run && Array.isArray(f.run.challenges)) ? f.run.challenges.length : 0), 0); tab.textContent = `${fDone}/${fTotal}`; }
   const list = $('#friendList'), detail = $('#friendDetail'); if (!list || !detail) return;
   if (!friends.length){
     list.innerHTML = `<div class="ch-empty">No friend snapshots yet.<br>Ask a friend to Export their run and send you the share code, then add it here.</div>`;
