@@ -236,6 +236,23 @@ footer a{color:var(--mint)}
 .ch-progress[hidden]{display:none!important}
 .ch-collapse{margin-left:auto;white-space:nowrap;padding:4px 9px;border:2px solid var(--ink);border-radius:10px;background:#f1e8f8;color:var(--ink);font:inherit;font-size:12px;font-weight:800;cursor:pointer}
 .ch-collapse:focus-visible{outline:3px dashed var(--lilac);outline-offset:2px}
+.ch-icon{font-size:24px;line-height:1}
+.ch-icon-img{width:30px;height:30px;object-fit:contain;border-radius:8px;vertical-align:middle}
+.ch-cond{font-size:12px;font-weight:800;color:#5d4b6e;margin-top:6px}
+.ch-tier-tabs{margin:0 0 12px}
+.fr-list{display:flex;flex-direction:column;gap:10px}
+.fr-card{border:3px solid var(--ink);border-radius:16px;padding:12px;background:#fff4fb;box-shadow:3px 3px 0 var(--ink);margin-bottom:12px}
+.fr-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fr-name{font-weight:800;font-size:17px}
+.fr-stats{font-size:13px;font-weight:600;color:#5d4b6e}
+.fr-acts{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.fr-table{border-collapse:collapse;margin:10px 0;font-size:14px;font-weight:700}
+.fr-table td,.fr-table th{border:2px solid var(--ink);padding:5px 12px;background:#fff4fb;text-align:left}
+.fr-ch{padding:4px 0;border-bottom:1px dashed #cdb8e8;font-size:14px}
+.fr-ch:last-child{border-bottom:none}
+.drag-handle{cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none;font-size:19px;line-height:1;padding:7px 5px;color:#8a76a8;text-align:center;border-radius:8px}
+.drag-handle:active{cursor:grabbing}
+.ch.dragging{opacity:.55;outline:3px dashed var(--lilac);outline-offset:2px}
 .counter-editor{margin-top:12px}
 .counter-editor-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .counter-editor-head .btn{padding:7px 10px;font-size:13px}
@@ -433,6 +450,7 @@ footer a{color:var(--mint)}
     <button class="tab" role="tab" data-tab="challenges" aria-selected="true" aria-controls="sec-challenges">Challenges <span class="cnt" id="tabChallenges"></span></button>
     <button class="tab" role="tab" data-tab="toons" aria-selected="false" aria-controls="sec-toons">Toons <span class="cnt" id="tabToons"></span></button>
     <button class="tab" role="tab" data-tab="trinkets" aria-selected="false" aria-controls="sec-trinkets">Trinkets <span class="cnt" id="tabTrinkets"></span></button>
+    <button class="tab" role="tab" data-tab="friends" aria-selected="false" aria-controls="sec-friends">Friends <span class="cnt" id="tabFriends"></span></button>
   </div>
 
   <section class="panel section" id="sec-challenges" role="tabpanel">
@@ -451,7 +469,7 @@ footer a{color:var(--mint)}
         <div class="meta"><div class="lbl">Challenges complete</div><div class="bar"><i id="chBar"></i></div></div>
       </div>
     </div>
-    <div class="ch-category-tabs seg" role="group" aria-label="Challenge categories" id="chCategories"> <button type="button" data-cc="toon" aria-pressed="true">🎭 Toon Challenges <span class="cnt" id="chToonCount">0/0</span></button> <button type="button" data-cc="trinket" aria-pressed="false">💍 Trinket Challenges <span class="cnt" id="chTrinketCount">0/0</span></button> <button type="button" data-cc="team" aria-pressed="false">🏅 Team Goals <span class="cnt" id="chTeamCount">0/0</span></button> </div><div class="filters ch-filters">
+    <div class="ch-category-tabs seg" role="group" aria-label="Challenge categories" id="chCategories"> <button type="button" data-cc="toon" aria-pressed="true">🎭 Toon Challenges <span class="cnt" id="chToonCount">0/0</span></button> <button type="button" data-cc="trinket" aria-pressed="false">💍 Trinket Challenges <span class="cnt" id="chTrinketCount">0/0</span></button> <button type="button" data-cc="team" aria-pressed="false">🏅 Team Goals <span class="cnt" id="chTeamCount">0/0</span></button> </div><div class="seg ch-tier-tabs" id="chTierTabs" role="group" aria-label="Team goal rarity" hidden><button type="button" data-tf="all" aria-pressed="true">All</button><button type="button" data-tf="bronze" aria-pressed="false">🥉 Bronze <span class="cnt" id="chTierCountBronze"></span></button><button type="button" data-tf="silver" aria-pressed="false">🥈 Silver <span class="cnt" id="chTierCountSilver"></span></button><button type="button" data-tf="gold" aria-pressed="false">🥇 Gold <span class="cnt" id="chTierCountGold"></span></button><button type="button" data-tf="iridescent" aria-pressed="false">🌈 Iridescent <span class="cnt" id="chTierCountIridescent"></span></button></div><div class="filters ch-filters">
       <div class="seg" role="group" aria-label="Filter challenges" id="chSeg">
         <button type="button" data-cf="all" aria-pressed="true">All</button>
         <button type="button" data-cf="active" aria-pressed="false">Active</button>
@@ -468,6 +486,14 @@ footer a{color:var(--mint)}
   </section>
   <section class="panel section" id="sec-toons" role="tabpanel" data-kind="toons" hidden></section>
   <section class="panel section" id="sec-trinkets" role="tabpanel" data-kind="trinkets" hidden></section>
+  <section class="panel section" id="sec-friends" role="tabpanel" hidden>
+    <h3>👥 Friends</h3>
+    <p class="howto"><b>Friend snapshots</b> — ask a friend to send you their share code; import a newer code anytime to update their progress. Progress isn't live-synced: a snapshot is the run your friend exported at that moment.</p>
+    <div class="filters"><button type="button" class="btn mint" id="friendAdd">＋ Add friend snapshot</button></div>
+    <div id="friendList" class="fr-list"></div>
+    <div id="friendDetail"></div>
+  </section>
+  <input type="file" id="friendFileIn" accept=".json,application/json" hidden>
 
   <footer>
     Fan-made tracker. Toon &amp; trinket names and images from the
@@ -476,7 +502,7 @@ footer a{color:var(--mint)}
   </footer>
 </div>
 
-<!-- Challenge editor --> <dialog id="chDlg"> <form method="dialog" id="chForm"> <div class="mh" style="background:var(--mint)"><div><h2 id="chDlgTitle">New challenge</h2><p id="chDlgHint">Finish it to earn a reward.</p></div></div> <div class="mb"> <label for="chTitle">Title</label> <input type="text" id="chTitle" maxlength="80" required placeholder="e.g. Survive 10 floors with Poppy" autocomplete="off"> <label for="chDesc" style="margin-top:12px">Description <span class="small">(optional · up to 3,000 characters)</span></label> <textarea id="chDesc" maxlength="3000" rows="6" placeholder="Add all the rules and details here…"></textarea> <fieldset class="state-pick" id="chCategory"><legend>Challenge tab</legend> <label class="st-unlocked"><input type="radio" name="chCategory" value="toon" checked><span>🎭 Toon challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="trinket"><span>💍 Trinket challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="team"><span>🏅 Team goal</span></label> </fieldset> <fieldset class="state-pick" id="teamTierWrap" hidden><legend>Team badge tier</legend> <label class="st-unlocked"><input type="radio" name="teamTier" value="bronze" checked><span>🥉 Bronze</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="silver"><span>🥈 Silver</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="gold"><span>🥇 Gold</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="iridescent"><span>🌈 Iridescent</span></label> <p class="ch-help" id="teamTierHint">Bronze badge · no reward.</p> </fieldset> <fieldset class="state-pick" id="chType"><legend>Progress</legend> <label class="st-unlocked"><input type="radio" name="chType" value="goal"><span>☑ One-time goal</span></label> <label class="st-unlocked"><input type="radio" name="chType" value="checklist" checked><span>☑ Checklist</span></label> <label class="st-unlocked"><input type="radio" name="chType" value="counter"><span>🔢 Counter</span></label> <label class="st-unlocked"><input type="radio" name="chType" value="combined"><span>☑🔢 Hybrid: Goal + Checklist + Counters</span></label> </fieldset> <div id="chTargetRow" class="counter-editor" hidden><div class="counter-editor-head"><strong>Counter goals</strong><button type="button" class="btn ghost" id="addCounterRow">＋ Add counter</button></div><div id="chCounterRows"></div><p class="ch-help">Add up to 20 counters. Each needs a label and target; every counter must reach its target. Checklist + counters challenges also require all included checklist items.</p></div> <div id="chChecklistRow" class="checklist-editor"><label for="chChecklist">Checklist items <span class="small">(one item per line · up to 100 items)</span></label><textarea id="chChecklist" maxlength="20000" rows="5" placeholder="Collect a specific item&#10;Reach the target floor&#10;Finish without using a revive"></textarea><p class="ch-help">Check off each step as you complete it. Use Exclude for items that do not apply; all included items must be checked.</p></div> <p id="chGoalHelp" class="ch-help" hidden>Mark one checkbox when the goal is complete.</p> <p id="chHybridHelp" class="ch-help" hidden>Hybrid mode uses all three: check the challenge goal to manually complete everything, or complete every included checklist item and reach every counter target.</p> <fieldset class="state-pick reward-pick" id="chRewardWrap"><legend>Reward</legend> <label class="st-unlocked"><input type="radio" name="chReward" value="spin" checked><span>🎭 Toon spin</span></label> <label class="st-locked"><input type="radio" name="chReward" value="none"><span>No reward</span></label> <p class="ch-help" id="chRewardHint">A completed Toon challenge earns a Toon spin.</p> </fieldset> <p class="small" id="chErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"> <button type="button" class="btn ghost" id="chCancel">Cancel</button> <button type="submit" class="btn mint" id="chSave">Save</button> </div> </form> </dialog> <dialog id="revivalDlg" class="revival-dlg"><form method="dialog" id="revivalForm"><div class="mh" style="background:var(--pink)"><div><h2 id="revivalDialogTitle">Choose your spin</h2><p id="revivalDialogPrompt">Pick a Toon or Trinket spin for this completed challenge.</p></div></div><div class="mb"><p id="revivalSourceRow">Reward from <strong id="revivalChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="revivalKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="revivalKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="revivalErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="revivalCancel">Cancel</button><button type="submit" class="btn mint" id="revivalChoose">Earn this spin</button></div></form></dialog> <!-- Spinner -->
+<!-- Challenge editor --> <dialog id="chDlg"> <form method="dialog" id="chForm"> <div class="mh" style="background:var(--mint)"><div><h2 id="chDlgTitle">New challenge</h2><p id="chDlgHint">Finish it to earn a reward.</p></div></div> <div class="mb"> <label for="chTitle">Title</label> <input type="text" id="chTitle" maxlength="80" required placeholder="e.g. Survive 10 floors with Poppy" autocomplete="off"> <label for="chDesc" style="margin-top:12px">Description <span class="small">(optional · up to 3,000 characters)</span></label> <textarea id="chDesc" maxlength="3000" rows="6" placeholder="Add all the rules and details here…"></textarea> <fieldset class="state-pick" id="chCategory"><legend>Challenge tab</legend> <label class="st-unlocked"><input type="radio" name="chCategory" value="toon" checked><span>🎭 Toon challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="trinket"><span>💍 Trinket challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="team"><span>🏅 Team goal</span></label> </fieldset> <fieldset class="state-pick" id="teamTierWrap" hidden><legend>Team badge tier</legend> <label class="st-unlocked"><input type="radio" name="teamTier" value="bronze" checked><span>🥉 Bronze</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="silver"><span>🥈 Silver</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="gold"><span>🥇 Gold</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="iridescent"><span>🌈 Iridescent</span></label> <p class="ch-help" id="teamTierHint">Bronze badge · no reward.</p> </fieldset> <fieldset class="state-pick" id="chType"><legend>Progress — pick any combination</legend> <label class="st-unlocked"><input type="checkbox" name="chModes" value="goal"><span>☑ One-time goal</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="checklist" checked><span>☑ Checklist</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="counter"><span>🔢 Counters</span></label> <p class="ch-help">Combine modes freely — e.g. Counters with a Checklist attached. At least one mode must stay selected.</p> </fieldset> <div id="chTargetRow" class="counter-editor" hidden><div class="counter-editor-head"><strong>Counter goals</strong><button type="button" class="btn ghost" id="addCounterRow">＋ Add counter</button></div><div id="chCounterRows"></div><p class="ch-help">Add up to 20 counters. Each needs a label and target, and each counter counts as one condition (see “conditions met” below).</p></div> <div id="chChecklistRow" class="checklist-editor"><label for="chChecklist">Checklist items <span class="small">(one item per line · up to 100 items)</span></label><textarea id="chChecklist" maxlength="20000" rows="5" placeholder="Collect a specific item&#10;Reach the target floor&#10;Finish without using a revive"></textarea><p class="ch-help">Check off each step as you complete it. Use Exclude for items that do not apply; every included item counts as one condition.</p></div> <p id="chGoalHelp" class="ch-help" hidden>Tick the challenge's main checkbox when the goal itself is done — the goal counts as one condition.</p> <div id="chReqRow"><label for="chReqCount">Complete when <input type="number" id="chReqCount" min="0" max="999" step="1" inputmode="numeric" style="width:80px"> conditions are met</label><p class="ch-help">Leave blank (or 0) to require <b>all</b> conditions. Each included checklist item, each counter, and the goal itself each count as one condition — e.g. set 2 to complete when any 2 of 3 conditions are met.</p></div> <fieldset class="state-pick" id="chIconKind"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="chIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="chIconEmojiRow" hidden><label for="chIconEmoji">Emoji</label> <input type="text" id="chIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🔥"></div> <div id="chIconSpriteRow" hidden><label for="chIconSprite">Sprite</label> <select id="chIconSprite"></select></div> <div id="chIconUploadRow" hidden><label for="chIconFile">Custom image</label> <input type="file" id="chIconFile" accept="image/*"> <p class="ch-help" id="chIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the challenge.</p><img id="chIconPreview" class="ch-icon-img" alt="" hidden></div> <fieldset class="state-pick reward-pick" id="chRewardWrap"><legend>Reward</legend> <label class="st-unlocked"><input type="radio" name="chReward" value="spin" checked><span>🎭 Toon spin</span></label> <label class="st-locked"><input type="radio" name="chReward" value="none"><span>No reward</span></label> <p class="ch-help" id="chRewardHint">A completed Toon challenge earns a Toon spin.</p> </fieldset> <p class="small" id="chErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"> <button type="button" class="btn ghost" id="chCancel">Cancel</button> <button type="submit" class="btn mint" id="chSave">Save</button> </div> </form> </dialog> <dialog id="revivalDlg" class="revival-dlg"><form method="dialog" id="revivalForm"><div class="mh" style="background:var(--pink)"><div><h2 id="revivalDialogTitle">Choose your spin</h2><p id="revivalDialogPrompt">Pick a Toon or Trinket spin for this completed challenge.</p></div></div><div class="mb"><p id="revivalSourceRow">Reward from <strong id="revivalChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="revivalKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="revivalKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="revivalErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="revivalCancel">Cancel</button><button type="submit" class="btn mint" id="revivalChoose">Earn this spin</button></div></form></dialog> <!-- Spinner -->
 <dialog id="spinDlg" class="spin-dlg">
   <div class="mh" style="background:var(--yellow)"><div><h2 id="spinTitle">Spinning…</h2><p id="spinSub"></p></div></div>
   <div class="mb">
@@ -568,15 +594,62 @@ const freshRun = (name) => ({ app:'dandys-world-nuzlocke', version:8, name, crea
   challenges:[], spins:[], history:[], spinUnlocks:{toons:{},trinkets:{}} });
 const clampInt = (v, lo, hi, d) => { v = Math.floor(Number(v)); return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
 const isoOr = (v) => (typeof v==='string' && !isNaN(Date.parse(v))) ? v : new Date().toISOString();
+/* Progress modes: any combination of 'goal' | 'checklist' | 'counter', stored on the challenge as `modes`.
+   Legacy saves only have `type` (incl. 'combined' = checklist+counter); modesOf() migrates them on load.
+   A legacy-compatible `type` is still written (legacyTypeForModes) so older builds keep working. */
+const CH_MODES = ['goal','checklist','counter'];
+function modesFromType(type){ return type==='combined' ? ['checklist','counter'] : CH_MODES.includes(type) ? [type] : ['checklist']; }
+function modesOf(o){
+  const raw = (o && Array.isArray(o.modes)) ? o.modes.filter(m => CH_MODES.includes(m)) : [];
+  const modes = CH_MODES.filter(m => raw.includes(m));
+  return modes.length ? modes : modesFromType(o && o.type);
+}
+function legacyTypeForModes(modes){
+  if (!modes || modes.length===1) return (modes && modes[0]) || 'checklist';
+  if (modes.includes('checklist') && modes.includes('counter')) return 'combined';
+  return modes[0];
+}
+const hasMode = (ch, m) => modesOf(ch).includes(m);
+function sanitizeIcon(icon){
+  if (!icon || typeof icon !== 'object') return null;
+  const value = typeof icon.value === 'string' ? icon.value : '';
+  if (icon.kind === 'emoji'){ const v = value.trim().slice(0,8); return v ? {kind:'emoji', value:v} : null; }
+  if (icon.kind === 'sprite'){ return (ITEMS.toons.has(value) || ITEMS.trinkets.has(value)) ? {kind:'sprite', value} : null; }
+  if (icon.kind === 'upload'){ return (value.startsWith('data:image/') && value.length <= 300000) ? {kind:'upload', value} : null; }
+  return null;
+}
+function iconMarkup(c){
+  const icon = c && c.icon; if (!icon) return '';
+  if (icon.kind === 'emoji') return `<span class="ch-icon" aria-hidden="true">${esc(icon.value)}</span>`;
+  if (icon.kind === 'sprite'){ const it = ITEMS.toons.get(icon.value) || ITEMS.trinkets.get(icon.value); return it ? `<img class="ch-icon-img" src="${it.src}" alt="">` : ''; }
+  if (icon.kind === 'upload' && typeof icon.value === 'string' && icon.value.startsWith('data:image/')) return `<img class="ch-icon-img" src="${esc(icon.value)}" alt="">`;
+  return '';
+}
+/* One condition = one required checklist item, one counter, or the manual goal flag. */
+function challengeConditions(ch){
+  const modes = modesOf(ch);
+  let total = 0, met = 0;
+  if (modes.includes('counter')) for (const counter of (ch.counters || [])){ total++; if (counter.value >= counter.target) met++; }
+  if (modes.includes('checklist')) for (const item of (ch.items || [])){ if (item.excluded) continue; total++; if (item.done) met++; }
+  if (modes.includes('goal')){ total++; if (ch.goalDone ?? ch.done) met++; }
+  return {total, met};
+}
+function computeDone(ch){
+  const {total, met} = challengeConditions(ch);
+  if (!total) return false;
+  const req = clampInt(ch.requiredCount, 0, 999, 0);
+  return req > 0 ? met >= Math.min(req, total) : met >= total;
+}
 function sanitizeChallenge(o, seen){
   let id = String(o.id || uid()).slice(0,40); while (seen.has(id)) id = uid(); seen.add(id);
   const type = ['checklist','counter','goal','combined'].includes(o.type) ? o.type : 'checklist';
+  const modes = modesOf(o), hasCounter = modes.includes('counter'), hasChecklist = modes.includes('checklist'), hasGoal = modes.includes('goal');
   const title = String(o.title||'').trim().slice(0,80);
   const legacyTarget = clampInt(o.target, 1, 99999, 10);
-  const legacyValue = (type==='counter' || type==='combined') ? clampInt(o.value, 0, 99999, 0) : 0;
+  const legacyValue = hasCounter ? clampInt(o.value, 0, 99999, 0) : 0;
   const rawCounters = Array.isArray(o.counters) ? o.counters : [];
   const counterIds = new Set();
-  let counters = (type==='counter' || type==='combined')
+  let counters = hasCounter
     ? (rawCounters.length ? rawCounters.slice(0,20).map((counter,index)=>{
         counter = counter && typeof counter==='object' ? counter : {};
         let counterId=String(counter.id||uid()).slice(0,40); while (counterIds.has(counterId)) counterId=uid(); counterIds.add(counterId);
@@ -590,35 +663,34 @@ function sanitizeChallenge(o, seen){
         return {id:counterId,label,target:clampInt(counter.target,1,99999,10),value:clampInt(counter.value,0,99999,0)};
       });
   const target=counters.length ? counters[0].target : legacyTarget;
-  const value=(type==='counter' || type==='combined') && counters.length ? counters[0].value : 0;
+  const value=hasCounter && counters.length ? counters[0].value : 0;
   const rawItems = Array.isArray(o.items) ? o.items : (Array.isArray(o.checklist) ? o.checklist : []);
   let items = rawItems.slice(0,100).map(item=>{
     const text=String(typeof item==='string' ? item : (item && typeof item==='object' ? (item.text ?? item.label ?? '') : '')).trim().slice(0,160);
     return text ? {text,done:!!(item && typeof item==='object' && (item.done ?? item.checked)),excluded:!!(item && typeof item==='object' && item.excluded)} : null;
   }).filter(Boolean);
   // Migrate legacy single-checkbox challenges without losing their completion state.
-  if ((type==='checklist' || type==='combined') && !items.length) items=[{text:'Complete challenge',done:!!o.done,excluded:false}];
+  if (hasChecklist && !items.length) items=[{text:'Complete challenge',done:!!o.done,excluded:false}];
   // Older saves had no challenge category. Their chosen spin kind is the best available migration hint.
   const category = CHALLENGE_CATEGORIES.includes(o.category) ? o.category : ((o.reward==='trinket' || o.rewardKind==='trinket') ? 'trinket' : 'toon');
   const teamTier = TEAM_TIERS.includes(o.teamTier) ? o.teamTier : 'bronze';
-  const requiredItems=items.filter(item=>!item.excluded);
-  const countersDone=counters.length>0 && counters.every(counter=>counter.value>=counter.target);
-  const checklistDone=requiredItems.length>0 && requiredItems.every(item=>item.done);
-  const done = type==='counter' ? countersDone : type==='combined' ? (checklistDone && countersDone) : type==='goal' ? !!o.done : checklistDone;
+  const requiredCount = clampInt(o.requiredCount, 0, 999, 0);
+  const goalDone = hasGoal ? (typeof o.goalDone === 'boolean' ? o.goalDone : (type==='goal' ? !!o.done : !!o.goalDone)) : false;
+  const done = computeDone({modes, counters, items, goalDone, done:!!o.done, requiredCount});
   const reward = category==='team' ? TEAM_TIER_REWARD[teamTier] : (o.reward==='none' ? 'none' : 'spin');
   let counterRestore=null;
-  if ((type==='counter' || type==='combined') && done && Array.isArray(o.counterRestore)){
+  if (hasCounter && done && Array.isArray(o.counterRestore)){
     const savedById=new Map(o.counterRestore.filter(saved=>saved && typeof saved==='object').map(saved=>[String(saved.id),saved]));
     const restored=counters.filter(counter=>savedById.has(counter.id)).map(counter=>({id:counter.id,value:clampInt(savedById.get(counter.id).value,0,99999,0)}));
     if (restored.length) counterRestore=restored;
   }
   let checklistRestore=null;
-  if (type==='combined' && done && Array.isArray(o.checklistRestore)){
+  if (hasChecklist && done && Array.isArray(o.checklistRestore)){
     checklistRestore=o.checklistRestore.filter(saved=>saved && typeof saved==='object' && Number.isInteger(Number(saved.index))).slice(0,100).map(saved=>({index:clampInt(saved.index,0,99,0),text:String(saved.text||'').slice(0,160),done:!!saved.done}));
     if (!checklistRestore.length) checklistRestore=null;
   }
   const rewardKind = SPIN_KINDS.includes(o.rewardKind) ? o.rewardKind : null;
-  return {id, title, desc:String(o.desc||'').slice(0,3000), category, teamTier, type, target, value, counters, counterRestore, checklistRestore, collapsed:!!o.collapsed, items, done, reward, claimed:done && reward!=='none' && !!o.claimed, rewardKind, rewardGrantId:o.rewardGrantId ? String(o.rewardGrantId).slice(0,40) : null};
+  return {id, title, desc:String(o.desc||'').slice(0,3000), category, teamTier, type:legacyTypeForModes(modes), modes, requiredCount, icon:sanitizeIcon(o.icon), goalDone, target, value, counters, counterRestore, checklistRestore, collapsed:!!o.collapsed, itemsCollapsed:!!o.itemsCollapsed, items, done, reward, claimed:done && reward!=='none' && !!o.claimed, rewardKind, rewardGrantId:o.rewardGrantId ? String(o.rewardGrantId).slice(0,40) : null};
 }
 const toMaps = r => ({toons:new Map(Object.entries(r.status.toons)), trinkets:new Map(Object.entries(r.status.trinkets))});
 
@@ -730,7 +802,7 @@ function saveRun(){
 const exportable = () => { saveRun(); return plainRun(); };
 
 /* ---------- UI state ---------- */
-const view = { tab:'challenges', cf:'all', cc:'toon', free:false, toons:{q:'',f:'all',cat:'all'}, trinkets:{q:'',f:'all',cat:'all'} };
+const view = { tab:'challenges', cf:'all', cc:'toon', tf:'all', friendId:null, free:false, toons:{q:'',f:'all',cat:'all'}, trinkets:{q:'',f:'all',cat:'all'} };
 const cats = k => (DATA.catOrder && DATA.catOrder[k]) || [...new Set(DATA[k].flatMap(i => i.cats))];
 
 function buildSection(kind){
@@ -794,7 +866,7 @@ function renderCard(card){
 }
 function renderAll(){
   document.querySelectorAll('.card').forEach(renderCard);
-  KINDS.forEach(applyFilter); renderCounts(); renderRuns(); renderChallenges();
+  KINDS.forEach(applyFilter); renderCounts(); renderRuns(); renderChallenges(); renderFriends();
 }
 function renderCounts(){
   for (const k of KINDS){
@@ -898,7 +970,7 @@ $('#resetRun').addEventListener('click', async () => {
     ok:'Reset', danger:true, check:'Also delete all challenges'});
   if (!res) return; const name = run.name, created = run.created, keep = res.checked ? [] : run.challenges;
   run = Object.assign(freshRun(name), {created}); run._st = toMaps(run);
-  run.challenges = keep.map(c => ({...c, done:false, value:0, claimed:false, rewardKind:null, rewardGrantId:null}));
+  run.challenges = keep.map(c => ({...c, done:false, goalDone:false, value:0, claimed:false, rewardKind:null, rewardGrantId:null}));
   saveRun(); renderAll(); toast(res.checked ? 'Run reset — challenges deleted' : 'Run reset — challenges kept');
 });
 
@@ -1139,24 +1211,28 @@ async function setDone(ch, done){
   const was=ch.done, oldCounters=(ch.counters||[]).map(counter=>({...counter})), oldItems=(ch.items||[]).map(item=>({...item}));
   const oldCounterRestore=Array.isArray(ch.counterRestore) ? ch.counterRestore.map(counter=>({...counter})) : null;
   const oldChecklistRestore=Array.isArray(ch.checklistRestore) ? ch.checklistRestore.map(item=>({...item})) : null;
-  if (ch.type==='counter' || ch.type==='combined'){
+  const oldGoalDone=!!ch.goalDone;
+  if (hasMode(ch,'goal')) ch.goalDone=done;
+  if (hasMode(ch,'counter') || hasMode(ch,'checklist')){
     if (done){
       if (!was){
-        ch.counterRestore=oldCounters.map(({id,value})=>({id,value}));
-        if (ch.type==='combined') ch.checklistRestore=oldItems.map((item,index)=>({index,text:item.text,done:!!item.done}));
+        if (hasMode(ch,'counter')) ch.counterRestore=oldCounters.map(({id,value})=>({id,value}));
+        if (hasMode(ch,'checklist')) ch.checklistRestore=oldItems.map((item,index)=>({index,text:item.text,done:!!item.done}));
       }
-      ch.counters.forEach(counter=>counter.value=Math.max(counter.value,counter.target));
-      if (ch.type==='combined') ch.items.filter(item=>!item.excluded).forEach(item=>item.done=true);
+      if (hasMode(ch,'counter')) ch.counters.forEach(counter=>counter.value=Math.max(counter.value,counter.target));
+      if (hasMode(ch,'checklist')) ch.items.filter(item=>!item.excluded).forEach(item=>item.done=true);
     }
     else {
-      const savedById=was && Array.isArray(ch.counterRestore) ? new Map(ch.counterRestore.map(counter=>[counter.id,counter.value])) : null;
-      const restored=savedById ? ch.counters.filter(counter=>savedById.has(counter.id)) : [];
-      if (restored.length) restored.forEach(counter=>counter.value=clampInt(savedById.get(counter.id),0,99999,counter.value));
-      else {
-        const completed=[...ch.counters].reverse().find(counter=>counter.value>=counter.target) || ch.counters[0];
-        if (completed) completed.value=Math.min(completed.value,completed.target-1);
+      if (hasMode(ch,'counter')){
+        const savedById=was && Array.isArray(ch.counterRestore) ? new Map(ch.counterRestore.map(counter=>[counter.id,counter.value])) : null;
+        const restored=savedById ? ch.counters.filter(counter=>savedById.has(counter.id)) : [];
+        if (restored.length) restored.forEach(counter=>counter.value=clampInt(savedById.get(counter.id),0,99999,counter.value));
+        else {
+          const completed=[...ch.counters].reverse().find(counter=>counter.value>=counter.target) || ch.counters[0];
+          if (completed) completed.value=Math.min(completed.value,completed.target-1);
+        }
       }
-      if (ch.type==='combined' && was && Array.isArray(ch.checklistRestore)){
+      if (hasMode(ch,'checklist') && was && Array.isArray(ch.checklistRestore)){
         const savedByIndex=new Map(ch.checklistRestore.map(item=>[item.index,item]));
         ch.items.forEach((item,index)=>{ const saved=savedByIndex.get(index); if (saved && saved.text===item.text) item.done=!!saved.done; });
       }
@@ -1166,28 +1242,26 @@ async function setDone(ch, done){
   }
   ch.done=done;
   const accepted=await afterChange(ch,was);
-  if (!accepted){ ch.counters=oldCounters; ch.items=oldItems; ch.counterRestore=oldCounterRestore; ch.checklistRestore=oldChecklistRestore; syncLegacyCounterFields(ch); ch.done=was; saveRun(); renderAll(); renderSpinPanel(); }
+  if (!accepted){ ch.counters=oldCounters; ch.items=oldItems; ch.counterRestore=oldCounterRestore; ch.checklistRestore=oldChecklistRestore; ch.goalDone=oldGoalDone; syncLegacyCounterFields(ch); ch.done=was; saveRun(); renderAll(); renderSpinPanel(); }
 }
 async function setValue(ch,index,v){
   const counter=(ch.counters||[])[index]; if (!counter) return;
   const was=ch.done, oldCounters=ch.counters.map(item=>({...item}));
   const oldCounterRestore=Array.isArray(ch.counterRestore) ? ch.counterRestore.map(item=>({...item})) : null, oldChecklistRestore=Array.isArray(ch.checklistRestore) ? ch.checklistRestore.map(item=>({...item})) : null, previousValue=counter.value;
-  counter.value=clampInt(v,0,99999,counter.value); if (counter.value!==previousValue){ ch.counterRestore=null; ch.checklistRestore=null; } syncLegacyCounterFields(ch); ch.done=ch.type==='combined' ? combinedChallengeDone(ch) : counterChallengeDone(ch);
+  counter.value=clampInt(v,0,99999,counter.value); if (counter.value!==previousValue){ ch.counterRestore=null; ch.checklistRestore=null; } syncLegacyCounterFields(ch); ch.done=computeDone(ch);
   const accepted=await afterChange(ch,was);
   if (!accepted){ ch.counters=oldCounters; ch.counterRestore=oldCounterRestore; ch.checklistRestore=oldChecklistRestore; syncLegacyCounterFields(ch); ch.done=was; saveRun(); renderAll(); renderSpinPanel(); }
 }
 async function toggleChecklistItem(ch,index){
-  if (!['checklist','combined'].includes(ch.type) || !Number.isInteger(index) || !ch.items[index] || ch.items[index].excluded) return;
+  if (!hasMode(ch,'checklist') || !Number.isInteger(index) || !ch.items[index] || ch.items[index].excluded) return;
   const was=ch.done; ch.items[index].done=!ch.items[index].done;
-  if (ch.type==='combined'){ ch.counterRestore=null; ch.checklistRestore=null; ch.done=combinedChallengeDone(ch); }
-  else ch.done=checklistChallengeDone(ch);
+  ch.counterRestore=null; ch.checklistRestore=null; ch.done=computeDone(ch);
   await afterChange(ch,was);
 }
 async function toggleChecklistExcluded(ch,index){
-  if (!['checklist','combined'].includes(ch.type) || !Number.isInteger(index) || !ch.items[index]) return;
+  if (!hasMode(ch,'checklist') || !Number.isInteger(index) || !ch.items[index]) return;
   const was=ch.done; ch.items[index].excluded=!ch.items[index].excluded;
-  if (ch.type==='combined'){ ch.counterRestore=null; ch.checklistRestore=null; ch.done=combinedChallengeDone(ch); }
-  else ch.done=checklistChallengeDone(ch);
+  ch.counterRestore=null; ch.checklistRestore=null; ch.done=computeDone(ch);
   await afterChange(ch,was);
 }
 function renderChallenges(){
@@ -1201,7 +1275,15 @@ function renderChallenges(){
     $(id).textContent=`${done}/${group.length}`;
   }
   const categoryChallenges=all.filter(c=>c.category===view.cc);
-  const shown=categoryChallenges.filter(c=>view.cf==='all' || (view.cf==='done')===c.done);
+  const tierTabs=$('#chTierTabs'); tierTabs.hidden=view.cc!=='team';
+  if (view.cc==='team'){
+    for (const tier of TEAM_TIERS){
+      const group=categoryChallenges.filter(c=>c.teamTier===tier);
+      $('#chTierCount'+tier[0].toUpperCase()+tier.slice(1)).textContent=`${group.filter(c=>c.done).length}/${group.length}`;
+    }
+    tierTabs.querySelectorAll('[data-tf]').forEach(x=>x.setAttribute('aria-pressed', x.dataset.tf===view.tf));
+  }
+  const shown=categoryChallenges.filter(c=>(view.cf==='all' || (view.cf==='done')===c.done) && (view.cc!=='team' || view.tf==='all' || c.teamTier===view.tf));
   const addLabel=view.cc==='team' ? 'team goal' : `${view.cc} challenge`;
   $('#addCh').textContent=`＋ Add ${addLabel}`;
   if (!categoryChallenges.length){
@@ -1209,7 +1291,7 @@ function renderChallenges(){
     const label=view.cc==='team' ? 'team goals' : `${view.cc} challenges`;
     list.innerHTML=`<div class="ch-empty"><span class="big">${icon}</span>No ${label} yet. Keep this tab organized with its own goals and rules.<br><button type="button" class="btn mint" data-act="add">＋ Add your first ${addLabel}</button></div>`;
   } else if (!shown.length){
-    list.innerHTML=`<div class="ch-empty">${view.cf==='done' ? 'Nothing completed in this tab yet — go get ’em!' : 'Everything in this tab is done! 🎉 Add another goal?'}</div>`;
+    list.innerHTML=`<div class="ch-empty">${view.cf==='done' ? 'Nothing completed in this tab yet — go get ’em!' : (view.cc==='team' && view.tf!=='all' && view.cf==='all') ? `No ${esc(view.tf)} team goals here yet.` : 'Everything in this tab is done! 🎉 Add another goal?'}</div>`;
   } else {
     list.innerHTML=shown.map(c=>{
       const i=categoryChallenges.indexOf(c), reward=challengeReward(c), requiredItems=(c.items||[]).filter(item=>!item.excluded), checkedItems=requiredItems.filter(item=>item.done).length, checklistPct=requiredItems.length ? checkedItems/requiredItems.length*100 : 0;
@@ -1223,32 +1305,86 @@ function renderChallenges(){
       if (reward==='new-toon') rewardText=c.claimed ? 'New Toon earned' : 'New Toon';
       const rew=reward==='none' ? `<span class="rew none">${rewardText}</span>`
         : `<span class="rew ${c.claimed?'claimed':''}">${c.claimed ? '✓ ' : '🎰 '}${rewardText}</span>`;
-      const hasChecklist=['checklist','combined'].includes(c.type), hasCounters=['counter','combined'].includes(c.type);
-      const progressToggle=c.type==='goal' ? '' : `<button type="button" class="ch-collapse" data-act="collapse" aria-expanded="${!c.collapsed}" aria-label="${c.collapsed?'Show':'Hide'} progress for ${esc(c.title)}">${c.collapsed?'Show':'Hide'} ${c.type==='combined'?'progress':c.type==='checklist'?'checklist':'counters'}</button>`;
+      const modes=modesOf(c), hasChecklist=modes.includes('checklist'), hasCounters=modes.includes('counter'), hasGoal=modes.includes('goal');
+      const cond=challengeConditions(c), bothSections=hasChecklist && hasCounters, checklistHidden=bothSections ? c.itemsCollapsed : c.collapsed;
+      const toggleBtn=(act,flag,label)=>`<button type="button" class="ch-collapse" data-act="${act}" aria-expanded="${!flag}" aria-label="${flag?'Show':'Hide'} ${label} for ${esc(c.title)}">${flag?'Show':'Hide'} ${label}</button>`;
+      const progressToggle=(!hasChecklist && !hasCounters) ? '' : bothSections
+        ? toggleBtn('collapse', c.collapsed, 'counters') + toggleBtn('collapse-items', c.itemsCollapsed, 'checklist')
+        : toggleBtn('collapse', c.collapsed, hasChecklist ? 'checklist' : 'counters');
       const counterMarkup=(c.counters||[]).map((counter,index)=>{
         const pct=Math.min(100,counter.value/counter.target*100);
         return `<div class="counter-unit"><div class="counter-label">${esc(counter.label)}</div><div class="counter"><button type="button" class="cbtn" data-act="dec" data-counter-index="${index}" aria-label="Decrease ${esc(counter.label)}">−</button><button type="button" class="cval" data-act="setval" data-counter-index="${index}" aria-label="Edit ${esc(counter.label)} progress">${counter.value} / ${counter.target}</button><button type="button" class="cbtn" data-act="inc" data-counter-index="${index}" aria-label="Increase ${esc(counter.label)}">+</button><div class="bar"><i style="width:${pct}%"></i></div></div></div>`;
       }).join('');
-      return `<div class="ch ${c.done?'done':''} ${c.type==='checklist'?'checklist-ch':''}" data-id="${esc(c.id)}">
-        ${c.type==='counter' || c.type==='combined' || c.type==='goal' ? `<button type="button" class="chk" data-act="toggle" aria-pressed="${c.done}" aria-label="${c.done?'Mark not done':'Mark done'}: ${esc(c.title)}">${c.done?'✓':''}</button>` : ''}
+      return `<div class="ch ${c.done?'done':''} ${modes.length===1 && modes[0]==='checklist' ? 'checklist-ch':''}" data-id="${esc(c.id)}">
+        ${hasCounters || hasGoal ? `<button type="button" class="chk" data-act="toggle" aria-pressed="${c.done}" aria-label="${c.done?'Mark not done':'Mark done'}: ${esc(c.title)}">${c.done?'✓':''}</button>` : ''}
         <div class="body">
-          <div class="ch-heading">${categoryTag}<div class="t">${esc(c.title)}</div>${progressToggle}</div>
+          <div class="ch-heading">${categoryTag}${iconMarkup(c)}<div class="t">${esc(c.title)}</div>${progressToggle}</div>
           ${c.desc ? `<div class="d">${esc(c.desc)}</div>` : ''}
+          ${(c.requiredCount>0 && cond.total>0) ? `<div class="ch-cond">${cond.met}/${cond.total} conditions · needs ${Math.min(c.requiredCount, cond.total)}</div>` : ''}
           ${hasCounters ? `<div class="ch-progress" ${c.collapsed?'hidden':''}><div class="counter-stack">${counterMarkup}</div></div>` : ''}
-          ${hasChecklist ? `<div class="ch-progress" ${c.collapsed?'hidden':''}><div class="checklist-progress"><span>${requiredItems.length ? `${checkedItems}/${requiredItems.length} required` : 'No required items'}</span><div class="bar"><i style="width:${checklistPct}%"></i></div></div><div class="checklist">${c.items.map((item,index)=>`<div class="checklist-row ${item.excluded?'excluded':''}"><button type="button" class="check-item ${item.done?'checked':''}" data-act="check-item" data-index="${index}" aria-pressed="${item.done}" aria-label="${item.done?'Uncheck':'Check'}: ${esc(item.text)}" ${item.excluded?'disabled':''}><span class="check-square" aria-hidden="true">${item.done?'✓':''}</span><span class="item-label">${esc(item.text)}</span></button><button type="button" class="check-exclude" data-act="exclude-item" data-index="${index}" aria-pressed="${item.excluded}" aria-label="${item.excluded?'Include':'Exclude'}: ${esc(item.text)}">${item.excluded?'Include':'Exclude'}</button></div>`).join('')}</div></div>` : ''}
+          ${hasChecklist ? `<div class="ch-progress" ${checklistHidden?'hidden':''}><div class="checklist-progress"><span>${requiredItems.length ? `${checkedItems}/${requiredItems.length} required` : 'No required items'}</span><div class="bar"><i style="width:${checklistPct}%"></i></div></div><div class="checklist">${c.items.map((item,index)=>`<div class="checklist-row ${item.excluded?'excluded':''}"><button type="button" class="check-item ${item.done?'checked':''}" data-act="check-item" data-index="${index}" aria-pressed="${item.done}" aria-label="${item.done?'Uncheck':'Check'}: ${esc(item.text)}" ${item.excluded?'disabled':''}><span class="check-square" aria-hidden="true">${item.done?'✓':''}</span><span class="item-label">${esc(item.text)}</span></button><button type="button" class="check-exclude" data-act="exclude-item" data-index="${index}" aria-pressed="${item.excluded}" aria-label="${item.excluded?'Include':'Exclude'}: ${esc(item.text)}">${item.excluded?'Include':'Exclude'}</button></div>`).join('')}</div></div>` : ''}
           <div class="meta-row">${rew}</div>
         </div>
-        <div class="acts"><div class="row"><button type="button" class="ibtn" data-act="up" aria-label="Move up" ${i===0?'disabled':''}>▲</button><button type="button" class="ibtn" data-act="down" aria-label="Move down" ${i===categoryChallenges.length-1?'disabled':''}>▼</button></div><div class="row"><button type="button" class="ibtn" data-act="edit" aria-label="Edit">✎</button><button type="button" class="ibtn del" data-act="del" aria-label="Delete">🗑</button></div></div>
+        <div class="acts"><div class="row"><span class="drag-handle" data-drag title="Drag to reorder" aria-label="Drag to reorder">⠿</span></div><div class="row"><button type="button" class="ibtn" data-act="up" aria-label="Move up" ${i===0?'disabled':''}>▲</button><button type="button" class="ibtn" data-act="down" aria-label="Move down" ${i===categoryChallenges.length-1?'disabled':''}>▼</button></div><div class="row"><button type="button" class="ibtn" data-act="edit" aria-label="Edit">✎</button><button type="button" class="ibtn del" data-act="del" aria-label="Delete">🗑</button></div></div>
       </div>`;
     }).join('');
   }
   renderHistory();
+}
+/* Drag-to-reorder (Pointer Events: mouse + touch). Dragging starts ONLY from the
+   ⠿ handle; the up/down arrows stay as the accessible fallback.
+   Reorder model: the visible cards' new relative order is written back into the
+   slots the visible items occupied in the full category list, so items hidden by
+   the All/Done or tier filters keep their exact positions (same category ordering
+   model the arrow buttons use). remapVisibleReorder is pure so it can be unit-tested. */
+function remapVisibleReorder(categoryList, visibleList, dragged, toVisible){
+  const fromVisible = visibleList.indexOf(dragged);
+  if (fromVisible < 0) return categoryList.slice();
+  const order = visibleList.slice();
+  order.splice(fromVisible, 1);
+  order.splice(Math.max(0, Math.min(toVisible, order.length)), 0, dragged);
+  let vi = 0;
+  return categoryList.map(item => visibleList.includes(item) ? order[vi++] : item);
+}
+let dragState = null;
+$('#chList').addEventListener('pointerdown', e => {
+  const handle = e.target.closest('[data-drag]'); if (!handle) return;
+  const card = handle.closest('.ch'); if (!card) return;
+  const ch = chById(card.dataset.id); if (!ch) return;
+  e.preventDefault();
+  dragState = { ch, card, pointerId: e.pointerId,
+    visible: [...$('#chList').querySelectorAll('.ch')].map(el => chById(el.dataset.id)).filter(Boolean) };
+  card.classList.add('dragging');
+  try { handle.setPointerCapture(e.pointerId); } catch { /* older browsers: window listeners below still track */ }
+});
+window.addEventListener('pointermove', e => {
+  if (!dragState || e.pointerId !== dragState.pointerId) return;
+  e.preventDefault();
+  // gentle auto-scroll near the viewport edges
+  if (e.clientY < 70) window.scrollBy(0, -14); else if (e.clientY > window.innerHeight - 70) window.scrollBy(0, 14);
+  const list = $('#chList'), card = dragState.card;
+  const siblings = [...list.querySelectorAll('.ch')].filter(el => el !== card);
+  const before = siblings.find(el => { const r = el.getBoundingClientRect(); return e.clientY < r.top + r.height / 2; });
+  if (before) list.insertBefore(card, before); else list.appendChild(card);
+}, { passive: false });
+window.addEventListener('pointerup', e => { if (dragState && e.pointerId === dragState.pointerId){ const ds = dragState; dragState = null; ds.card.classList.remove('dragging'); finishDrag(ds, ds.visible); } });
+window.addEventListener('pointercancel', e => { if (dragState && e.pointerId === dragState.pointerId){ dragState = null; renderChallenges(); } });
+function finishDrag(ds, visibleAtStart){
+  const domOrder = [...$('#chList').querySelectorAll('.ch')].map(el => el.dataset.id);
+  const toVisible = domOrder.indexOf(ds.ch.id);
+  if (toVisible < 0 || visibleAtStart.indexOf(ds.ch) === toVisible) { renderChallenges(); return; }
+  const categoryList = run.challenges.filter(c => c.category === view.cc);
+  const newOrder = remapVisibleReorder(categoryList, visibleAtStart, ds.ch, toVisible);
+  let i = 0;
+  run.challenges = run.challenges.map(c => c.category === view.cc ? newOrder[i++] : c);
+  saveRun(); renderChallenges();
 }
 $('#chList').addEventListener('click', async e=>{
   const b=e.target.closest('[data-act]'); if (!b) return;
   const act=b.dataset.act; if (act==='add') return openChEditor(null);
   const ch=chById(b.closest('.ch')?.dataset.id); if (!ch) return;
   if (act==='collapse'){ ch.collapsed=!ch.collapsed; saveRun(); renderChallenges(); return; }
+  if (act==='collapse-items'){ ch.itemsCollapsed=!ch.itemsCollapsed; saveRun(); renderChallenges(); return; }
   const categoryChallenges=run.challenges.filter(c=>c.category===view.cc), localIndex=categoryChallenges.indexOf(ch);
   if (act==='toggle') await setDone(ch,!ch.done);
   if (act==='check-item') await toggleChecklistItem(ch,Number(b.dataset.index));
@@ -1282,10 +1418,23 @@ $('#chSeg').addEventListener('click',e=>{
   const b=e.target.closest('[data-cf]'); if (!b) return;
   view.cf=b.dataset.cf; $('#chSeg').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); renderChallenges();
 });
+$('#chTierTabs').addEventListener('click',e=>{
+  const b=e.target.closest('[data-tf]'); if (!b) return;
+  view.tf=b.dataset.tf; renderChallenges();
+});
 let chEditing=null;
 const radioVal=name=>(document.querySelector(`input[name="${name}"]:checked`)||{}).value;
 const setRadio=(name,v)=>document.querySelectorAll(`input[name="${name}"]`).forEach(r=>r.checked=r.value===v);
-function syncTargetRow(){ const type=radioVal('chType'); $('#chTargetRow').hidden=!['counter','combined'].includes(type); $('#chChecklistRow').hidden=!['checklist','combined'].includes(type); $('#chGoalHelp').hidden=type!=='goal'; $('#chHybridHelp').hidden=type!=='combined'; }
+function selectedModes(){ return CH_MODES.filter(m=>document.querySelector(`input[name="chModes"][value="${m}"]`)?.checked); }
+function syncTargetRow(){
+  let modes=selectedModes();
+  if (!modes.length){ document.querySelector('input[name="chModes"][value="checklist"]').checked=true; modes=['checklist']; $('#chErr').textContent='Pick at least one progress mode — Checklist has been re-selected for you.'; }
+  $('#chTargetRow').hidden=!modes.includes('counter'); $('#chChecklistRow').hidden=!modes.includes('checklist'); $('#chGoalHelp').hidden=!modes.includes('goal');
+}
+function syncIconRow(){
+  const kind=radioVal('chIconKind')||'none';
+  $('#chIconEmojiRow').hidden=kind!=='emoji'; $('#chIconSpriteRow').hidden=kind!=='sprite'; $('#chIconUploadRow').hidden=kind!=='upload';
+}
 function checklistFromText(raw,previous=[]){
   const used=new Set();
   return String(raw).split(/\r?\n/).map(line=>line.trim()).filter(Boolean).map(text=>{
@@ -1323,19 +1472,56 @@ function syncCategoryFields(){
   $('#chRewardHint').textContent=category==='team' ? '' : `A completed ${kind} challenge earns a ${kind} spin.`;
   $('#chDlgHint').textContent=category==='team' ? 'Complete the goal to earn its badge-tier reward.' : `Complete it to earn a ${kind} spin.`;
 }
-document.querySelectorAll('input[name="chType"]').forEach(r=>r.addEventListener('change',syncTargetRow));
+document.querySelectorAll('input[name="chModes"]').forEach(r=>r.addEventListener('change',syncTargetRow));
+document.querySelectorAll('input[name="chIconKind"]').forEach(r=>r.addEventListener('change',syncIconRow));
 document.querySelectorAll('input[name="chCategory"],input[name="teamTier"]').forEach(r=>r.addEventListener('change',syncCategoryFields));
+let chIconUploadData='';
+(function buildIconSpriteOptions(){
+  const sel=$('#chIconSprite'); if (!sel) return;
+  const group=(label,kind)=>`<optgroup label="${label}">${DATA[kind].map(it=>`<option value="${esc(it.name)}">${esc(it.name)}</option>`).join('')}</optgroup>`;
+  sel.innerHTML=group('Toons','toons')+group('Trinkets','trinkets');
+})();
+$('#chIconFile').addEventListener('change', async e=>{
+  const f=e.target.files[0]; e.target.value=''; if (!f) return;
+  try {
+    const url=await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(f); });
+    const img=await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=url; });
+    let size=128, data='';
+    while (size>=16){
+      const cv=document.createElement('canvas');
+      const scale=Math.min(1, size/Math.max(img.width||size, img.height||size));
+      cv.width=Math.max(1,Math.round((img.width||size)*scale)); cv.height=Math.max(1,Math.round((img.height||size)*scale));
+      cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+      data=cv.toDataURL('image/png');
+      if (data.length<=300000) break;
+      size=Math.floor(size/2);
+    }
+    if (!data || data.length>300000){ $('#chErr').textContent='That image is still too detailed to store, even shrunk. Try a simpler image.'; return; }
+    chIconUploadData=data;
+    const prev=$('#chIconPreview'); prev.src=data; prev.hidden=false;
+    $('#chIconUploadInfo').textContent='Custom image ready — it will be saved inside the challenge.';
+    $('#chErr').textContent='';
+  } catch { $('#chErr').textContent='Could not read that image file.'; }
+});
 function openChEditor(ch){
   chEditing=ch ? ch.id : null;
   $('#chDlgTitle').textContent=ch ? 'Edit challenge' : 'New challenge';
   $('#chTitle').value=ch ? ch.title : ''; $('#chDesc').value=ch ? ch.desc : '';
   setRadio('chCategory',ch ? ch.category : view.cc); setRadio('teamTier',ch ? ch.teamTier : 'bronze');
-  setRadio('chType',ch ? ch.type : 'checklist');
+  const editModes=ch ? modesOf(ch) : ['checklist'];
+  document.querySelectorAll('input[name="chModes"]').forEach(r=>r.checked=editModes.includes(r.value));
+  $('#chReqCount').value=ch && ch.requiredCount ? ch.requiredCount : '';
+  setRadio('chIconKind',ch && ch.icon ? ch.icon.kind : 'none');
+  $('#chIconEmoji').value=ch && ch.icon && ch.icon.kind==='emoji' ? ch.icon.value : '';
+  if (ch && ch.icon && ch.icon.kind==='sprite') $('#chIconSprite').value=ch.icon.value;
+  chIconUploadData=ch && ch.icon && ch.icon.kind==='upload' ? ch.icon.value : '';
+  const iconPrev=$('#chIconPreview'); iconPrev.hidden=!chIconUploadData; if (chIconUploadData) iconPrev.src=chIconUploadData;
+  $('#chIconUploadInfo').textContent=chIconUploadData ? 'Custom image saved — pick a new file to replace it.' : 'Pick an image — it is shrunk to at most 128×128 and stored inside the challenge.';
   $('#chChecklist').value=ch && Array.isArray(ch.items) ? ch.items.map(item=>item.text).join('\n') : '';
   const counters=ch && Array.isArray(ch.counters) && ch.counters.length ? ch.counters : [{id:uid(),label:'Counter 1',target:10,value:0}];
   renderCounterEditor(counters);
   setRadio('chReward',ch && ch.reward==='none' ? 'none' : 'spin'); $('#chErr').textContent='';
-  syncTargetRow(); syncCategoryFields(); $('#chDlg').showModal(); setTimeout(()=>$('#chTitle').focus(),30);
+  syncTargetRow(); syncIconRow(); syncCategoryFields(); $('#chDlg').showModal(); setTimeout(()=>$('#chTitle').focus(),30);
 }
 $('#chCancel').addEventListener('click',()=>$('#chDlg').close());
 $('#chForm').addEventListener('submit',async e=>{
@@ -1343,34 +1529,42 @@ $('#chForm').addEventListener('submit',async e=>{
   const title=$('#chTitle').value.trim();
   if (!title){ $('#chErr').textContent='Give your challenge a title.'; $('#chTitle').focus(); return; }
   const category=radioVal('chCategory')||'toon', teamTier=radioVal('teamTier')||'bronze';
-  const type=radioVal('chType')||'checklist', reward=category==='team' ? TEAM_TIER_REWARD[teamTier] : (radioVal('chReward')==='none' ? 'none' : 'spin');
+  const modes=selectedModes(), type=legacyTypeForModes(modes), reward=category==='team' ? TEAM_TIER_REWARD[teamTier] : (radioVal('chReward')==='none' ? 'none' : 'spin');
+  if (!modes.length){ $('#chErr').textContent='Pick at least one progress mode.'; return; }
   let ch=chEditing && chById(chEditing); const isNew=!ch, before=ch ? {...ch} : null;
   const draftLines=$('#chChecklist').value.split(/\r?\n/).map(line=>line.trim()).filter(Boolean);
-  if ((type==='checklist' || type==='combined') && !draftLines.length){ $('#chErr').textContent='Add at least one checklist item, one per line.'; $('#chChecklist').focus(); return; }
-  if ((type==='checklist' || type==='combined') && draftLines.length>100){ $('#chErr').textContent='A checklist can have up to 100 items.'; $('#chChecklist').focus(); return; }
-  if ((type==='checklist' || type==='combined') && draftLines.some(line=>line.length>160)){ $('#chErr').textContent='Each checklist item must be 160 characters or fewer.'; $('#chChecklist').focus(); return; }
+  if (modes.includes('checklist') && !draftLines.length){ $('#chErr').textContent='Add at least one checklist item, one per line.'; $('#chChecklist').focus(); return; }
+  if (modes.includes('checklist') && draftLines.length>100){ $('#chErr').textContent='A checklist can have up to 100 items.'; $('#chChecklist').focus(); return; }
+  if (modes.includes('checklist') && draftLines.some(line=>line.length>160)){ $('#chErr').textContent='Each checklist item must be 160 characters or fewer.'; $('#chChecklist').focus(); return; }
   const configRows=[...$('#chCounterRows').querySelectorAll('.counter-config-row')];
-  if ((type==='counter' || type==='combined') && (!configRows.length || configRows.length>20)){ $('#chErr').textContent='Add between 1 and 20 counters.'; $('#chCounterRows').scrollIntoView({block:'nearest'}); return; }
+  if (modes.includes('counter') && (!configRows.length || configRows.length>20)){ $('#chErr').textContent='Add between 1 and 20 counters.'; $('#chCounterRows').scrollIntoView({block:'nearest'}); return; }
   const counterConfigs=[];
   for (const [index,row] of configRows.entries()){
     const label=row.querySelector('[data-counter-label]').value.trim(), rawTarget=row.querySelector('[data-counter-target]').value, target=Number(rawTarget);
-    if ((type==='counter' || type==='combined') && !label){ $('#chErr').textContent=`Give counter ${index+1} a label.`; row.querySelector('[data-counter-label]').focus(); return; }
-    if ((type==='counter' || type==='combined') && (!Number.isInteger(target) || target<1 || target>99999)){ $('#chErr').textContent=`Set a target from 1 to 99,999 for counter ${index+1}.`; row.querySelector('[data-counter-target]').focus(); return; }
+    if (modes.includes('counter') && !label){ $('#chErr').textContent=`Give counter ${index+1} a label.`; row.querySelector('[data-counter-label]').focus(); return; }
+    if (modes.includes('counter') && (!Number.isInteger(target) || target<1 || target>99999)){ $('#chErr').textContent=`Set a target from 1 to 99,999 for counter ${index+1}.`; row.querySelector('[data-counter-target]').focus(); return; }
     const id=row.dataset.counterId, previous=(ch?.counters||[]).find(counter=>counter.id===id);
     counterConfigs.push({id,label:label||`Counter ${index+1}`,target:clampInt(rawTarget,1,99999,10),value:previous ? clampInt(previous.value,0,99999,0) : 0});
   }
   const checklistItems=checklistFromText($('#chChecklist').value,ch && Array.isArray(ch.items) ? ch.items : []);
-  if (isNew){ ch={id:uid(),title,desc:'',category,teamTier,type,target:10,value:0,counters:counterConfigs,collapsed:false,items:[],done:false,reward,claimed:false,rewardKind:null,rewardGrantId:null,checklistRestore:null}; run.challenges.push(ch); }
-  const was=ch.done, previousReward=challengeReward(ch), counterConfigChanged=ch.type!==type || (ch.counters||[]).length!==counterConfigs.length || (ch.counters||[]).some((counter,index)=>counter.id!==counterConfigs[index]?.id || counter.target!==counterConfigs[index]?.target);
-  const nextItems=(type==='checklist' || type==='combined') ? checklistItems : ch.items;
+  const reqRaw=$('#chReqCount').value.trim(), requiredCount=reqRaw==='' ? 0 : Number(reqRaw);
+  if (!Number.isInteger(requiredCount) || requiredCount<0 || requiredCount>999){ $('#chErr').textContent='Set “conditions met” to a whole number from 0 to 999, or leave it blank for all.'; $('#chReqCount').focus(); return; }
+  const iconKind=radioVal('chIconKind')||'none';
+  let icon=null;
+  if (iconKind==='emoji'){ const v=$('#chIconEmoji').value.trim(); if (!v){ $('#chErr').textContent='Type an emoji for the icon, or choose a different icon option.'; $('#chIconEmoji').focus(); return; } icon={kind:'emoji',value:v}; }
+  else if (iconKind==='sprite'){ icon={kind:'sprite',value:$('#chIconSprite').value}; }
+  else if (iconKind==='upload'){ if (!chIconUploadData){ $('#chErr').textContent='Choose an image for the icon, or choose a different icon option.'; return; } icon={kind:'upload',value:chIconUploadData}; }
+  icon=sanitizeIcon(icon);
+  if (iconKind!=='none' && !icon){ $('#chErr').textContent='That icon could not be saved — try a different one.'; return; }
+  if (isNew){ ch={id:uid(),title,desc:'',category,teamTier,type,modes,requiredCount,icon,goalDone:false,target:10,value:0,counters:counterConfigs,counterRestore:null,collapsed:false,itemsCollapsed:false,items:[],done:false,reward,claimed:false,rewardKind:null,rewardGrantId:null,checklistRestore:null}; run.challenges.push(ch); }
+  const was=ch.done, previousReward=challengeReward(ch), counterConfigChanged=ch.type!==type || JSON.stringify(modesOf(ch))!==JSON.stringify(modes) || (ch.counters||[]).length!==counterConfigs.length || (ch.counters||[]).some((counter,index)=>counter.id!==counterConfigs[index]?.id || counter.target!==counterConfigs[index]?.target);
+  const nextItems=modes.includes('checklist') ? checklistItems : ch.items;
   const checklistConfigChanged=(ch.items||[]).length!==nextItems.length || (ch.items||[]).some((item,index)=>item.text!==nextItems[index]?.text || item.excluded!==nextItems[index]?.excluded);
-  Object.assign(ch,{title,desc:$('#chDesc').value.trim().slice(0,3000),category,teamTier,type,counters:counterConfigs,items:nextItems,reward});
+  Object.assign(ch,{title,desc:$('#chDesc').value.trim().slice(0,3000),category,teamTier,type,modes,requiredCount,icon,counters:counterConfigs,items:nextItems,reward});
   if (counterConfigChanged) ch.counterRestore=null;
   if (counterConfigChanged || checklistConfigChanged) ch.checklistRestore=null;
   syncLegacyCounterFields(ch);
-  if (type==='counter') ch.done=counterChallengeDone(ch);
-  else if (type==='checklist') ch.done=checklistChallengeDone(ch);
-  else if (type==='combined') ch.done=combinedChallengeDone(ch);
+  ch.done=computeDone(ch);
   $('#chDlg').close();
   const accepted=await afterChange(ch,was,previousReward);
   if (!accepted){
@@ -1556,14 +1750,125 @@ $('#clearHist').addEventListener('click', async () => {
   if (ok){ run.history = []; saveRun(); renderHistory(); toast('Spin history cleared'); }
 });
 
+/* ================= Friends (snapshots — not live sync) =================
+   A friend entry is a snapshot of a friend's exported run, imported with the same
+   share-code/file parsing as a normal import but stored separately under its own
+   localStorage key. It never touches the user's own runs. */
+const LS_FRIENDS = 'dwNuzlocke:friends';
+const FRIENDS_MAX = 20;
+let friends = [];
+let friendImportTarget = null;
+function loadFriends(){
+  let raw; try { raw = JSON.parse(store.get(LS_FRIENDS)); } catch { raw = null; }
+  friends = [];
+  if (Array.isArray(raw)) for (const entry of raw.slice(0, FRIENDS_MAX)){
+    if (!entry || typeof entry !== 'object') continue;
+    try {
+      const r = normalizeRun(entry.run); delete r._needsSave;
+      friends.push({id:String(entry.id || uid()).slice(0,40), name:String(entry.name || r.name || 'Friend').slice(0,60), importedAt:isoOr(entry.importedAt), run:r});
+    } catch { /* skip a malformed snapshot rather than breaking the app */ }
+  }
+}
+const saveFriends = () => store.set(LS_FRIENDS, JSON.stringify(friends));
+function runStats(r){
+  const count = (kind, st) => Object.values((r.status && r.status[kind]) || {}).filter(v => v === st).length;
+  return {challengesDone:r.challenges.filter(c => c.done).length, challengesTotal:r.challenges.length,
+    toonsUnlocked:count('toons','unlocked'), toonsEliminated:count('toons','eliminated'),
+    trinketsUnlocked:count('trinkets','unlocked'), trinketsEliminated:count('trinkets','eliminated')};
+}
+function myStats(){
+  return {challengesDone:run.challenges.filter(c => c.done).length, challengesTotal:run.challenges.length,
+    toonsUnlocked:countState('toons','unlocked'), toonsEliminated:countState('toons','eliminated'),
+    trinketsUnlocked:countState('trinkets','unlocked'), trinketsEliminated:countState('trinkets','eliminated')};
+}
+function friendProgressText(c){
+  const parts = [];
+  if (hasMode(c,'counter')) parts.push((c.counters || []).map(x => `${x.label} ${x.value}/${x.target}`).join(', '));
+  if (hasMode(c,'checklist')){ const req = (c.items || []).filter(i => !i.excluded); parts.push(`${req.filter(i => i.done).length}/${req.length} checklist items`); }
+  if (hasMode(c,'goal')) parts.push((c.goalDone ?? c.done) ? 'goal done' : 'goal not done');
+  if (c.requiredCount > 0){ const cond = challengeConditions(c); parts.push(`${cond.met}/${cond.total} conditions (needs ${Math.min(c.requiredCount, cond.total)})`); }
+  return parts.filter(Boolean).join(' · ') || 'No progress details';
+}
+function renderFriends(){
+  const tab = $('#tabFriends'); if (tab) tab.textContent = friends.length ? String(friends.length) : '';
+  const list = $('#friendList'), detail = $('#friendDetail'); if (!list || !detail) return;
+  if (!friends.length){
+    list.innerHTML = `<div class="ch-empty">No friend snapshots yet.<br>Ask a friend to Export their run and send you the share code, then add it here.</div>`;
+    detail.innerHTML = ''; return;
+  }
+  list.innerHTML = friends.map(f => {
+    const s = runStats(f.run), when = new Date(f.importedAt);
+    return `<div class="fr-card"><div class="fr-head"><span class="fr-name">${esc(f.name)}</span><span class="fr-stats">${s.challengesDone}/${s.challengesTotal} challenges · 🎭 ${s.toonsUnlocked} unlocked, ☠ ${s.toonsEliminated} · 💍 ${s.trinketsUnlocked} unlocked, ☠ ${s.trinketsEliminated} · snapshot ${esc(isNaN(when) ? '' : when.toLocaleDateString())}</span><span class="fr-acts"><button type="button" class="btn ghost sm" data-fact="view" data-fid="${esc(f.id)}">${view.friendId === f.id ? 'Hide' : 'View'}</button><button type="button" class="btn ghost sm" data-fact="update" data-fid="${esc(f.id)}">Update</button><button type="button" class="btn ghost sm" data-fact="rename" data-fid="${esc(f.id)}">Rename</button><button type="button" class="btn ghost sm" data-fact="remove" data-fid="${esc(f.id)}">Remove</button></span></div></div>`;
+  }).join('');
+  const f = friends.find(x => x.id === view.friendId);
+  if (!f){ detail.innerHTML = ''; return; }
+  const mine = myStats(), theirs = runStats(f.run);
+  const row = (label, a, b) => `<tr><th>${label}</th><td>${a}</td><td>${b}</td></tr>`;
+  detail.innerHTML = `<div class="fr-card"><h3>You vs ${esc(f.name)}</h3>
+    <table class="fr-table"><tr><th></th><th>You</th><th>${esc(f.name)}</th></tr>
+    ${row('Challenges done', `${mine.challengesDone}/${mine.challengesTotal}`, `${theirs.challengesDone}/${theirs.challengesTotal}`)}
+    ${row('Toons unlocked', mine.toonsUnlocked, theirs.toonsUnlocked)}
+    ${row('Toons eliminated', mine.toonsEliminated, theirs.toonsEliminated)}
+    ${row('Trinkets unlocked', mine.trinketsUnlocked, theirs.trinketsUnlocked)}
+    ${row('Trinkets eliminated', mine.trinketsEliminated, theirs.trinketsEliminated)}</table>
+    <h4>${esc(f.name)}'s challenges (read-only)</h4>
+    ${f.run.challenges.length ? f.run.challenges.map(c => `<div class="fr-ch"><span>${c.done ? '✅' : '⬜'} <b>${esc(c.title)}</b> ${iconMarkup(c)}<span class="fr-stats">${esc(CATEGORY_LABEL[c.category] || c.category)}${c.category === 'team' ? ' · ' + esc(c.teamTier) : ''} · ${esc(friendProgressText(c))}</span></span></div>`).join('') : '<p class="fr-stats">No challenges in this snapshot.</p>'}
+  </div>`;
+}
+function saveFriendSnapshot(obj){
+  const r = normalizeRun(obj); delete r._needsSave;
+  const nameEl = $('#frName');
+  const label = (nameEl && nameEl.value.trim().slice(0,60)) || r.name || 'Friend';
+  if (friendImportTarget){
+    friendImportTarget.run = r; friendImportTarget.name = label; friendImportTarget.importedAt = new Date().toISOString();
+    view.friendId = friendImportTarget.id; toast(`Updated ${label}'s snapshot`);
+  } else {
+    if (friends.length >= FRIENDS_MAX){ const el = $('#ioErr'); if (el){ el.textContent = `You can keep at most ${FRIENDS_MAX} friend snapshots — remove one first.`; } return; }
+    const entry = {id:uid(), name:label, importedAt:new Date().toISOString(), run:r};
+    friends.push(entry); view.friendId = entry.id; toast(`Added ${label}'s snapshot`);
+  }
+  saveFriends(); renderFriends();
+  if ($('#ioDlg').open) $('#ioDlg').close();
+}
+function openFriendImport(target){
+  friendImportTarget = target || null;
+  ioOpen(target ? `Update ${target.name}` : 'Add friend snapshot', 'Friend snapshots — ask a friend to send you their share code; import a newer code anytime to update their progress. Progress isn\u2019t live-synced.',
+    `<label for="frName">Friend's name:</label><input type="text" id="frName" maxlength="60" autocomplete="off" style="display:block;width:100%;margin:4px 0 10px" value="${esc(target ? target.name : '')}">
+     <label for="ioPaste">Paste their share code or run JSON:</label><textarea id="ioPaste" class="code" placeholder="DWNZ1:…" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"></textarea>
+     <p class="small" id="ioErr" style="color:#c0233a;font-weight:700"></p>`,
+    `<button type="button" class="btn ghost" data-io="close">Cancel</button><button type="button" class="btn sky" data-io="ffile">Choose .json file…</button><button type="button" class="btn mint" data-io="fpaste">${target ? 'Update snapshot' : 'Add friend'}</button>`);
+  $('#ioFoot').onclick = e => {
+    const a = e.target.closest('[data-io]')?.dataset.io; if (!a) return;
+    if (a === 'close') $('#ioDlg').close();
+    if (a === 'ffile') $('#friendFileIn').click();
+    if (a === 'fpaste'){ try { saveFriendSnapshot(fromText($('#ioPaste').value)); } catch(err){ $('#ioErr').textContent = friendlyErr(err); } }
+  };
+}
+$('#friendAdd').addEventListener('click', () => openFriendImport(null));
+$('#friendFileIn').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try { saveFriendSnapshot(fromText(await f.text())); }
+  catch(err){ const el = $('#ioErr'), m = friendlyErr(err); if (el && $('#ioDlg').open) el.textContent = m; else toast(m); }
+});
+$('#sec-friends').addEventListener('click', async e => {
+  const b = e.target.closest('[data-fact]'); if (!b) return;
+  const f = friends.find(x => x.id === b.dataset.fid); if (!f) return;
+  const act = b.dataset.fact;
+  if (act === 'view'){ view.friendId = view.friendId === f.id ? null : f.id; renderFriends(); }
+  if (act === 'rename'){ const name = await ask({title:'Rename friend', msg:'Name shown for this snapshot:', input:f.name, ok:'Rename'}); if (name){ f.name = name.slice(0,60); saveFriends(); renderFriends(); } }
+  if (act === 'update') openFriendImport(f);
+  if (act === 'remove'){ const ok = await ask({title:'Remove friend?', msg:`Remove ${f.name}'s snapshot? Your own run is not affected.`, ok:'Remove', danger:true}); if (ok){ friends = friends.filter(x => x !== f); if (view.friendId === f.id) view.friendId = null; saveFriends(); renderFriends(); toast('Friend snapshot removed'); } }
+});
+loadFriends();
+
 /* tabs */
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
   view.tab = t.dataset.tab;
   document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x===t));
-  ['challenges', ...KINDS].forEach(k => document.getElementById('sec-'+k).hidden = k !== view.tab);
+  ['challenges', 'friends', ...KINDS].forEach(k => document.getElementById('sec-'+k).hidden = k !== view.tab);
 }));
 /* sync across tabs/windows */
-window.addEventListener('storage', e => { if (e.key && e.key.startsWith('dwNuzlocke:')) { loadIndex(); loadRun(index.active); renderAll(); } });
+window.addEventListener('storage', e => { if (e.key && e.key.startsWith('dwNuzlocke:')) { loadIndex(); loadRun(index.active); loadFriends(); renderAll(); } });
 
 KINDS.forEach(buildSection);
 loadIndex(); loadRun(index.active); renderAll(); renderSpinPanel();
