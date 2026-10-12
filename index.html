@@ -238,7 +238,6 @@ footer a{color:var(--mint)}
 .ch-collapse:focus-visible{outline:3px dashed var(--lilac);outline-offset:2px}
 .ch-icon{font-size:24px;line-height:1}
 .ch-icon-img{width:30px;height:30px;object-fit:contain;border-radius:8px;vertical-align:middle}
-.ch-cond{font-size:12px;font-weight:800;color:#5d4b6e;margin-top:6px}
 .ch-tier-tabs{margin:0 0 12px}
 .fr-list{display:flex;flex-direction:column;gap:10px}
 .fr-card{border:3px solid var(--ink);border-radius:16px;padding:12px;background:#fff4fb;box-shadow:3px 3px 0 var(--ink);margin-bottom:12px}
@@ -264,7 +263,7 @@ footer a{color:var(--mint)}
 .checklist-editor{margin-top:12px}
 .checklist-editor[hidden]{display:none!important}
 .checklist-editor label{display:block;margin:0 0 6px;font-weight:700}
-#chChecklist{width:100%;min-height:112px;resize:vertical;font-size:15px;padding:9px 11px;border:3px solid var(--ink);border-radius:12px}
+.chlist-row textarea{width:100%;min-height:96px;resize:vertical;font-size:15px;padding:9px 11px;border:3px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink);font-family:inherit}
 .checklist-editor .ch-help{margin:6px 0 0}
 .checklist{display:grid;gap:5px;margin-top:8px}
 .checklist-row{display:flex;align-items:stretch;gap:6px;min-width:0}
@@ -274,6 +273,20 @@ footer a{color:var(--mint)}
 .check-exclude[aria-pressed="true"]{background:#e8ddf0;color:#58476b}
 .checklist-progress{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px;font-weight:800;color:#5d4b6e}
 .checklist-progress .bar{height:10px;flex:1;margin:0;min-width:60px}
+.checklist-group{margin-top:10px}
+.checklist-group-head{display:flex;align-items:center;gap:8px}
+.checklist-group-name{font-weight:800;font-size:13.5px}
+.checklist-group-count{font-size:12px;font-weight:800;color:#5d4b6e}
+.checklist-group-head .ch-collapse{margin-left:auto}
+.chlist-title{display:block;margin:0 0 8px}
+.chlist-row{margin-bottom:10px}
+.chlist-head{display:flex;gap:6px;align-items:center;margin-bottom:5px}
+.chlist-head input[type="text"]{flex:1;min-width:0;font-size:15px;font-weight:700;padding:8px 9px;border:3px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink);font-family:inherit}
+#addChecklistList:disabled{opacity:.5;cursor:not-allowed}
+.fr-chip{display:inline-flex;align-items:center;gap:5px;border:2px solid var(--ink);border-radius:999px;padding:2px 10px 2px 3px;background:#fff;font-size:12.5px;font-weight:700;color:var(--ink)}
+.fr-chip img{width:26px;height:26px;border-radius:50%;object-fit:cover;flex:none}
+.fr-roster-row{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:5px 0}
+.fr-roster-label{font-size:12px;font-weight:800;color:#5d4b6e;margin-right:2px}
 .check-item{display:flex;align-items:flex-start;gap:9px;width:100%;text-align:left;border:2px solid #c9bdd4;border-radius:10px;background:#fff;padding:6px 9px;color:var(--ink);font-family:inherit;font-size:14px;font-weight:600;line-height:1.35;cursor:pointer}
 .check-item .check-square{width:20px;height:20px;flex:none;display:grid;place-items:center;border:2px solid var(--ink);border-radius:6px;background:#fff;font-size:14px;font-weight:900}
 .check-item.checked{background:#e7f5ee;border-color:#8bb59f}
@@ -511,7 +524,7 @@ footer a{color:var(--mint)}
   </footer>
 </div>
 
-<!-- Challenge editor --> <dialog id="chDlg"> <form method="dialog" id="chForm"> <div class="mh" style="background:var(--mint)"><div><h2 id="chDlgTitle">New challenge</h2><p id="chDlgHint">Finish it to earn a reward.</p></div></div> <div class="mb"> <label for="chTitle">Title</label> <input type="text" id="chTitle" maxlength="80" required placeholder="e.g. Survive 10 floors with Poppy" autocomplete="off"> <label for="chDesc" style="margin-top:12px">Description <span class="small">(optional · up to 3,000 characters)</span></label> <textarea id="chDesc" maxlength="3000" rows="6" placeholder="Add all the rules and details here…"></textarea> <fieldset class="state-pick" id="chCategory"><legend>Challenge tab</legend> <label class="st-unlocked"><input type="radio" name="chCategory" value="toon" checked><span>🎭 Toon challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="trinket"><span>💍 Trinket challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="team"><span>🏅 Team goal</span></label> </fieldset> <fieldset class="state-pick" id="teamTierWrap" hidden><legend>Team badge tier</legend> <label class="st-unlocked"><input type="radio" name="teamTier" value="bronze" checked><span>🥉 Bronze</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="silver"><span>🥈 Silver</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="gold"><span>🥇 Gold</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="iridescent"><span>🌈 Iridescent</span></label> <p class="ch-help" id="teamTierHint">Bronze badge · no reward.</p> </fieldset> <fieldset class="state-pick" id="chType"><legend>Progress — pick any combination</legend> <label class="st-unlocked"><input type="checkbox" name="chModes" value="goal"><span>☑ One-time goal</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="checklist" checked><span>☑ Checklist</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="counter"><span>🔢 Counters</span></label> <p class="ch-help">Combine modes freely — e.g. Counters with a Checklist attached. At least one mode must stay selected.</p> </fieldset> <div id="chTargetRow" class="counter-editor" hidden><div class="counter-editor-head"><strong>Counter goals</strong><button type="button" class="btn ghost" id="addCounterRow">＋ Add counter</button></div><div id="chCounterRows"></div><p class="ch-help">Add up to 20 counters. Each needs a label and target, and each counter counts as one condition (see “conditions met” below).</p></div> <div id="chChecklistRow" class="checklist-editor"><label for="chChecklist">Checklist items <span class="small">(one item per line · up to 100 items)</span></label><textarea id="chChecklist" maxlength="20000" rows="5" placeholder="Collect a specific item&#10;Reach the target floor&#10;Finish without using a revive"></textarea><p class="ch-help">Check off each step as you complete it. Use Exclude for items that do not apply; every included item counts as one condition.</p></div> <p id="chGoalHelp" class="ch-help" hidden>Tick the challenge's main checkbox when the goal itself is done — the goal counts as one condition.</p> <div id="chReqRow"><label for="chReqCount">Complete when <input type="number" id="chReqCount" min="0" max="999" step="1" inputmode="numeric" style="width:80px"> conditions are met</label><p class="ch-help">Leave blank (or 0) to require <b>all</b> conditions. Each included checklist item, each counter, and the goal itself each count as one condition — e.g. set 2 to complete when any 2 of 3 conditions are met.</p></div> <fieldset class="state-pick" id="chIconKind"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="chIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="chIconEmojiRow" hidden><label for="chIconEmoji">Emoji</label> <input type="text" id="chIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🔥"></div> <div id="chIconSpriteRow" hidden><label for="chIconSprite">Sprite</label> <select id="chIconSprite"></select></div> <div id="chIconUploadRow" hidden><label for="chIconFile">Custom image</label> <input type="file" id="chIconFile" accept="image/*"> <p class="ch-help" id="chIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the challenge.</p><img id="chIconPreview" class="ch-icon-img" alt="" hidden></div> <fieldset class="state-pick reward-pick" id="chRewardWrap"><legend>Reward</legend> <label class="st-unlocked"><input type="radio" name="chReward" value="spin" checked><span>🎭 Toon spin</span></label> <label class="st-locked"><input type="radio" name="chReward" value="none"><span>No reward</span></label> <p class="ch-help" id="chRewardHint">A completed Toon challenge earns a Toon spin.</p> </fieldset> <p class="small" id="chErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"> <button type="button" class="btn ghost" id="chCancel">Cancel</button> <button type="submit" class="btn mint" id="chSave">Save</button> </div> </form> </dialog> <dialog id="revivalDlg" class="revival-dlg"><form method="dialog" id="revivalForm"><div class="mh" style="background:var(--pink)"><div><h2 id="revivalDialogTitle">Choose your spin</h2><p id="revivalDialogPrompt">Pick a Toon or Trinket spin for this completed challenge.</p></div></div><div class="mb"><p id="revivalSourceRow">Reward from <strong id="revivalChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="revivalKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="revivalKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="revivalErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="revivalCancel">Cancel</button><button type="submit" class="btn mint" id="revivalChoose">Earn this spin</button></div></form></dialog> <!-- Spinner -->
+<!-- Challenge editor --> <dialog id="chDlg"> <form method="dialog" id="chForm"> <div class="mh" style="background:var(--mint)"><div><h2 id="chDlgTitle">New challenge</h2><p id="chDlgHint">Finish it to earn a reward.</p></div></div> <div class="mb"> <label for="chTitle">Title</label> <input type="text" id="chTitle" maxlength="80" required placeholder="e.g. Survive 10 floors with Poppy" autocomplete="off"> <label for="chDesc" style="margin-top:12px">Description <span class="small">(optional · up to 3,000 characters)</span></label> <textarea id="chDesc" maxlength="3000" rows="6" placeholder="Add all the rules and details here…"></textarea> <fieldset class="state-pick" id="chCategory"><legend>Challenge tab</legend> <label class="st-unlocked"><input type="radio" name="chCategory" value="toon" checked><span>🎭 Toon challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="trinket"><span>💍 Trinket challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="team"><span>🏅 Team goal</span></label> </fieldset> <fieldset class="state-pick" id="teamTierWrap" hidden><legend>Team badge tier</legend> <label class="st-unlocked"><input type="radio" name="teamTier" value="bronze" checked><span>🥉 Bronze</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="silver"><span>🥈 Silver</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="gold"><span>🥇 Gold</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="iridescent"><span>🌈 Iridescent</span></label> <p class="ch-help" id="teamTierHint">Bronze badge · no reward.</p> </fieldset> <fieldset class="state-pick" id="chType"><legend>Progress — pick any combination</legend> <label class="st-unlocked"><input type="checkbox" name="chModes" value="goal"><span>☑ One-time goal</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="checklist" checked><span>☑ Checklist</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="counter"><span>🔢 Counters</span></label> <p class="ch-help">Combine modes freely — e.g. Counters with a Checklist attached. At least one mode must stay selected.</p> </fieldset> <div id="chTargetRow" class="counter-editor" hidden><div class="counter-editor-head"><strong>Counter goals</strong><button type="button" class="btn ghost" id="addCounterRow">＋ Add counter</button></div><div id="chCounterRows"></div><p class="ch-help">Add up to 20 counters. Each needs a label and target, and each counter counts as one condition (see “conditions met” below).</p></div> <div id="chChecklistRow" class="checklist-editor"><strong class="chlist-title">Checklists</strong><div id="chListEditors"></div><button type="button" class="btn ghost" id="addChecklistList">＋ Add checklist</button><p class="ch-help">Give each checklist a name and its items, one per line (up to 100 items across all lists). Check off each step as you complete it. Use Exclude for items that do not apply; every included item counts as one condition. On the card, each checklist can be shown or hidden on its own.</p></div> <p id="chGoalHelp" class="ch-help" hidden>Tick the challenge's main checkbox when the goal itself is done — the goal counts as one condition.</p> <div id="chReqRow"><label for="chReqCount">Complete when <input type="number" id="chReqCount" min="0" max="999" step="1" inputmode="numeric" style="width:80px"> conditions are met</label><p class="ch-help">Leave blank (or 0) to require <b>all</b> conditions. Each included checklist item, each counter, and the goal itself each count as one condition — e.g. set 2 to complete when any 2 of 3 conditions are met.</p></div> <fieldset class="state-pick" id="chIconKind"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="chIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="chIconEmojiRow" hidden><label for="chIconEmoji">Emoji</label> <input type="text" id="chIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🔥"></div> <div id="chIconSpriteRow" hidden><label for="chIconSprite">Sprite</label> <select id="chIconSprite"></select></div> <div id="chIconUploadRow" hidden><label for="chIconFile">Custom image</label> <input type="file" id="chIconFile" accept="image/*"> <p class="ch-help" id="chIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the challenge.</p><img id="chIconPreview" class="ch-icon-img" alt="" hidden></div> <fieldset class="state-pick reward-pick" id="chRewardWrap"><legend>Reward</legend> <label class="st-unlocked"><input type="radio" name="chReward" value="spin" checked><span>🎭 Toon spin</span></label> <label class="st-locked"><input type="radio" name="chReward" value="none"><span>No reward</span></label> <p class="ch-help" id="chRewardHint">A completed Toon challenge earns a Toon spin.</p> </fieldset> <p class="small" id="chErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"> <button type="button" class="btn ghost" id="chCancel">Cancel</button> <button type="submit" class="btn mint" id="chSave">Save</button> </div> </form> </dialog> <dialog id="revivalDlg" class="revival-dlg"><form method="dialog" id="revivalForm"><div class="mh" style="background:var(--pink)"><div><h2 id="revivalDialogTitle">Choose your spin</h2><p id="revivalDialogPrompt">Pick a Toon or Trinket spin for this completed challenge.</p></div></div><div class="mb"><p id="revivalSourceRow">Reward from <strong id="revivalChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="revivalKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="revivalKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="revivalErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="revivalCancel">Cancel</button><button type="submit" class="btn mint" id="revivalChoose">Earn this spin</button></div></form></dialog> <!-- Spinner -->
 <dialog id="spinDlg" class="spin-dlg">
   <div class="mh" style="background:var(--yellow)"><div><h2 id="spinTitle">Spinning…</h2><p id="spinSub"></p></div></div>
   <div class="mb">
@@ -650,6 +663,22 @@ function computeDone(ch){
   const req = clampInt(ch.requiredCount, 0, 999, 0);
   return req > 0 ? met >= Math.min(req, total) : met >= total;
 }
+/* Summary bar for a challenge card's checklist section. When a "conditions met"
+   target (requiredCount) is set, the bar is measured on the conditions scale —
+   met out of required conditions — instead of against every checklist item. */
+function checklistSummary(c, cond){
+  const req = clampInt(c && c.requiredCount, 0, 999, 0);
+  if (req > 0 && cond && cond.total > 0){
+    const r = Math.min(req, cond.total);
+    return {label:`${Math.min(cond.met, r)}/${r} conditions`, pct:Math.min(100, cond.met / r * 100)};
+  }
+  const requiredItems = (c.items || []).filter(item => !item.excluded), checkedItems = requiredItems.filter(item => item.done).length;
+  return {label:requiredItems.length ? `${checkedItems}/${requiredItems.length} required` : 'No required items', pct:requiredItems.length ? checkedItems / requiredItems.length * 100 : 0};
+}
+/* Checklist grouping: items stay one flat array; each item's `list` names the
+   checklist it belongs to (default 'Checklist'), and `listState` on the
+   challenge remembers which lists are collapsed on the card. */
+const sanitizeListName = v => String(v ?? '').trim().slice(0,40).trim() || 'Checklist';
 function sanitizeChallenge(o, seen){
   let id = String(o.id || uid()).slice(0,40); while (seen.has(id)) id = uid(); seen.add(id);
   const type = ['checklist','counter','goal','combined'].includes(o.type) ? o.type : 'checklist';
@@ -677,10 +706,10 @@ function sanitizeChallenge(o, seen){
   const rawItems = Array.isArray(o.items) ? o.items : (Array.isArray(o.checklist) ? o.checklist : []);
   let items = rawItems.slice(0,100).map(item=>{
     const text=String(typeof item==='string' ? item : (item && typeof item==='object' ? (item.text ?? item.label ?? '') : '')).trim().slice(0,160);
-    return text ? {text,done:!!(item && typeof item==='object' && (item.done ?? item.checked)),excluded:!!(item && typeof item==='object' && item.excluded)} : null;
+    return text ? {text,done:!!(item && typeof item==='object' && (item.done ?? item.checked)),excluded:!!(item && typeof item==='object' && item.excluded),list:sanitizeListName(item && typeof item==='object' ? item.list : null)} : null;
   }).filter(Boolean);
   // Migrate legacy single-checkbox challenges without losing their completion state.
-  if (hasChecklist && !items.length) items=[{text:'Complete challenge',done:!!o.done,excluded:false}];
+  if (hasChecklist && !items.length) items=[{text:'Complete challenge',done:!!o.done,excluded:false,list:'Checklist'}];
   // Older saves had no challenge category. Their chosen spin kind is the best available migration hint.
   const category = CHALLENGE_CATEGORIES.includes(o.category) ? o.category : ((o.reward==='trinket' || o.rewardKind==='trinket') ? 'trinket' : 'toon');
   const teamTier = TEAM_TIERS.includes(o.teamTier) ? o.teamTier : 'bronze';
@@ -699,8 +728,16 @@ function sanitizeChallenge(o, seen){
     checklistRestore=o.checklistRestore.filter(saved=>saved && typeof saved==='object' && Number.isInteger(Number(saved.index))).slice(0,100).map(saved=>({index:clampInt(saved.index,0,99,0),text:String(saved.text||'').slice(0,160),done:!!saved.done}));
     if (!checklistRestore.length) checklistRestore=null;
   }
+  const listState=[];
+  if (Array.isArray(o.listState)) for (const entry of o.listState){
+    if (listState.length>=20) break;
+    if (!entry || typeof entry!=='object') continue;
+    const name=sanitizeListName(entry.name);
+    if (listState.some(e=>e.name===name)) continue;
+    listState.push({name, collapsed:!!entry.collapsed});
+  }
   const rewardKind = SPIN_KINDS.includes(o.rewardKind) ? o.rewardKind : null;
-  return {id, title, desc:String(o.desc||'').slice(0,3000), category, teamTier, type:legacyTypeForModes(modes), modes, requiredCount, icon:sanitizeIcon(o.icon), goalDone, target, value, counters, counterRestore, checklistRestore, collapsed:!!o.collapsed, itemsCollapsed:!!o.itemsCollapsed, items, done, reward, claimed:done && reward!=='none' && !!o.claimed, rewardKind, rewardGrantId:o.rewardGrantId ? String(o.rewardGrantId).slice(0,40) : null};
+  return {id, title, desc:String(o.desc||'').slice(0,3000), category, teamTier, type:legacyTypeForModes(modes), modes, requiredCount, icon:sanitizeIcon(o.icon), goalDone, target, value, counters, counterRestore, checklistRestore, collapsed:!!o.collapsed, itemsCollapsed:!!o.itemsCollapsed, items, listState, done, reward, claimed:done && reward!=='none' && !!o.claimed, rewardKind, rewardGrantId:o.rewardGrantId ? String(o.rewardGrantId).slice(0,40) : null};
 }
 const toMaps = r => ({toons:new Map(Object.entries(r.status.toons)), trinkets:new Map(Object.entries(r.status.trinkets))});
 
@@ -1275,6 +1312,24 @@ async function toggleChecklistExcluded(ch,index){
   ch.counterRestore=null; ch.checklistRestore=null; ch.done=computeDone(ch);
   await afterChange(ch,was);
 }
+function checklistItemRow(item, index){
+  return `<div class="checklist-row ${item.excluded?'excluded':''}"><button type="button" class="check-item ${item.done?'checked':''}" data-act="check-item" data-index="${index}" aria-pressed="${item.done}" aria-label="${item.done?'Uncheck':'Check'}: ${esc(item.text)}" ${item.excluded?'disabled':''}><span class="check-square" aria-hidden="true">${item.done?'✓':''}</span><span class="item-label">${esc(item.text)}</span></button><button type="button" class="check-exclude" data-act="exclude-item" data-index="${index}" aria-pressed="${item.excluded}" aria-label="${item.excluded?'Include':'Exclude'}: ${esc(item.text)}">${item.excluded?'Include':'Exclude'}</button></div>`;
+}
+/* Group a challenge's flat items by their `list` tag (first-appearance order),
+   one collapsible section per list. Checkboxes keep the FLAT item index. */
+function checklistGroupsMarkup(c){
+  const groups = [], byName = new Map();
+  (c.items || []).forEach((item, index) => {
+    const name = item.list || 'Checklist';
+    if (!byName.has(name)){ const g = {name, entries:[]}; byName.set(name, g); groups.push(g); }
+    byName.get(name).entries.push({item, index});
+  });
+  return groups.map(g => {
+    const req = g.entries.filter(e => !e.item.excluded), doneCount = req.filter(e => e.item.done).length;
+    const st = (c.listState || []).find(e => e && e.name === g.name), collapsed = st ? !!st.collapsed : false;
+    return `<div class="checklist-group"><div class="checklist-group-head"><span class="checklist-group-name">${esc(g.name)}</span><span class="checklist-group-count">${doneCount}/${req.length}</span><button type="button" class="ch-collapse" data-act="collapse-list" data-list="${esc(g.name)}" aria-expanded="${!collapsed}" aria-label="${collapsed?'Show':'Hide'} ${esc(g.name)} for ${esc(c.title)}">${collapsed?'Show':'Hide'}</button></div><div class="checklist" ${collapsed?'hidden':''}>${g.entries.map(e => checklistItemRow(e.item, e.index)).join('')}</div></div>`;
+  }).join('');
+}
 function renderChallenges(){
   const list=$('#chList'), all=run.challenges, nDone=all.filter(c=>c.done).length;
   $('#chCount').textContent=`${nDone}/${all.length}`;
@@ -1305,7 +1360,7 @@ function renderChallenges(){
     list.innerHTML=`<div class="ch-empty">${view.cf==='done' ? 'Nothing completed in this tab yet — go get ’em!' : (view.cc==='team' && view.tf!=='all' && view.cf==='all') ? `No ${esc(view.tf)} team goals here yet.` : 'Everything in this tab is done! 🎉 Add another goal?'}</div>`;
   } else {
     list.innerHTML=shown.map(c=>{
-      const i=categoryChallenges.indexOf(c), reward=challengeReward(c), requiredItems=(c.items||[]).filter(item=>!item.excluded), checkedItems=requiredItems.filter(item=>item.done).length, checklistPct=requiredItems.length ? checkedItems/requiredItems.length*100 : 0;
+      const i=categoryChallenges.indexOf(c), reward=challengeReward(c);
       const categoryTag=c.category==='team'
         ? `<span class="tier-badge ${esc(c.teamTier)}">${esc(c.teamTier[0].toUpperCase()+c.teamTier.slice(1))} badge</span>`
         : `<span class="ch-kind">${CATEGORY_LABEL[c.category]}</span>`;
@@ -1318,6 +1373,7 @@ function renderChallenges(){
         : `<span class="rew ${c.claimed?'claimed':''}">${c.claimed ? '✓ ' : '🎰 '}${rewardText}</span>`;
       const modes=modesOf(c), hasChecklist=modes.includes('checklist'), hasCounters=modes.includes('counter'), hasGoal=modes.includes('goal');
       const cond=challengeConditions(c), bothSections=hasChecklist && hasCounters, checklistHidden=bothSections ? c.itemsCollapsed : c.collapsed;
+      const summary=checklistSummary(c, cond), checklistGroups=hasChecklist ? checklistGroupsMarkup(c) : '';
       const toggleBtn=(act,flag,label)=>`<button type="button" class="ch-collapse" data-act="${act}" aria-expanded="${!flag}" aria-label="${flag?'Show':'Hide'} ${label} for ${esc(c.title)}">${flag?'Show':'Hide'} ${label}</button>`;
       const progressToggle=(!hasChecklist && !hasCounters) ? '' : bothSections
         ? toggleBtn('collapse', c.collapsed, 'counters') + toggleBtn('collapse-items', c.itemsCollapsed, 'checklist')
@@ -1331,9 +1387,8 @@ function renderChallenges(){
         <div class="body">
           <div class="ch-heading">${categoryTag}${iconMarkup(c)}<div class="t">${esc(c.title)}</div>${progressToggle}</div>
           ${c.desc ? `<div class="d">${esc(c.desc)}</div>` : ''}
-          ${(c.requiredCount>0 && cond.total>0) ? `<div class="ch-cond">${cond.met}/${cond.total} conditions · needs ${Math.min(c.requiredCount, cond.total)}</div>` : ''}
           ${hasCounters ? `<div class="ch-progress" ${c.collapsed?'hidden':''}><div class="counter-stack">${counterMarkup}</div></div>` : ''}
-          ${hasChecklist ? `<div class="ch-progress" ${checklistHidden?'hidden':''}><div class="checklist-progress"><span>${requiredItems.length ? `${checkedItems}/${requiredItems.length} required` : 'No required items'}</span><div class="bar"><i style="width:${checklistPct}%"></i></div></div><div class="checklist">${c.items.map((item,index)=>`<div class="checklist-row ${item.excluded?'excluded':''}"><button type="button" class="check-item ${item.done?'checked':''}" data-act="check-item" data-index="${index}" aria-pressed="${item.done}" aria-label="${item.done?'Uncheck':'Check'}: ${esc(item.text)}" ${item.excluded?'disabled':''}><span class="check-square" aria-hidden="true">${item.done?'✓':''}</span><span class="item-label">${esc(item.text)}</span></button><button type="button" class="check-exclude" data-act="exclude-item" data-index="${index}" aria-pressed="${item.excluded}" aria-label="${item.excluded?'Include':'Exclude'}: ${esc(item.text)}">${item.excluded?'Include':'Exclude'}</button></div>`).join('')}</div></div>` : ''}
+          ${hasChecklist ? `<div class="ch-progress" ${checklistHidden?'hidden':''}><div class="checklist-progress"><span>${summary.label}</span><div class="bar"><i style="width:${summary.pct}%"></i></div></div>${checklistGroups}</div>` : ''}
           <div class="meta-row">${rew}</div>
         </div>
         <div class="acts"><div class="row"><span class="drag-handle" data-drag title="Drag to reorder" aria-label="Drag to reorder">⠿</span></div><div class="row"><button type="button" class="ibtn" data-act="up" aria-label="Move up" ${i===0?'disabled':''}>▲</button><button type="button" class="ibtn" data-act="down" aria-label="Move down" ${i===categoryChallenges.length-1?'disabled':''}>▼</button></div><div class="row"><button type="button" class="ibtn" data-act="edit" aria-label="Edit">✎</button><button type="button" class="ibtn del" data-act="del" aria-label="Delete">🗑</button></div></div>
@@ -1396,6 +1451,7 @@ $('#chList').addEventListener('click', async e=>{
   const ch=chById(b.closest('.ch')?.dataset.id); if (!ch) return;
   if (act==='collapse'){ ch.collapsed=!ch.collapsed; saveRun(); renderChallenges(); return; }
   if (act==='collapse-items'){ ch.itemsCollapsed=!ch.itemsCollapsed; saveRun(); renderChallenges(); return; }
+  if (act==='collapse-list'){ const name=b.dataset.list; if (!Array.isArray(ch.listState)) ch.listState=[]; const st=ch.listState.find(en=>en && en.name===name); if (st) st.collapsed=!st.collapsed; else ch.listState.push({name, collapsed:true}); saveRun(); renderChallenges(); return; }
   const categoryChallenges=run.challenges.filter(c=>c.category===view.cc), localIndex=categoryChallenges.indexOf(ch);
   if (act==='toggle') await setDone(ch,!ch.done);
   if (act==='check-item') await toggleChecklistItem(ch,Number(b.dataset.index));
@@ -1454,6 +1510,43 @@ function checklistFromText(raw,previous=[]){
     return {text,done:match ? !!match.done : false,excluded:match ? !!match.excluded : false};
   });
 }
+/* Multiple named checklists in the editor: one block per list (name input +
+   items textarea). readChecklistEditor returns the blocks in display order. */
+function renderChecklistEditor(lists){
+  const wrap=$('#chListEditors'); if (!wrap) return;
+  const arr=(lists && lists.length) ? lists : [{name:'Checklist', text:''}];
+  wrap.innerHTML=arr.map((l,index)=>`<div class="chlist-row"><div class="chlist-head"><input type="text" data-list-name maxlength="40" autocomplete="off" aria-label="Checklist ${index+1} name" placeholder="Checklist name" value="${esc(l.name||'')}"><button type="button" class="ibtn del" data-remove-list aria-label="Remove checklist ${index+1}" title="Remove checklist" ${arr.length===1?'disabled':''}>−</button></div><textarea data-list-items rows="4" maxlength="20000" aria-label="Checklist ${index+1} items, one per line" placeholder="One item per line">${esc(l.text||'')}</textarea></div>`).join('');
+  const add=$('#addChecklistList'); if (add) add.disabled=arr.length>=10;
+}
+function readChecklistEditor(){
+  return [...document.querySelectorAll('#chListEditors .chlist-row')].map(row=>({name:row.querySelector('[data-list-name]').value, text:row.querySelector('[data-list-items]').value}));
+}
+function editorListsFor(ch){
+  if (!ch || !Array.isArray(ch.items) || !ch.items.length) return [{name:'Checklist', text:''}];
+  const order=[], byName=new Map();
+  for (const item of ch.items){
+    const name=item.list || 'Checklist';
+    if (!byName.has(name)){ byName.set(name, []); order.push(name); }
+    byName.get(name).push(item.text);
+  }
+  return order.map(name=>({name, text:byName.get(name).join('\n')}));
+}
+$('#addChecklistList').addEventListener('click',()=>{
+  const lists=readChecklistEditor();
+  if (lists.length>=10) return;
+  lists.push({name:`Checklist ${lists.length+1}`, text:''});
+  renderChecklistEditor(lists);
+  $('#chListEditors').lastElementChild?.querySelector('[data-list-name]')?.focus();
+});
+$('#chChecklistRow').addEventListener('click',e=>{
+  const rm=e.target.closest('[data-remove-list]'); if (!rm) return;
+  const lists=readChecklistEditor();
+  if (lists.length<=1) return;
+  const rows=[...document.querySelectorAll('#chListEditors .chlist-row')];
+  const idx=rows.indexOf(rm.closest('.chlist-row')); if (idx<0) return;
+  lists.splice(idx,1);
+  renderChecklistEditor(lists);
+});
 function renderCounterEditor(counters){
   const rows=$('#chCounterRows');
   rows.innerHTML=(counters||[]).map((counter,index)=>`<div class="counter-config-row" data-counter-id="${esc(counter.id||uid())}"><input type="text" data-counter-label maxlength="60" required autocomplete="off" aria-label="Counter ${index+1} label" placeholder="Counter ${index+1}" value="${esc(counter.label||`Counter ${index+1}`)}"><input class="counter-target" type="number" data-counter-target min="1" max="99999" step="1" required inputmode="numeric" aria-label="Counter ${index+1} target" value="${clampInt(counter.target,1,99999,10)}"><button type="button" class="ibtn del" data-remove-counter aria-label="Remove counter ${index+1}" title="Remove counter" ${counters.length===1?'disabled':''}>−</button></div>`).join('');
@@ -1528,7 +1621,7 @@ function openChEditor(ch){
   chIconUploadData=ch && ch.icon && ch.icon.kind==='upload' ? ch.icon.value : '';
   const iconPrev=$('#chIconPreview'); iconPrev.hidden=!chIconUploadData; if (chIconUploadData) iconPrev.src=chIconUploadData;
   $('#chIconUploadInfo').textContent=chIconUploadData ? 'Custom image saved — pick a new file to replace it.' : 'Pick an image — it is shrunk to at most 128×128 and stored inside the challenge.';
-  $('#chChecklist').value=ch && Array.isArray(ch.items) ? ch.items.map(item=>item.text).join('\n') : '';
+  renderChecklistEditor(editorListsFor(ch));
   const counters=ch && Array.isArray(ch.counters) && ch.counters.length ? ch.counters : [{id:uid(),label:'Counter 1',target:10,value:0}];
   renderCounterEditor(counters);
   setRadio('chReward',ch && ch.reward==='none' ? 'none' : 'spin'); $('#chErr').textContent='';
@@ -1543,10 +1636,12 @@ $('#chForm').addEventListener('submit',async e=>{
   const modes=selectedModes(), type=legacyTypeForModes(modes), reward=category==='team' ? TEAM_TIER_REWARD[teamTier] : (radioVal('chReward')==='none' ? 'none' : 'spin');
   if (!modes.length){ $('#chErr').textContent='Pick at least one progress mode.'; return; }
   let ch=chEditing && chById(chEditing); const isNew=!ch, before=ch ? {...ch} : null;
-  const draftLines=$('#chChecklist').value.split(/\r?\n/).map(line=>line.trim()).filter(Boolean);
-  if (modes.includes('checklist') && !draftLines.length){ $('#chErr').textContent='Add at least one checklist item, one per line.'; $('#chChecklist').focus(); return; }
-  if (modes.includes('checklist') && draftLines.length>100){ $('#chErr').textContent='A checklist can have up to 100 items.'; $('#chChecklist').focus(); return; }
-  if (modes.includes('checklist') && draftLines.some(line=>line.length>160)){ $('#chErr').textContent='Each checklist item must be 160 characters or fewer.'; $('#chChecklist').focus(); return; }
+  const editorLists=readChecklistEditor();
+  const draftLines=editorLists.flatMap(l=>l.text.split(/\r?\n/).map(line=>line.trim()).filter(Boolean));
+  const focusListItems=()=>{ const ta=document.querySelector('#chListEditors [data-list-items]'); if (ta) ta.focus(); };
+  if (modes.includes('checklist') && !draftLines.length){ $('#chErr').textContent='Add at least one checklist item, one per line.'; focusListItems(); return; }
+  if (modes.includes('checklist') && draftLines.length>100){ $('#chErr').textContent='Checklists can have up to 100 items in total.'; focusListItems(); return; }
+  if (modes.includes('checklist') && draftLines.some(line=>line.length>160)){ $('#chErr').textContent='Each checklist item must be 160 characters or fewer.'; focusListItems(); return; }
   const configRows=[...$('#chCounterRows').querySelectorAll('.counter-config-row')];
   if (modes.includes('counter') && (!configRows.length || configRows.length>20)){ $('#chErr').textContent='Add between 1 and 20 counters.'; $('#chCounterRows').scrollIntoView({block:'nearest'}); return; }
   const counterConfigs=[];
@@ -1557,7 +1652,16 @@ $('#chForm').addEventListener('submit',async e=>{
     const id=row.dataset.counterId, previous=(ch?.counters||[]).find(counter=>counter.id===id);
     counterConfigs.push({id,label:label||`Counter ${index+1}`,target:clampInt(rawTarget,1,99999,10),value:previous ? clampInt(previous.value,0,99999,0) : 0});
   }
-  const checklistItems=checklistFromText($('#chChecklist').value,ch && Array.isArray(ch.items) ? ch.items : []);
+  const prevItems=ch && Array.isArray(ch.items) ? ch.items : [];
+  const resolvedLists=[];
+  for (const l of editorLists){
+    const name=sanitizeListName(l.name);
+    const found=resolvedLists.find(x=>x.name===name);
+    if (found) found.text=(found.text && l.text) ? found.text+'\n'+l.text : (found.text || l.text);
+    else resolvedLists.push({name, text:l.text});
+  }
+  let checklistItems=[];
+  for (const l of resolvedLists) checklistItems=checklistItems.concat(checklistFromText(l.text, prevItems.filter(item=>(item.list||'Checklist')===l.name)).map(item=>({...item, list:l.name})));
   const reqRaw=$('#chReqCount').value.trim(), requiredCount=reqRaw==='' ? 0 : Number(reqRaw);
   if (!Number.isInteger(requiredCount) || requiredCount<0 || requiredCount>999){ $('#chErr').textContent='Set “conditions met” to a whole number from 0 to 999, or leave it blank for all.'; $('#chReqCount').focus(); return; }
   const iconKind=radioVal('chIconKind')||'none';
@@ -1567,11 +1671,12 @@ $('#chForm').addEventListener('submit',async e=>{
   else if (iconKind==='upload'){ if (!chIconUploadData){ $('#chErr').textContent='Choose an image for the icon, or choose a different icon option.'; return; } icon={kind:'upload',value:chIconUploadData}; }
   icon=sanitizeIcon(icon);
   if (iconKind!=='none' && !icon){ $('#chErr').textContent='That icon could not be saved — try a different one.'; return; }
-  if (isNew){ ch={id:uid(),title,desc:'',category,teamTier,type,modes,requiredCount,icon,goalDone:false,target:10,value:0,counters:counterConfigs,counterRestore:null,collapsed:false,itemsCollapsed:false,items:[],done:false,reward,claimed:false,rewardKind:null,rewardGrantId:null,checklistRestore:null}; run.challenges.push(ch); }
+  if (isNew){ ch={id:uid(),title,desc:'',category,teamTier,type,modes,requiredCount,icon,goalDone:false,target:10,value:0,counters:counterConfigs,counterRestore:null,collapsed:false,itemsCollapsed:false,listState:[],items:[],done:false,reward,claimed:false,rewardKind:null,rewardGrantId:null,checklistRestore:null}; run.challenges.push(ch); }
   const was=ch.done, previousReward=challengeReward(ch), counterConfigChanged=ch.type!==type || JSON.stringify(modesOf(ch))!==JSON.stringify(modes) || (ch.counters||[]).length!==counterConfigs.length || (ch.counters||[]).some((counter,index)=>counter.id!==counterConfigs[index]?.id || counter.target!==counterConfigs[index]?.target);
   const nextItems=modes.includes('checklist') ? checklistItems : ch.items;
-  const checklistConfigChanged=(ch.items||[]).length!==nextItems.length || (ch.items||[]).some((item,index)=>item.text!==nextItems[index]?.text || item.excluded!==nextItems[index]?.excluded);
+  const checklistConfigChanged=(ch.items||[]).length!==nextItems.length || (ch.items||[]).some((item,index)=>item.text!==nextItems[index]?.text || item.excluded!==nextItems[index]?.excluded || (item.list||'Checklist')!==(nextItems[index]?.list||'Checklist'));
   Object.assign(ch,{title,desc:$('#chDesc').value.trim().slice(0,3000),category,teamTier,type,modes,requiredCount,icon,counters:counterConfigs,items:nextItems,reward});
+  if (modes.includes('checklist') && Array.isArray(ch.listState)){ const listNames=new Set(nextItems.map(item=>item.list||'Checklist')); ch.listState=ch.listState.filter(e=>e && listNames.has(e.name)); }
   if (counterConfigChanged) ch.counterRestore=null;
   if (counterConfigChanged || checklistConfigChanged) ch.checklistRestore=null;
   syncLegacyCounterFields(ch);
@@ -1800,6 +1905,24 @@ function friendProgressText(c){
   if (c.requiredCount > 0){ const cond = challengeConditions(c); parts.push(`${cond.met}/${cond.total} conditions (needs ${Math.min(c.requiredCount, cond.total)})`); }
   return parts.filter(Boolean).join(' · ') || 'No progress details';
 }
+/* Read-only roster of a friend's specific toons/trinkets by state, with
+   sprites (A–Z, DATA order). Locked items are counted, not listed. */
+function friendRoster(r, kind){
+  if (!r || !r.status || !Array.isArray(DATA[kind])) return '';
+  const unlocked=[], eliminated=[];
+  for (const it of DATA[kind]){
+    const st=r.status[kind] ? r.status[kind][it.name] : undefined;
+    if (st==='unlocked') unlocked.push(it); else if (st==='eliminated') eliminated.push(it);
+  }
+  const locked=DATA[kind].length-unlocked.length-eliminated.length;
+  const chips=arr=>arr.map(it=>`<span class="fr-chip"><img src="${it.src}" alt="">${esc(it.name)}</span>`).join('');
+  let h='';
+  if (unlocked.length) h+=`<div class="fr-roster-row"><span class="fr-roster-label">Unlocked</span>${chips(unlocked)}</div>`;
+  if (eliminated.length) h+=`<div class="fr-roster-row"><span class="fr-roster-label">Eliminated</span>${chips(eliminated)}</div>`;
+  if (!h) return `<p class="fr-stats">Nothing unlocked or eliminated yet${locked>0 ? ` · ${locked} locked` : ''}.</p>`;
+  if (locked>0) h+=`<p class="fr-stats">${locked} still locked</p>`;
+  return h;
+}
 function renderFriends(){
   const tab = $('#tabFriends'); if (tab) { const fDone = friends.reduce((n,f)=>n + ((f.run && Array.isArray(f.run.challenges)) ? f.run.challenges.filter(c=>c.done).length : 0), 0); const fTotal = friends.reduce((n,f)=>n + ((f.run && Array.isArray(f.run.challenges)) ? f.run.challenges.length : 0), 0); let gDone = 0, gTotal = 0; try { const myId = grpMember ? grpMember.id : null; grpMembers.forEach(m => { if (m.memberId === myId) return; const s = runStats(m.run); gDone += s.challengesDone; gTotal += s.challengesTotal; }); } catch {} tab.textContent = `${fDone + gDone}/${fTotal + gTotal}`; }
   renderGroup();
@@ -1823,6 +1946,10 @@ function renderFriends(){
     ${row('Toons eliminated', mine.toonsEliminated, theirs.toonsEliminated)}
     ${row('Trinkets unlocked', mine.trinketsUnlocked, theirs.trinketsUnlocked)}
     ${row('Trinkets eliminated', mine.trinketsEliminated, theirs.trinketsEliminated)}</table>
+    <h4>${esc(f.name)}'s toons</h4>
+    ${friendRoster(f.run, 'toons')}
+    <h4>${esc(f.name)}'s trinkets</h4>
+    ${friendRoster(f.run, 'trinkets')}
     <h4>${esc(f.name)}'s challenges (read-only)</h4>
     ${f.run.challenges.length ? f.run.challenges.map(c => `<div class="fr-ch"><span>${c.done ? '✅' : '⬜'} <b>${esc(c.title)}</b> ${iconMarkup(c)}<span class="fr-stats">${esc(CATEGORY_LABEL[c.category] || c.category)}${c.category === 'team' ? ' · ' + esc(c.teamTier) : ''} · ${esc(friendProgressText(c))}</span></span></div>`).join('') : '<p class="fr-stats">No challenges in this snapshot.</p>'}
   </div>`;
@@ -2096,6 +2223,10 @@ function grpMemberDetail(m){
     ${row('Toons eliminated', mine.toonsEliminated, theirs.toonsEliminated)}
     ${row('Trinkets unlocked', mine.trinketsUnlocked, theirs.trinketsUnlocked)}
     ${row('Trinkets eliminated', mine.trinketsEliminated, theirs.trinketsEliminated)}</table>
+    <h4>${esc(m.name)}'s toons</h4>
+    ${friendRoster(m.run, 'toons')}
+    <h4>${esc(m.name)}'s trinkets</h4>
+    ${friendRoster(m.run, 'trinkets')}
     <h4>${esc(m.name)}'s challenges (read-only)</h4>
     ${m.run.challenges.length ? m.run.challenges.map(c => `<div class="fr-ch"><span>${c.done ? '✅' : '⬜'} <b>${esc(c.title)}</b> ${iconMarkup(c)}<span class="fr-stats">${esc(CATEGORY_LABEL[c.category] || c.category)}${c.category === 'team' ? ' · ' + esc(c.teamTier) : ''} · ${esc(friendProgressText(c))}</span></span></div>`).join('') : '<p class="fr-stats">No challenges shared yet.</p>'}
   </div>`;

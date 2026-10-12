@@ -14,6 +14,11 @@ app to back it up or move it between devices.
 - **X-of-Y completion** — "Complete when ___ conditions are met" lets a
   challenge finish without 100% (e.g. 2 of 3 boxes checked). Each checked
   box and each finished counter counts as one condition. Blank = all.
+  When a number is set, the progress bar is measured against that
+  number (e.g. 2/3), not the total.
+- **Multiple checklists per challenge** — a challenge can hold several
+  named checklists (add them in the editor), and each one collapses
+  independently on the card.
 - **Custom challenge icons** — per challenge: an emoji, any toon or
   trinket sprite, or your own uploaded image (shrunk automatically).
 - **Team-goal rarity tabs** — All / Bronze / Silver / Gold / Iridescent.
@@ -21,7 +26,9 @@ app to back it up or move it between devices.
   a *live group* (create one or join with a group code — progress then
   syncs in real time through a free Supabase project; the group code
   is the group's shared password), and *snapshots* (import a friend's
-  share code to see their progress as of that moment).
+  share code to see their progress as of that moment). Opening any
+  friend shows their specific toons and trinkets by name and sprite,
+  not just counts.
 - **Drag to reorder** — drag challenges by the ⠿ handle (works with
   touch) instead of clicking the arrow buttons over and over. The
   arrows still work too.
