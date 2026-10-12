@@ -209,6 +209,10 @@ footer a{color:var(--mint)}
 .spin-btns{display:flex;flex-wrap:wrap;gap:10px}
 .spin-btns .btn{flex:1 1 120px;justify-content:center;font-size:15px;padding:10px 12px}
 .spin-btns .btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:2px 2px 0 var(--ink)}
+.chance-stock{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.chance-stock[hidden]{display:none}
+.chance-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,244,251,.08);border:2px solid rgba(255,244,251,.28);border-radius:12px;padding:5px 6px 5px 12px}
+.chance-row-label{font-weight:700;font-size:14px;color:#ffe9f7}
 .badge{background:var(--ink);color:#fff;border-radius:999px;padding:1px 8px;font-size:12px;min-width:22px;text-align:center}
 .ch-prog{padding:12px 14px;display:flex;align-items:center;gap:14px}
 .ch-prog .num{font-family:var(--fh);font-size:34px;line-height:1;color:#fff;-webkit-text-stroke:1.5px var(--ink);text-shadow:3px 3px 0 var(--ink)}
@@ -538,6 +542,7 @@ footer a{color:var(--mint)}
           <button type="button" class="btn pink" id="spinChance" data-spin="chance">🎲 Chance spin <span class="badge" id="credChance">0</span></button>
           <button type="button" class="btn sky" id="spinTarget" data-spin="target">🎯 Targeted revival <span class="badge" id="credTarget">0</span></button>
           <button type="button" class="btn mint" id="spinChoice" data-spin="choice">✨ Choice <span class="badge" id="credChoice">0</span></button></div>
+        <div class="chance-stock" id="chanceStock" hidden></div>
         <label class="free"><input type="checkbox" id="freeSpin"> <span>Free spin <small>(spin without using a credit)</small></span></label>
       </div>
       <div class="ch-prog">
@@ -1352,6 +1357,11 @@ $('#fileIn').addEventListener('change', async e => {
 
 /* ================= Challenges ================= */
 const REWARD_LABEL = {toon:'Toon spin', trinket:'Trinket spin', revival:'Revival Spin', choice:'Your choice', chance:'Revival chance', custom:'Custom reward', target:'Targeted revival', none:'No reward'};
+/* Short labels naming what a "Your choice" reward can actually pick — shared
+   by the card badge and the extra-reward badges, so a choice badge always
+   lists the configured options instead of vaguely implying anything goes. */
+const CHOICE_OPTION_LABEL = {toon:'🎭 New Toon', trinket:'💍 New Trinket', revival:'🎰 Revival spin', target:'🎯 Revive a specific one'};
+function choiceOptionsText(options){ return sanitizeChoiceOptions(options).map(k => CHOICE_OPTION_LABEL[k]).join(' · '); }
 /* Compact badge label for one extra reward entry (the .rew style uppercases
    it, like the primary reward badge). */
 function extraBadgeLabel(entry, claimed){
@@ -1362,7 +1372,7 @@ function extraBadgeLabel(entry, claimed){
     case 'target': return claimed ? '✓ Targeted revival earned' : '🎯 Targeted revival';
     case 'chance': return claimed ? `✓ Revival chance (${clampInt(entry.pct, 1, 99, 50)}%) earned` : `🎲 Revival chance (${clampInt(entry.pct, 1, 99, 50)}%)`;
     case 'custom': return claimed ? `✓ Reward earned: ${entry.text || 'Custom reward'}` : `🎁 ${entry.text || 'Custom reward'}`;
-    case 'choice': return claimed ? '✓ Choice reward earned' : '✨ Choice reward';
+    case 'choice': return claimed ? '✓ Choice reward earned' : `✨ Choice: ${choiceOptionsText(entry.options)}`;
   }
   return '';
 }
@@ -1766,7 +1776,7 @@ function challengeCardMarkup(c, i, listLen, opts){
       if (reward==='toon') rewardText=c.claimed ? 'Toon spin earned' : 'Toon spin';
       if (reward==='trinket') rewardText=c.claimed ? 'Trinket spin earned' : 'Trinket spin';
       if (reward==='revival') rewardText=c.claimed ? 'Revival Spin earned' : 'Revival Spin · revives an eliminated Toon or Trinket';
-      if (reward==='choice') rewardText=c.claimed ? ({toon:'Toon spin earned', trinket:'Trinket spin earned', revival:'Revival Spin earned', target:'Targeted revival earned'})[c.rewardKind] || 'Toon spin earned' : 'Reward — your choice';
+      if (reward==='choice') rewardText=c.claimed ? ({toon:'Toon spin earned', trinket:'Trinket spin earned', revival:'Revival Spin earned', target:'Targeted revival earned'})[c.rewardKind] || 'Toon spin earned' : `Reward — your choice · Pick one: ${choiceOptionsText(c.choiceOptions)}`;
       if (reward==='chance') rewardText=c.claimed ? `Revival chance (${clampInt(c.rewardChance,1,99,50)}%) earned` : `Revival chance (${clampInt(c.rewardChance,1,99,50)}%)`;
       if (reward==='custom') rewardText=c.claimed ? `Reward earned: ${c.rewardText || 'Custom reward'}` : `Reward: ${c.rewardText || 'Custom reward'}`;
       const badgeIcon=reward==='chance' ? '🎲 ' : reward==='custom' ? '🎁 ' : '🎰 ';
@@ -2446,6 +2456,16 @@ const poolFor = (kind, category=null) => {
   return DATA[KIND_OF[kind]].filter(it => stateOf(KIND_OF[kind], it.name) === 'locked').map(it => ({kind:KIND_OF[kind], item:it}));
 };
 const credits = k => run.spins.filter(g => g.kind === k).length;
+/* Chance credits each carry their own success %, so the panel also lists the
+   stock grouped by % — most spins first (ties: lowest % first). */
+const chancePctOf = g => clampInt(g.pct, 1, 99, 50);
+function chanceStock(){
+  const byPct = new Map();
+  for (const g of run.spins) if (g.kind === 'chance'){ const p = chancePctOf(g); byPct.set(p, (byPct.get(p) || 0) + 1); }
+  return [...byPct.entries()].map(([pct, count]) => ({pct, count})).sort((a, b) => b.count - a.count || a.pct - b.pct);
+}
+const chanceRowLabel = r => `${r.count} Chance Spin${r.count === 1 ? '' : 's'} Left (${r.pct}%)`;
+function firstChanceGrant(pct){ return run.spins.find(g => g.kind === 'chance' && chancePctOf(g) === pct) || null; }
 function renderSpinPanel(){
   const t = credits('toon'), r = credits('trinket'), v = credits('revival'), cn = credits('chance'), tg = credits('target'), ch = credits('choice'), total = t + r + v + cn + tg + ch;
   $('#creditTotal').textContent = `${total} spin${total===1?'':'s'}`;
@@ -2460,7 +2480,19 @@ function renderSpinPanel(){
     : (view.free ? 'Free spin is on — spins won’t use credits.' : 'Complete a challenge or team goal to earn a spin (or turn on Free spin).');
   const spinButtons = {toon:'spinToon', trinket:'spinTrinket', revival:'spinRevival', chance:'spinChance', target:'spinTarget', choice:'spinChoice'};
   for (const k of SPIN_KINDS) $('#' + spinButtons[k]).disabled = !view.free && !credits(k);
+  /* Per-% chance stock list. Free spin doesn't use stock (fixed 50%), so the
+     list only shows in normal mode, and only while chance credits are held. */
+  const stockEl = $('#chanceStock');
+  if (stockEl){
+    const stock = view.free ? [] : chanceStock();
+    stockEl.hidden = !stock.length;
+    stockEl.innerHTML = stock.map(r => `<div class="chance-row"><span class="chance-row-label">${esc(chanceRowLabel(r))}</span><button type="button" class="btn pink sm" data-chance-pct="${r.pct}">Spin</button></div>`).join('');
+  }
 }
+$('#chanceStock').addEventListener('click', e => {
+  const b = e.target.closest('[data-chance-pct]');
+  if (b) startChanceSpin(null, Number(b.dataset.chancePct));
+});
 $('#freeSpin').addEventListener('change', e => { view.free = e.target.checked; renderSpinPanel(); });
 function takeCredit(kind, challengeId){
   // a spin only uses a credit of the matching kind; 'Spin now' prefers that challenge's own credit
@@ -2553,12 +2585,17 @@ async function startSpin(kind, challengeId = null){
    lands on a tile of the rolled type. Success converts the consumed chance
    into a Revival Spin credit for the same challenge and runs the normal
    revival flow; failure consumes the credit and logs a history entry. */
-async function startChanceSpin(challengeId = null){
+async function startChanceSpin(challengeId = null, pctWanted = null){
   let grant = null, pct = 50;
   if (!view.free){
-    grant = (challengeId ? run.spins.find(g => g.kind === 'chance' && g.challengeId === challengeId) : null) || run.spins.find(g => g.kind === 'chance') || null;
+    /* A stock-list row spends a credit of its own % (first one in storage
+       order); 'Spin now' spends the earning challenge's credit; the generic
+       Chance button spends from the largest stocked pile (the list's top row). */
+    if (pctWanted != null) grant = firstChanceGrant(pctWanted);
+    else if (challengeId) grant = run.spins.find(g => g.kind === 'chance' && g.challengeId === challengeId) || null;
+    if (!grant){ const stock = chanceStock(); if (stock.length) grant = firstChanceGrant(stock[0].pct); }
     if (!grant){ toast('No revival-chance credits — complete a challenge with a Revival chance reward first'); renderSpinPanel(); return; }
-    pct = clampInt(grant.pct, 1, 99, 50);
+    pct = chancePctOf(grant);
   }
   /* Nothing to revive? The chance is NOT consumed. */
   if (!poolFor('revival').length){ toast('No eliminated Toons or Trinkets to revive yet — your revival chance is saved.'); return; }
