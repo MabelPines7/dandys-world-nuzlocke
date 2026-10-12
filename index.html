@@ -2762,6 +2762,7 @@ async function startSpin(kind, challengeId = null, fixedPoolKind = null){
   setState(win.kind, win.item.name, 'unlocked', true, null, {historyId:entry.id, challengeId:entry.challengeId, previousState:kind==='revival' ? 'eliminated' : null});
   renderChallenges(); renderSpinPanel();
   spinCtx = {kind, win, entry, credit, previousState, previousUnlock, revivalPoolKind};
+  const myCtx = spinCtx; /* landing closures below must only ever land THIS spin */
   const rm = reduceMotion();
   const N = rm ? 18 : 40, W_INDEX = N - 4, tiles = [];
   for (let i = 0; i < N; i++){
@@ -2785,13 +2786,13 @@ async function startSpin(kind, challengeId = null, fixedPoolKind = null){
        {transform:`translateX(${x}px)`, offset:1}];
   if (typeof strip.animate === 'function'){
     spinAnim = strip.animate(frames, {duration:dur, fill:'forwards'});
-    spinAnim.onfinish = () => { strip.style.transform = `translateX(${x}px)`; spinAnim = null; landSpin(); };
+    spinAnim.onfinish = () => { if (spinCtx !== myCtx) return; strip.style.transform = `translateX(${x}px)`; spinAnim = null; landSpin(); };
   } else {
     // very old WebKit fallback: CSS transition
     strip.style.transition = `transform ${dur}ms cubic-bezier(.1,.55,.18,1)`;
     requestAnimationFrame(() => requestAnimationFrame(() => { strip.style.transform = `translateX(${x}px)`; }));
-    const t = setTimeout(() => { strip.style.transition = ''; spinAnim = null; landSpin(); }, dur + 30);
-    spinAnim = {finish(){ clearTimeout(t); strip.style.transition = ''; strip.style.transform = `translateX(${x}px)`; spinAnim = null; landSpin(); }, cancel(){ clearTimeout(t); }};
+    const t = setTimeout(() => { if (spinCtx !== myCtx) return; strip.style.transition = ''; spinAnim = null; landSpin(); }, dur + 30);
+    spinAnim = {finish(){ clearTimeout(t); if (spinCtx !== myCtx) return; strip.style.transition = ''; strip.style.transform = `translateX(${x}px)`; spinAnim = null; landSpin(); }, cancel(){ clearTimeout(t); }};
   }
   startTicks(step, reel.clientWidth / 2);
 }
@@ -2810,6 +2811,7 @@ function prepSpinDlgChrome(title, sub){
    on a tile of the rolled type. onLand runs when the reel settles. Shared
    by revival-chance spins and choice-chance rolls. */
 function animateVerdictReel(success, pct, onLand){
+  const myCtx = spinCtx; /* the verdict context this reel belongs to */
   const rm = reduceMotion();
   const N = rm ? 18 : 40, W_INDEX = N - 4, tiles = [];
   for (let i = 0; i < N; i++) tiles.push(i === W_INDEX ? success : Math.random() * 100 < pct);
@@ -2830,12 +2832,12 @@ function animateVerdictReel(success, pct, onLand){
        {transform:`translateX(${x}px)`, offset:1}];
   if (typeof strip.animate === 'function'){
     spinAnim = strip.animate(frames, {duration:dur, fill:'forwards'});
-    spinAnim.onfinish = () => { strip.style.transform = `translateX(${x}px)`; spinAnim = null; onLand(); };
+    spinAnim.onfinish = () => { if (spinCtx !== myCtx) return; strip.style.transform = `translateX(${x}px)`; spinAnim = null; onLand(); };
   } else {
     strip.style.transition = `transform ${dur}ms cubic-bezier(.1,.55,.18,1)`;
     requestAnimationFrame(() => requestAnimationFrame(() => { strip.style.transform = `translateX(${x}px)`; }));
-    const t = setTimeout(() => { strip.style.transition = ''; spinAnim = null; onLand(); }, dur + 30);
-    spinAnim = {finish(){ clearTimeout(t); strip.style.transition = ''; strip.style.transform = `translateX(${x}px)`; spinAnim = null; onLand(); }, cancel(){ clearTimeout(t); }};
+    const t = setTimeout(() => { if (spinCtx !== myCtx) return; strip.style.transition = ''; spinAnim = null; onLand(); }, dur + 30);
+    spinAnim = {finish(){ clearTimeout(t); if (spinCtx !== myCtx) return; strip.style.transition = ''; strip.style.transform = `translateX(${x}px)`; spinAnim = null; onLand(); }, cancel(){ clearTimeout(t); }};
   }
   startTicks(step, reel.clientWidth / 2);
 }
@@ -2899,7 +2901,7 @@ async function landChanceSpin(){
   if (src){ const converted = {id:uid(), kind:'revival', challengeId:src.challengeId, title:src.title, ts:new Date().toISOString()}; if (Number.isInteger(src.extraIndex)) converted.extraIndex = src.extraIndex; run.spins.push(converted); }
   saveRun(); renderSpinPanel();
   spinCtx = null;
-  setTimeout(() => { if ($('#spinDlg').open) $('#spinDlg').close(); startSpin('revival', src ? src.challengeId : null); }, 1100);
+  setTimeout(async () => { if ($('#spinDlg').open){ const closed = nextSpinDlgClose(); $('#spinDlg').close(); await closed; } startSpin('revival', src ? src.challengeId : null); }, 1100);
 }
 /* ================= Choice chance spins =================
    Spending a choice-chance credit: the player first sees the gamble tiles
@@ -3076,10 +3078,29 @@ function landCCReel(){
   $('#spinResult').hidden = false;
   spinCtx = null;
   setTimeout(async () => {
-    if ($('#spinDlg').open) $('#spinDlg').close();
+    /* Close the verdict dialog and wait for its 'close' EVENT before any
+       prize spin reopens it: close() flips .open at once but queues the
+       event as a task, so a prize wheel reopened in this same task would
+       have the stale event land on it — finishing its animation against
+       the NEXT gamble's context (poisoning its landed flag via a stray
+       landSpin) and resolving whenSpinDlgClosed early. That race silently
+       dropped new-toon / new-trinket prizes sequenced after another
+       gamble's prize wheel in 'all' mode. */
+    if ($('#spinDlg').open){ const closed = nextSpinDlgClose(); $('#spinDlg').close(); await closed; }
     if (success) await resolveCCPrize(entry, src);
     ccNextRoll();
   }, 1500);
+}
+/* Resolves on #spinDlg's next 'close' EVENT. close() flips .open
+   synchronously but dispatches the event as a queued task, so awaiting the
+   event itself is the only way to know no stale close event is pending
+   before the dialog is reopened for a prize spin. */
+function nextSpinDlgClose(){
+  return new Promise(res => {
+    const dlg = $('#spinDlg');
+    const h = () => { dlg.removeEventListener('close', h); res(); };
+    dlg.addEventListener('close', h);
+  });
 }
 function whenSpinDlgClosed(){
   return new Promise(res => {
@@ -3168,7 +3189,9 @@ function startTicks(step, centre){
 function stopTicks(){ cancelAnimationFrame(tickRaf); tickRaf = 0; const p = $('#pointer'); if (p) p.classList.remove('tick'); }
 function landSpin(){
   stopTicks();
-  if (!spinCtx || spinCtx.landed) return;
+  /* Verdict-reel contexts (chance / choice-chance rolls) have no win: a
+     stray landing call against one must be a no-op, never mark it landed. */
+  if (!spinCtx || spinCtx.landed || !spinCtx.win) return;
   spinCtx.landed = true;
   const {win, credit} = spinCtx, it = win.item;
   $('#spinSkip').hidden = true;
