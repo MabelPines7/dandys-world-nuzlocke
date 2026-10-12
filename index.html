@@ -154,6 +154,10 @@ dialog::backdrop{background:rgba(10,4,16,.72);backdrop-filter:blur(3px)}
 .mb{padding:16px}
 .mb label{font-weight:700;display:block;margin-bottom:6px}
 .mb textarea,.mb input[type=text]{width:100%;font-size:16px;font-weight:500;padding:10px 12px;border:3px solid var(--ink);border-radius:14px;background:#fff;color:var(--ink);resize:vertical}
+#subSharedValue{width:100%;font-size:16px;font-weight:500;padding:10px 12px;border:3px solid var(--ink);border-radius:14px;background:#fff;color:var(--ink)}
+#subSharedValue:disabled{opacity:.45}
+#subSharedWrap,#subIconKindWrap{border:3px solid #c9bdd4;border-radius:14px;padding:12px;margin-top:14px}
+#subSharedWrap legend{font-weight:800;padding:0 6px}
 .mb textarea{min-height:110px}
 .toggle-row{display:flex;align-items:center;gap:10px;margin-top:14px;font-weight:700}
 .state-pick{border:none;padding:0;margin:14px 0 0;display:flex;flex-wrap:wrap;gap:8px}
@@ -212,6 +216,16 @@ footer a{color:var(--mint)}
 .ch-prog .lbl{font-weight:700;color:var(--lilac);font-size:14px;text-transform:uppercase;letter-spacing:1px}
 .ch-filters .grow{flex:1}
 .ch-list{display:flex;flex-direction:column;gap:12px}
+/* Missions subgroup view: the challenges form one connected stack — no gaps,
+   shared edges (each card overlaps the previous card's 3px border), and only
+   the stack's outer corners stay rounded. */
+.mission-stack{gap:0}
+.mission-stack>.ch{border-radius:0;box-shadow:none}
+.mission-stack>.ch+.ch{margin-top:-3px}
+.mission-stack>.ch:first-child{border-top-left-radius:18px;border-top-right-radius:18px}
+.mission-stack>.ch:last-child{border-bottom-left-radius:18px;border-bottom-right-radius:18px}
+.mission-stack>.ch:only-child{border-radius:18px}
+.mission-stack>.ch.dragging{box-shadow:4px 4px 0 var(--ink)}
 .ch{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 14px;background:#fff4fb;color:var(--ink)}
 .ch.done{background:#d7f8ea}
 .ch .chk{width:46px;height:46px;border-radius:14px;border:3px solid var(--ink);background:#fff;box-shadow:3px 3px 0 var(--ink);cursor:pointer;display:grid;place-items:center;font-size:26px;font-weight:900;color:var(--ink);padding:0}
@@ -232,11 +246,11 @@ footer a{color:var(--mint)}
 .counter-config-row .counter-link{grid-column:1/-1;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
 .mission-crumb{font-size:18px}
 .mission-prog{font-weight:700;color:#e9defc}
-.shared-block{border:3px dashed #7a5fa8;border-radius:16px;padding:12px;margin-bottom:14px;background:#f6f0ff;color:var(--ink)}
-.shared-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-.shared-label{font-weight:800;font-size:16px}
-.shared-acts{display:flex;gap:6px;flex-wrap:wrap}
-.shared-counter{max-width:340px}
+
+
+
+
+
 .mission-picker{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
 .tab[data-tab=missions][aria-selected=true]{background:var(--lilac)}
 .tile.success{background:#2fae72}
@@ -276,6 +290,7 @@ footer a{color:var(--mint)}
 .drag-handle{cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none;font-size:19px;line-height:1;padding:7px 5px;color:#8a76a8;text-align:center;border-radius:8px}
 .drag-handle:active{cursor:grabbing}
 .ch.dragging{opacity:.55;outline:3px dashed var(--lilac);outline-offset:2px}
+.fr-card.dragging{opacity:.55;outline:3px dashed var(--lilac);outline-offset:2px}
 .counter-editor{margin-top:12px}
 .counter-editor-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .counter-editor-head .btn{padding:7px 10px;font-size:13px}
@@ -555,7 +570,7 @@ footer a{color:var(--mint)}
   </footer>
 </div>
 
-<!-- Challenge editor --> <dialog id="chDlg"> <form method="dialog" id="chForm"> <div class="mh" style="background:var(--mint)"><div><h2 id="chDlgTitle">New challenge</h2><p id="chDlgHint">Finish it to earn a reward.</p></div></div> <div class="mb"> <label for="chTitle">Title</label> <input type="text" id="chTitle" maxlength="80" required placeholder="e.g. Survive 10 floors with Poppy" autocomplete="off"> <label for="chDesc" style="margin-top:12px">Description <span class="small">(optional · up to 3,000 characters)</span></label> <textarea id="chDesc" maxlength="3000" rows="6" placeholder="Add all the rules and details here…"></textarea> <fieldset class="state-pick" id="chCategory"><legend>Challenge tab</legend> <label class="st-unlocked"><input type="radio" name="chCategory" value="toon" checked><span>🎭 Toon challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="trinket"><span>💍 Trinket challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="team"><span>🏅 Team goal</span></label> </fieldset> <fieldset class="state-pick" id="teamTierWrap"><legend>Rarity / badge tier</legend> <label class="st-locked" id="tierNoneLabel"><input type="radio" name="teamTier" value="none"><span>None (default title color)</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="bronze" checked><span>🥉 Bronze</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="silver"><span>🥈 Silver</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="gold"><span>🥇 Gold</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="iridescent"><span>🌈 Iridescent</span></label> <p class="ch-help" id="teamTierHint">Bronze badge · no reward.</p> </fieldset> <fieldset class="state-pick" id="chType"><legend>Progress — pick any combination</legend> <label class="st-unlocked"><input type="checkbox" name="chModes" value="goal"><span>☑ One-time goal</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="checklist" checked><span>☑ Checklist</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="counter"><span>🔢 Counters</span></label> <p class="ch-help">Combine modes freely — e.g. Counters with a Checklist attached. At least one mode must stay selected.</p> </fieldset> <div id="chTargetRow" class="counter-editor" hidden><div class="counter-editor-head"><strong>Counter goals</strong><button type="button" class="btn ghost" id="addCounterRow">＋ Add counter</button></div><div id="chCounterRows"></div><p class="ch-help">Add up to 20 counters. Each needs a label and target, and each counter counts as one condition (see “conditions met” below).</p></div> <div id="chChecklistRow" class="checklist-editor"><strong class="chlist-title">Checklists</strong><div id="chListEditors"></div><button type="button" class="btn ghost" id="addChecklistList">＋ Add checklist</button><p class="ch-help">Give each checklist a name and its items, one per line (up to 100 items across all lists). Check off each step as you complete it. Use Exclude for items that do not apply; every included item counts as one condition. On the card, each checklist can be shown or hidden on its own.</p></div> <p id="chGoalHelp" class="ch-help" hidden>Tick the challenge's main checkbox when the goal itself is done — the goal counts as one condition.</p> <div id="chReqRow"><label for="chReqCount">Complete when <input type="number" id="chReqCount" min="0" max="999" step="1" inputmode="numeric" style="width:80px"> conditions are met</label><p class="ch-help">Leave blank (or 0) to require <b>all</b> conditions. Each included checklist item, each counter, and the goal itself each count as one condition — e.g. set 2 to complete when any 2 of 3 conditions are met.</p></div> <fieldset class="state-pick" id="chIconKind"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="chIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="chIconEmojiRow" hidden><label for="chIconEmoji">Emoji</label> <input type="text" id="chIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🔥"></div> <div id="chIconSpriteRow" hidden><label for="chIconSprite">Sprite</label> <select id="chIconSprite"></select></div> <div id="chIconUploadRow" hidden><label for="chIconFile">Custom image</label> <input type="file" id="chIconFile" accept="image/*"> <p class="ch-help" id="chIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the challenge.</p><img id="chIconPreview" class="ch-icon-img" alt="" hidden></div> <fieldset class="state-pick reward-pick" id="chRewardWrap"><legend>Default spin (used when Reward = Default)</legend> <label class="st-unlocked"><input type="radio" name="chReward" value="spin" checked><span>🎭 Toon spin</span></label> <label class="st-locked"><input type="radio" name="chReward" value="none"><span>No reward</span></label> <p class="ch-help" id="chRewardHint">A completed Toon challenge earns a Toon spin.</p> </fieldset> <fieldset class="state-pick" id="chRewardPickWrap"><legend>Reward</legend> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="default" checked><span>↩ Default for this tab/tier</span></label> <label class="st-locked"><input type="radio" name="chRewardPick" value="none"><span>No reward</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="toon"><span>🎭 Toon spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="trinket"><span>💍 Trinket spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="revival"><span>🎰 Revival Spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="choice"><span>✨ Your choice: Toon or Trinket spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="chance"><span>🎲 Revival chance…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="custom"><span>🎁 Custom reward…</span></label> <p class="ch-help">The reward is yours to choose, whatever the rarity — rarity stays as the badge/title color. “Default” keeps the standard reward above (tab spin, or the badge-tier reward for team goals).</p> </fieldset> <div id="chRewardChanceRow" hidden><label for="chRewardChance">Revival success chance</label> <input type="number" id="chRewardChance" min="1" max="99" step="1" value="50" style="width:80px"> % <p class="ch-help">Completing this challenge earns one revival chance at this success rate. Spin it from the wheel panel: success earns a Revival Spin, failure uses it up.</p></div> <div id="chRewardTextRow" hidden><label for="chRewardText">Custom reward text</label> <input type="text" id="chRewardText" maxlength="80" placeholder="e.g. Winner picks tonight's snack" autocomplete="off"> <p class="ch-help">Shown as the earned reward on the challenge card. The site displays it — it can't automate made-up effects.</p></div> <div id="chMissionRow"><label for="chMission">Mission group <span class="small">(optional)</span></label> <select id="chMission"></select> <p class="ch-help">Put this challenge in a mission subgroup (see the Missions tab). While it is in a subgroup with a shared counter, its counters can link to that shared counter.</p></div> <div id="chExcludeRow"><label><input type="checkbox" id="chExcluded"> Exclude from completion totals</label> <p class="ch-help">An excluded challenge still works and earns its reward — it just doesn't count toward 100% completion anywhere.</p></div> <p class="small" id="chErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"> <button type="button" class="btn ghost" id="chCancel">Cancel</button> <button type="submit" class="btn mint" id="chSave">Save</button> </div> </form> </dialog> <!-- Mission pack editor --> <dialog id="packDlg"> <form method="dialog" id="packForm"> <div class="mh" style="background:var(--lilac)"><div><h2 id="packDlgTitle">New mission pack</h2><p id="packDlgHint">Name the pack, and give it an icon if you like.</p></div></div> <div class="mb"> <label for="packName">Pack name</label> <input type="text" id="packName" maxlength="60" autocomplete="off" placeholder="e.g. Floor Milestones"> <fieldset class="state-pick" id="packIconKindWrap"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="packIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="packIconEmojiRow" hidden><label for="packIconEmoji">Emoji</label> <input type="text" id="packIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🗺"></div> <div id="packIconSpriteRow" hidden><label for="packIconSprite">Sprite</label> <select id="packIconSprite"></select></div> <div id="packIconUploadRow" hidden><label for="packIconFile">Custom image</label> <input type="file" id="packIconFile" accept="image/*"> <p class="ch-help" id="packIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the pack.</p><img id="packIconPreview" class="ch-icon-img" alt="" hidden></div> <p class="small" id="packErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"><button type="button" class="btn ghost" id="packCancel">Cancel</button><button type="submit" class="btn mint" id="packSave">Save pack</button></div> </form> </dialog> <dialog id="revivalDlg" class="revival-dlg"><form method="dialog" id="revivalForm"><div class="mh" style="background:var(--pink)"><div><h2 id="revivalDialogTitle">Choose your spin</h2><p id="revivalDialogPrompt">Pick a Toon or Trinket spin for this completed challenge.</p></div></div><div class="mb"><p id="revivalSourceRow">Reward from <strong id="revivalChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="revivalKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="revivalKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="revivalErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="revivalCancel">Cancel</button><button type="submit" class="btn mint" id="revivalChoose">Earn this spin</button></div></form></dialog> <dialog id="choiceDlg" class="revival-dlg"><form method="dialog" id="choiceForm"><div class="mh" style="background:var(--pink)"><div><h2 id="choiceDialogTitle">Choose your Iridescent reward</h2><p id="choiceDialogPrompt">Pick a New Toon or a New Trinket spin for this completed team goal.</p></div></div><div class="mb"><p>Reward from <strong id="choiceChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="choiceKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="choiceKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="choiceErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="choiceCancel">Choose later</button><button type="submit" class="btn mint" id="choiceChoose">Earn this spin</button></div></form></dialog> <!-- Spinner -->
+<!-- Challenge editor --> <dialog id="chDlg"> <form method="dialog" id="chForm"> <div class="mh" style="background:var(--mint)"><div><h2 id="chDlgTitle">New challenge</h2><p id="chDlgHint">Finish it to earn a reward.</p></div></div> <div class="mb"> <label for="chTitle">Title</label> <input type="text" id="chTitle" maxlength="80" required placeholder="e.g. Survive 10 floors with Poppy" autocomplete="off"> <label for="chDesc" style="margin-top:12px">Description <span class="small">(optional · up to 3,000 characters)</span></label> <textarea id="chDesc" maxlength="3000" rows="6" placeholder="Add all the rules and details here…"></textarea> <fieldset class="state-pick" id="chCategory"><legend>Challenge tab</legend> <label class="st-unlocked"><input type="radio" name="chCategory" value="toon" checked><span>🎭 Toon challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="trinket"><span>💍 Trinket challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="team"><span>🏅 Team goal</span></label> </fieldset> <fieldset class="state-pick" id="teamTierWrap"><legend>Rarity / badge tier</legend> <label class="st-locked" id="tierNoneLabel"><input type="radio" name="teamTier" value="none"><span>None (default title color)</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="bronze" checked><span>🥉 Bronze</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="silver"><span>🥈 Silver</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="gold"><span>🥇 Gold</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="iridescent"><span>🌈 Iridescent</span></label> <p class="ch-help" id="teamTierHint">Bronze badge · no reward.</p> </fieldset> <fieldset class="state-pick" id="chType"><legend>Progress — pick any combination</legend> <label class="st-unlocked"><input type="checkbox" name="chModes" value="goal"><span>☑ One-time goal</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="checklist" checked><span>☑ Checklist</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="counter"><span>🔢 Counters</span></label> <p class="ch-help">Combine modes freely — e.g. Counters with a Checklist attached. At least one mode must stay selected.</p> </fieldset> <div id="chTargetRow" class="counter-editor" hidden><div class="counter-editor-head"><strong>Counter goals</strong><button type="button" class="btn ghost" id="addCounterRow">＋ Add counter</button></div><div id="chCounterRows"></div><p class="ch-help">Add up to 20 counters. Each needs a label and target, and each counter counts as one condition (see “conditions met” below).</p></div> <div id="chChecklistRow" class="checklist-editor"><strong class="chlist-title">Checklists</strong><div id="chListEditors"></div><button type="button" class="btn ghost" id="addChecklistList">＋ Add checklist</button><p class="ch-help">Give each checklist a name and its items, one per line (up to 100 items across all lists). Check off each step as you complete it. Use Exclude for items that do not apply; every included item counts as one condition. On the card, each checklist can be shown or hidden on its own.</p></div> <p id="chGoalHelp" class="ch-help" hidden>Tick the challenge's main checkbox when the goal itself is done — the goal counts as one condition.</p> <div id="chReqRow"><label for="chReqCount">Complete when <input type="number" id="chReqCount" min="0" max="999" step="1" inputmode="numeric" style="width:80px"> conditions are met</label><p class="ch-help">Leave blank (or 0) to require <b>all</b> conditions. Each included checklist item, each counter, and the goal itself each count as one condition — e.g. set 2 to complete when any 2 of 3 conditions are met.</p></div> <fieldset class="state-pick" id="chIconKind"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="chIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="chIconEmojiRow" hidden><label for="chIconEmoji">Emoji</label> <input type="text" id="chIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🔥"></div> <div id="chIconSpriteRow" hidden><label for="chIconSprite">Sprite</label> <select id="chIconSprite"></select></div> <div id="chIconUploadRow" hidden><label for="chIconFile">Custom image</label> <input type="file" id="chIconFile" accept="image/*"> <p class="ch-help" id="chIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the challenge.</p><img id="chIconPreview" class="ch-icon-img" alt="" hidden></div> <fieldset class="state-pick reward-pick" id="chRewardWrap"><legend>Default spin (used when Reward = Default)</legend> <label class="st-unlocked"><input type="radio" name="chReward" value="spin" checked><span>🎭 Toon spin</span></label> <label class="st-locked"><input type="radio" name="chReward" value="none"><span>No reward</span></label> <p class="ch-help" id="chRewardHint">A completed Toon challenge earns a Toon spin.</p> </fieldset> <fieldset class="state-pick" id="chRewardPickWrap"><legend>Reward</legend> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="default" checked><span>↩ Default for this tab/tier</span></label> <label class="st-locked"><input type="radio" name="chRewardPick" value="none"><span>No reward</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="toon"><span>🎭 Toon spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="trinket"><span>💍 Trinket spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="revival"><span>🎰 Revival Spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="choice"><span>✨ Your choice: Toon or Trinket spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="chance"><span>🎲 Revival chance…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="custom"><span>🎁 Custom reward…</span></label> <p class="ch-help">The reward is yours to choose, whatever the rarity — rarity stays as the badge/title color. “Default” keeps the standard reward above (tab spin, or the badge-tier reward for team goals).</p> </fieldset> <div id="chRewardChanceRow" hidden><label for="chRewardChance">Revival success chance</label> <input type="number" id="chRewardChance" min="1" max="99" step="1" value="50" style="width:80px"> % <p class="ch-help">Completing this challenge earns one revival chance at this success rate. Spin it from the wheel panel: success earns a Revival Spin, failure uses it up.</p></div> <div id="chRewardTextRow" hidden><label for="chRewardText">Custom reward text</label> <input type="text" id="chRewardText" maxlength="80" placeholder="e.g. Winner picks tonight's snack" autocomplete="off"> <p class="ch-help">Shown as the earned reward on the challenge card. The site displays it — it can't automate made-up effects.</p></div> <div id="chMissionRow"><label for="chMission">Mission group <span class="small">(optional)</span></label> <select id="chMission"></select> <p class="ch-help">Put this challenge in a mission subgroup (see the Missions tab). While it is in a subgroup with a shared counter, its counters can link to that shared counter.</p></div> <div id="chExcludeRow"><label><input type="checkbox" id="chExcluded"> Exclude from completion totals</label> <p class="ch-help">An excluded challenge still works and earns its reward — it just doesn't count toward 100% completion anywhere.</p></div> <p class="small" id="chErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"> <button type="button" class="btn ghost" id="chCancel">Cancel</button> <button type="submit" class="btn mint" id="chSave">Save</button> </div> </form> </dialog> <!-- Mission pack editor --> <dialog id="packDlg"> <form method="dialog" id="packForm"> <div class="mh" style="background:var(--lilac)"><div><h2 id="packDlgTitle">New mission pack</h2><p id="packDlgHint">Name the pack, and give it an icon if you like.</p></div></div> <div class="mb"> <label for="packName">Pack name</label> <input type="text" id="packName" maxlength="60" autocomplete="off" placeholder="e.g. Floor Milestones"> <fieldset class="state-pick" id="packIconKindWrap"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="packIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="packIconEmojiRow" hidden><label for="packIconEmoji">Emoji</label> <input type="text" id="packIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🗺"></div> <div id="packIconSpriteRow" hidden><label for="packIconSprite">Sprite</label> <select id="packIconSprite"></select></div> <div id="packIconUploadRow" hidden><label for="packIconFile">Custom image</label> <input type="file" id="packIconFile" accept="image/*"> <p class="ch-help" id="packIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the pack.</p><img id="packIconPreview" class="ch-icon-img" alt="" hidden></div> <p class="small" id="packErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"><button type="button" class="btn ghost" id="packCancel">Cancel</button><button type="submit" class="btn mint" id="packSave">Save pack</button></div> </form> </dialog> <!-- Subgroup editor --> <dialog id="subDlg"> <form method="dialog" id="subForm"> <div class="mh" style="background:var(--sky)"><div><h2 id="subDlgTitle">Edit subgroup</h2><p id="subDlgHint">Rename the subgroup, and manage its shared counter if it has one.</p></div></div> <div class="mb"> <label for="subName">Subgroup name</label> <input type="text" id="subName" maxlength="60" autocomplete="off" placeholder="e.g. Survival"> <fieldset id="subSharedWrap"><legend>Shared counter (optional)</legend> <label for="subSharedLabel">Label</label> <input type="text" id="subSharedLabel" maxlength="40" autocomplete="off" placeholder="e.g. Floors Survived — leave empty for none"> <label for="subSharedValue">Value</label> <input type="number" id="subSharedValue" min="0" max="1000000" step="1" inputmode="numeric"> <p class="ch-help" id="subSharedNote">One shared value drives every 🔗 linked counter in this subgroup. Changing the value updates the linked challenges right away.</p> <button type="button" class="btn ghost sm" id="subSharedRemove" hidden>Remove shared counter</button> </fieldset> <fieldset id="subIconKindWrap"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="subIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="subIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="subIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="subIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="subIconEmojiRow" hidden><label for="subIconEmoji">Emoji</label> <input type="text" id="subIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🗺"></div> <div id="subIconSpriteRow" hidden><label for="subIconSprite">Sprite</label> <select id="subIconSprite"></select></div> <div id="subIconUploadRow" hidden><label for="subIconFile">Custom image</label> <input type="file" id="subIconFile" accept="image/*"> <p class="ch-help" id="subIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the subgroup.</p><img id="subIconPreview" class="ch-icon-img" alt="" hidden></div> <p class="small" id="subErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"><button type="button" class="btn ghost" id="subCancel">Cancel</button><button type="submit" class="btn mint" id="subSave">Save subgroup</button></div> </form> </dialog> <dialog id="revivalDlg" class="revival-dlg"><form method="dialog" id="revivalForm"><div class="mh" style="background:var(--pink)"><div><h2 id="revivalDialogTitle">Choose your spin</h2><p id="revivalDialogPrompt">Pick a Toon or Trinket spin for this completed challenge.</p></div></div><div class="mb"><p id="revivalSourceRow">Reward from <strong id="revivalChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="revivalKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="revivalKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="revivalErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="revivalCancel">Cancel</button><button type="submit" class="btn mint" id="revivalChoose">Earn this spin</button></div></form></dialog> <dialog id="choiceDlg" class="revival-dlg"><form method="dialog" id="choiceForm"><div class="mh" style="background:var(--pink)"><div><h2 id="choiceDialogTitle">Choose your Iridescent reward</h2><p id="choiceDialogPrompt">Pick a New Toon or a New Trinket spin for this completed team goal.</p></div></div><div class="mb"><p>Reward from <strong id="choiceChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="choiceKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="choiceKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="choiceErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="choiceCancel">Choose later</button><button type="submit" class="btn mint" id="choiceChoose">Earn this spin</button></div></form></dialog> <!-- Spinner -->
 <dialog id="spinDlg" class="spin-dlg">
   <div class="mh" style="background:var(--yellow)"><div><h2 id="spinTitle">Spinning…</h2><p id="spinSub"></p></div></div>
   <div class="mb">
@@ -689,10 +704,13 @@ function iconMarkup(c){
   return '';
 }
 /* Mission pack icons reuse the challenge icon renderer; .pack-ico sizes them up. */
-function packIconMarkup(pack){
-  const m = iconMarkup(pack);
+/* Shared icon wrapper for mission entities (packs and subgroups): renders
+   the entity's icon at pack-icon size, or nothing when it has none. */
+function entityIconMarkup(entity){
+  const m = iconMarkup(entity);
   return m ? `<span class="pack-ico">${m}</span>` : '';
 }
+function packIconMarkup(pack){ return entityIconMarkup(pack); }
 /* One condition = one required checklist item, one counter, or the manual goal flag. */
 function challengeConditions(ch){
   const modes = modesOf(ch);
@@ -803,7 +821,7 @@ function sanitizeMissions(raw, validIds){
     const rawSubs = Array.isArray(p.subs) ? p.subs.slice(0,30) : [];
     for (const s of rawSubs){
       if (!s || typeof s !== 'object') continue;
-      const sub = {id:freshId(s.id), title:String(s.title || 'Subgroup').trim().slice(0,60) || 'Subgroup', shared:null, challengeIds:[]};
+      const sub = {id:freshId(s.id), title:String(s.title || 'Subgroup').trim().slice(0,60) || 'Subgroup', icon:sanitizeIcon(s.icon), shared:null, challengeIds:[]};
       if (s.shared && typeof s.shared === 'object' && String(s.shared.label || '').trim())
         sub.shared = {label:String(s.shared.label).trim().slice(0,40), value:clampInt(s.shared.value, 0, 1000000, 0)};
       if (Array.isArray(s.challengeIds)) for (const cid of s.challengeIds){
@@ -1462,6 +1480,14 @@ async function setDone(ch, done){
    subgroup. Changing it writes the value into each linked counter (so stored
    data never goes stale) and re-evaluates each linked challenge's completion
    through the normal afterChange path. */
+/* Remove a subgroup's shared counter: linked counters keep their current
+   value (kept in sync by setSharedValue / load-time sync) as their own and
+   unlink. Caller saves and re-renders. */
+function removeSharedCounter(sub){
+  if (!sub || !sub.shared) return;
+  for (const cid of sub.challengeIds){ const ch = chById(cid); if (ch) for (const counter of (ch.counters || [])) if (counter.linked) counter.linked = false; }
+  sub.shared = null;
+}
 async function setSharedValue(sub, v){
   if (!sub || !sub.shared) return;
   sub.shared.value = clampInt(v, 0, 1000000, sub.shared.value);
@@ -1552,7 +1578,7 @@ function challengeCardMarkup(c, i, listLen, opts){
       const counterMarkup=(c.counters||[]).map((counter,index)=>{
         const isLinked=!!counter.linked && !!cardShared;
         const pct=Math.min(100,counter.value/counter.target*100);
-        return `<div class="counter-unit"><div class="counter-label">${esc(counter.label)}${isLinked ? ` <span class="counter-link-tag" title="Linked to the group counter — its value drives this counter">🔗 ${esc(cardShared.label)}</span>` : ''}</div><div class="counter"><button type="button" class="cbtn" data-act="dec" data-counter-index="${index}" aria-label="Decrease ${esc(counter.label)}">−</button><button type="button" class="cval" data-act="setval" data-counter-index="${index}" aria-label="Edit ${esc(counter.label)} progress">${counter.value} / ${counter.target}</button><button type="button" class="cbtn" data-act="inc" data-counter-index="${index}" aria-label="Increase ${esc(counter.label)}">+</button><div class="bar"><i style="width:${pct}%"></i></div></div></div>`;
+        return `<div class="counter-unit">${isLinked ? '' : `<div class="counter-label">${esc(counter.label)}</div>`}<div class="counter"><button type="button" class="cbtn" data-act="dec" data-counter-index="${index}" aria-label="Decrease ${esc(counter.label)}">−</button><button type="button" class="cval" data-act="setval" data-counter-index="${index}" aria-label="Edit ${esc(counter.label)} progress">${counter.value} / ${counter.target}</button><button type="button" class="cbtn" data-act="inc" data-counter-index="${index}" aria-label="Increase ${esc(counter.label)}">+</button><div class="bar"><i style="width:${pct}%"></i></div></div></div>`;
       }).join('');
       return `<div class="ch ${c.done?'done':''}${c.excluded?' excluded':''} ${modes.length===1 && modes[0]==='checklist' ? 'checklist-ch':''}" data-id="${esc(c.id)}">
         ${hasCounters || hasGoal ? `<button type="button" class="chk" data-act="toggle" aria-pressed="${c.done}" aria-label="${c.done?'Mark not done':'Mark done'}: ${esc(c.title)}">${c.done?'✓':''}</button>` : ''}
@@ -1937,6 +1963,95 @@ $('#packForm').addEventListener('submit',e=>{
   $('#packDlg').close();
   saveRun(); renderMissions();
 });
+
+/* ---------- Subgroup editor (name + shared counter) ---------- */
+let subEditing=null, subRemoveShared=false, subHadShared=false, subIconUploadData='';
+function syncSubIconRow(){
+  const kind=radioVal('subIconKind')||'none';
+  $('#subIconEmojiRow').hidden=kind!=='emoji'; $('#subIconSpriteRow').hidden=kind!=='sprite'; $('#subIconUploadRow').hidden=kind!=='upload';
+}
+document.querySelectorAll('input[name="subIconKind"]').forEach(r=>r.addEventListener('change',syncSubIconRow));
+(function buildSubIconSpriteOptions(){
+  const sel=$('#subIconSprite'); if (!sel) return;
+  const group=(label,kind)=>`<optgroup label="${label}">${DATA[kind].map(it=>`<option value="${esc(it.name)}">${esc(it.name)}</option>`).join('')}</optgroup>`;
+  sel.innerHTML=group('Toons','toons')+group('Trinkets','trinkets');
+})();
+$('#subIconFile').addEventListener('change', async e=>{
+  const f=e.target.files[0]; e.target.value=''; if (!f) return;
+  try {
+    const data=await shrinkIconImage(f);
+    if (!data){ $('#subErr').textContent='That image is still too detailed to store, even shrunk. Try a simpler image.'; return; }
+    subIconUploadData=data;
+    const prev=$('#subIconPreview'); prev.src=data; prev.hidden=false;
+    $('#subIconUploadInfo').textContent='Custom image ready — it will be saved inside the subgroup.';
+    $('#subErr').textContent='';
+  } catch { $('#subErr').textContent='Could not read that image file.'; }
+});
+function openSubEditor(pack, sub){
+  subEditing={packId:pack.id, subId:sub.id};
+  subRemoveShared=false; subHadShared=!!sub.shared;
+  $('#subName').value=sub.title;
+  $('#subSharedLabel').value=sub.shared ? sub.shared.label : '';
+  $('#subSharedLabel').disabled=false;
+  $('#subSharedValue').value=sub.shared ? sub.shared.value : 0;
+  $('#subSharedValue').disabled=!sub.shared;
+  $('#subSharedRemove').hidden=!sub.shared;
+  setRadio('subIconKind', sub.icon ? sub.icon.kind : 'none');
+  $('#subIconEmoji').value=sub.icon && sub.icon.kind==='emoji' ? sub.icon.value : '';
+  if (sub.icon && sub.icon.kind==='sprite') $('#subIconSprite').value=sub.icon.value;
+  subIconUploadData=sub.icon && sub.icon.kind==='upload' ? sub.icon.value : '';
+  const sprev=$('#subIconPreview'); sprev.hidden=!subIconUploadData; if (subIconUploadData) sprev.src=subIconUploadData;
+  $('#subIconUploadInfo').textContent=subIconUploadData ? 'Custom image saved — pick a new file to replace it.' : 'Pick an image — it is shrunk to at most 128×128 and stored inside the subgroup.';
+  syncSubIconRow();
+  $('#subSharedNote').textContent='One shared value drives every 🔗 linked counter in this subgroup. Changing the value updates the linked challenges right away.';
+  $('#subErr').textContent='';
+  $('#subDlg').showModal(); setTimeout(()=>$('#subName').focus(),30);
+}
+$('#subSharedLabel').addEventListener('input',()=>{
+  $('#subSharedValue').disabled=!(subHadShared || $('#subSharedLabel').value.trim());
+});
+$('#subSharedRemove').addEventListener('click',()=>{
+  subRemoveShared=true;
+  $('#subSharedLabel').value=''; $('#subSharedLabel').disabled=true;
+  $('#subSharedValue').disabled=true;
+  $('#subSharedRemove').hidden=true;
+  $('#subSharedNote').textContent='The shared counter will be removed when you save. Linked counters keep their current value as their own and unlink.';
+});
+$('#subCancel').addEventListener('click',()=>{ subEditing=null; subRemoveShared=false; $('#subDlg').close(); });
+$('#subForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  if (!subEditing) return;
+  const pack=missionPackById(subEditing.packId);
+  const sub=pack ? pack.subs.find(s=>s.id===subEditing.subId) : null;
+  if (!sub){ subEditing=null; $('#subDlg').close(); return; }
+  const title=$('#subName').value.trim().slice(0,60);
+  if (!title){ $('#subErr').textContent='Give your subgroup a name.'; $('#subName').focus(); return; }
+  const iconKind=radioVal('subIconKind')||'none';
+  let icon=null;
+  if (iconKind==='emoji'){ const v=$('#subIconEmoji').value.trim(); if (!v){ $('#subErr').textContent='Type an emoji for the icon, or choose a different icon option.'; $('#subIconEmoji').focus(); return; } icon={kind:'emoji',value:v}; }
+  else if (iconKind==='sprite'){ icon={kind:'sprite',value:$('#subIconSprite').value}; }
+  else if (iconKind==='upload'){ if (!subIconUploadData){ $('#subErr').textContent='Choose an image for the icon, or choose a different icon option.'; return; } icon={kind:'upload',value:subIconUploadData}; }
+  icon=sanitizeIcon(icon);
+  if (iconKind!=='none' && !icon){ $('#subErr').textContent='That icon could not be saved — try a different one.'; return; }
+  sub.title=title; sub.icon=icon;
+  const label=$('#subSharedLabel').value.trim().slice(0,40);
+  const val=clampInt($('#subSharedValue').value, 0, 1000000, sub.shared ? sub.shared.value : 0);
+  let sharedValChanged=false;
+  if (subRemoveShared || (sub.shared && !label)){
+    removeSharedCounter(sub); /* existing semantics: linked counters unlink, values materialized */
+  } else if (label){
+    if (!sub.shared) sub.shared={label, value:val};
+    else {
+      sub.shared.label=label;
+      sharedValChanged = val !== sub.shared.value;
+    }
+  }
+  subEditing=null; subRemoveShared=false; subHadShared=false;
+  $('#subDlg').close();
+  if (sharedValChanged) await setSharedValue(sub, val); /* routes through the shared-value path: linked counters + completion */
+  else { saveRun(); renderAll(); }
+  toast('Subgroup saved');
+});
 $('#chForm').addEventListener('submit',async e=>{
   e.preventDefault();
   const title=$('#chTitle').value.trim();
@@ -2309,6 +2424,21 @@ function missionTotals(){
   for (const p of (run.missions || [])) for (const s of p.subs){ const pr = missionProgress(s.challengeIds); done += pr.done; total += pr.total; }
   return {done, total};
 }
+/* Reorder helpers for the mission lists — packs and subgroups sort exactly
+   like challenges (drag, with the arrows as fallback). swapInPlace returns
+   false for edge no-ops; reorderByIds rebuilds a list in a given id order
+   (used when a drag ends), falling back to the original order when the id
+   set does not match exactly. */
+function swapInPlace(arr, i, j){
+  if (!Array.isArray(arr) || i < 0 || j < 0 || i >= arr.length || j >= arr.length || i === j) return false;
+  [arr[i], arr[j]] = [arr[j], arr[i]]; return true;
+}
+function reorderByIds(list, ids){
+  if (!Array.isArray(list) || !Array.isArray(ids) || ids.length !== list.length) return Array.isArray(list) ? list.slice() : [];
+  const byId = new Map(list.map(x => [x.id, x]));
+  const out = ids.map(id => byId.get(id));
+  return out.every(Boolean) ? out : list.slice();
+}
 function renderMissions(){
   const badge = $('#tabMissions');
   if (badge){ const t = missionTotals(); badge.textContent = `${t.done}/${t.total}`; }
@@ -2320,35 +2450,31 @@ function renderMissions(){
   if (pack && view.missionSubId){ sub = pack.subs.find(s => s.id === view.missionSubId) || null; if (!sub){ view.missionSubId = null; view.missionPicker = false; } }
   if (!pack){
     root.innerHTML = `<div class="filters"><button type="button" class="btn mint" data-mact="new-pack">＋ New mission pack</button></div>` +
-      (packs.length ? packs.map(p => {
+      (packs.length ? `<div id="missionPacks">` + packs.map((p, i) => {
         let done = 0, total = 0;
         for (const s of p.subs){ const pr = missionProgress(s.challengeIds); done += pr.done; total += pr.total; }
-        return `<div class="fr-card"><div class="fr-head"><span class="fr-runname">${packIconMarkup(p)}${esc(p.title)}</span><span class="fr-stats">${done}/${total} challenges complete · ${p.subs.length} subgroup${p.subs.length === 1 ? '' : 's'}</span><span class="fr-acts"><button type="button" class="btn mint sm" data-mact="open-pack" data-pid="${esc(p.id)}">Open</button><button type="button" class="btn ghost sm" data-mact="edit-pack" data-pid="${esc(p.id)}">Edit</button><button type="button" class="btn ghost sm" data-mact="del-pack" data-pid="${esc(p.id)}">Delete</button></span></div></div>`;
-      }).join('') : `<div class="ch-empty"><span class="big">🗺</span>No mission packs yet.<br>Create one to group related challenges — like a “Survive Floors” series — across rarities.</div>`);
+        return `<div class="fr-card" data-pid="${esc(p.id)}"><div class="fr-head"><span class="drag-handle" data-drag-pack title="Drag to reorder" aria-label="Drag to reorder">⠿</span><span class="fr-runname">${packIconMarkup(p)}${esc(p.title)}</span><span class="fr-stats">${done}/${total} challenges complete · ${p.subs.length} subgroup${p.subs.length === 1 ? '' : 's'}</span><span class="fr-acts"><button type="button" class="btn mint sm" data-mact="open-pack" data-pid="${esc(p.id)}">Open</button><button type="button" class="btn ghost sm" data-mact="edit-pack" data-pid="${esc(p.id)}">Edit</button><button type="button" class="btn ghost sm" data-mact="del-pack" data-pid="${esc(p.id)}">Delete</button><button type="button" class="ibtn" data-mact="pack-up" data-pid="${esc(p.id)}" aria-label="Move pack up" ${i===0?'disabled':''}>▲</button><button type="button" class="ibtn" data-mact="pack-down" data-pid="${esc(p.id)}" aria-label="Move pack down" ${i===packs.length-1?'disabled':''}>▼</button></span></div></div>`;
+      }).join('') + `</div>` : `<div class="ch-empty"><span class="big">🗺</span>No mission packs yet.<br>Create one to group related challenges — like a “Survive Floors” series — across rarities.</div>`);
     return;
   }
   if (!sub){
     root.innerHTML = `<div class="filters"><button type="button" class="btn ghost" data-mact="back">← Back</button>${packIconMarkup(pack)}<strong class="mission-crumb">${esc(pack.title)}</strong><button type="button" class="btn mint" data-mact="new-sub">＋ New subgroup</button></div>` +
-      (pack.subs.length ? pack.subs.map(s => {
+      (pack.subs.length ? `<div id="missionSubs">` + pack.subs.map((s, i) => {
         const pr = missionProgress(s.challengeIds);
-        return `<div class="fr-card"><div class="fr-head"><span class="fr-runname">${esc(s.title)}</span><span class="fr-stats">${pr.done}/${pr.total} challenges complete${s.shared ? ` · 🔗 ${esc(s.shared.label)}: ${s.shared.value}` : ''}</span><span class="fr-acts"><button type="button" class="btn mint sm" data-mact="open-sub" data-sid="${esc(s.id)}">Open</button><button type="button" class="btn ghost sm" data-mact="rename-sub" data-sid="${esc(s.id)}">Rename</button><button type="button" class="btn ghost sm" data-mact="del-sub" data-sid="${esc(s.id)}">Delete</button></span></div></div>`;
-      }).join('') : `<div class="ch-empty">No subgroups in this pack yet. Add one to start grouping challenges.</div>`);
+        return `<div class="fr-card" data-sid="${esc(s.id)}"><div class="fr-head"><span class="drag-handle" data-drag-sub title="Drag to reorder" aria-label="Drag to reorder">⠿</span><span class="fr-runname">${entityIconMarkup(s)}${esc(s.title)}</span><span class="fr-stats">${pr.done}/${pr.total} challenges complete${s.shared ? ` · 🔗 ${esc(s.shared.label)}: ${s.shared.value}` : ''}</span><span class="fr-acts"><button type="button" class="btn mint sm" data-mact="open-sub" data-sid="${esc(s.id)}">Open</button><button type="button" class="btn ghost sm" data-mact="edit-sub" data-sid="${esc(s.id)}">Edit</button><button type="button" class="btn ghost sm" data-mact="del-sub" data-sid="${esc(s.id)}">Delete</button><button type="button" class="ibtn" data-mact="sub-up" data-sid="${esc(s.id)}" aria-label="Move subgroup up" ${i===0?'disabled':''}>▲</button><button type="button" class="ibtn" data-mact="sub-down" data-sid="${esc(s.id)}" aria-label="Move subgroup down" ${i===pack.subs.length-1?'disabled':''}>▼</button></span></div></div>`;
+      }).join('') + `</div>` : `<div class="ch-empty">No subgroups in this pack yet. Add one to start grouping challenges.</div>`);
     return;
   }
   const pr = missionProgress(sub.challengeIds);
   const members = sub.challengeIds.map(id => chById(id)).filter(Boolean);
-  const sharedBlock = sub.shared
-    ? `<div class="shared-block"><div class="shared-head"><span class="shared-label">🔗 ${esc(sub.shared.label)}</span><span class="shared-acts"><button type="button" class="btn ghost sm" data-mact="shared-edit">Edit label</button><button type="button" class="btn ghost sm" data-mact="shared-del">Remove</button></span></div><div class="counter shared-counter"><button type="button" class="cbtn" data-mact="shared-dec" aria-label="Decrease ${esc(sub.shared.label)}">−</button><button type="button" class="cval" data-mact="shared-set" aria-label="Set ${esc(sub.shared.label)}">${sub.shared.value}</button><button type="button" class="cbtn" data-mact="shared-inc" aria-label="Increase ${esc(sub.shared.label)}">+</button></div><p class="ch-help">One shared value — it drives every 🔗 linked counter in this subgroup.</p></div>`
-    : `<div class="shared-block"><button type="button" class="btn ghost sm" data-mact="shared-add">＋ Add shared counter</button><p class="ch-help">A shared counter (e.g. “Floors Survived”) can drive several challenges in this subgroup at once — link a counter from each challenge's editor.</p></div>`;
   const unaffiliated = run.challenges.filter(c => !missionLoc(c.id));
   const picker = view.missionPicker
     ? `<div class="mission-picker">${unaffiliated.length ? unaffiliated.map(c => `<button type="button" class="btn ghost sm mission-pick" data-mact="pick-ch" data-cid="${esc(c.id)}">${esc(c.title)}</button>`).join('') : '<p class="ch-help">Every challenge is already in a subgroup.</p>'}</div>`
     : '';
-  root.innerHTML = `<div class="filters"><button type="button" class="btn ghost" data-mact="back">← Back</button><strong class="mission-crumb">${esc(pack.title)} › ${esc(sub.title)}</strong><span class="mission-prog">${pr.done}/${pr.total} complete</span></div>` +
-    sharedBlock +
+  root.innerHTML = `<div class="filters"><button type="button" class="btn ghost" data-mact="back">← Back</button>${entityIconMarkup(sub)}<strong class="mission-crumb">${esc(pack.title)} › ${esc(sub.title)}</strong><span class="mission-prog">${pr.done}/${pr.total} complete</span><button type="button" class="btn ghost sm" data-mact="edit-sub">Edit</button></div>` +
     `<div class="filters"><button type="button" class="btn mint" data-mact="add-new-ch">＋ New challenge</button><button type="button" class="btn sky" data-mact="add-existing" aria-expanded="${!!view.missionPicker}">＋ Add existing challenge</button></div>` +
     picker +
-    `<div id="missionCards" class="ch-list">${members.length ? members.map((c, idx) => challengeCardMarkup(c, idx, members.length, {mission:true})).join('') : '<div class="ch-empty">No challenges in this subgroup yet. Add a new one, or bring in an existing challenge.</div>'}</div>`;
+    `<div id="missionCards" class="ch-list mission-stack">${members.length ? members.map((c, idx) => challengeCardMarkup(c, idx, members.length, {mission:true})).join('') : '<div class="ch-empty">No challenges in this subgroup yet. Add a new one, or bring in an existing challenge.</div>'}</div>`;
 }
 /* Card actions inside the subgroup view: same behavior as the Challenges tab,
    except reorder edits the subgroup's order and there is a Remove-from-group. */
@@ -2410,6 +2536,11 @@ $('#missionRoot').addEventListener('click', async e => {
     if (view.missionId === p.id){ view.missionId = null; view.missionSubId = null; view.missionPicker = false; }
     saveRun(); renderAll(); toast('Mission pack deleted — challenges kept'); return;
   }
+  if (mact === 'pack-up' || mact === 'pack-down'){
+    const arr = run.missions || [], i = arr.findIndex(x => x.id === b.dataset.pid);
+    if (i >= 0 && swapInPlace(arr, i, i + (mact === 'pack-up' ? -1 : 1))){ saveRun(); renderMissions(); }
+    return;
+  }
   if (!pack) return;
   if (mact === 'back'){
     if (view.missionSubId){ view.missionSubId = null; view.missionPicker = false; } else view.missionId = null;
@@ -2418,15 +2549,14 @@ $('#missionRoot').addEventListener('click', async e => {
   if (mact === 'new-sub'){
     const name = await ask({title:'New subgroup', msg:`Name this subgroup of “${pack.title}”:`, input:'', ok:'Create'});
     if (name === null || !String(name).trim()) return;
-    pack.subs.push({id:uid(), title:String(name).trim().slice(0,60), shared:null, challengeIds:[]});
+    pack.subs.push({id:uid(), title:String(name).trim().slice(0,60), icon:null, shared:null, challengeIds:[]});
     saveRun(); renderMissions(); return;
   }
   if (mact === 'open-sub'){ view.missionSubId = b.dataset.sid; view.missionPicker = false; renderMissions(); return; }
-  if (mact === 'rename-sub'){
-    const s = pack.subs.find(x => x.id === b.dataset.sid); if (!s) return;
-    const name = await ask({title:'Rename subgroup', msg:'New name:', input:s.title, ok:'Rename'});
-    if (name === null || !String(name).trim()) return;
-    s.title = String(name).trim().slice(0,60); saveRun(); renderMissions(); return;
+  if (mact === 'edit-sub'){
+    const s = b.dataset.sid ? pack.subs.find(x => x.id === b.dataset.sid) : sub;
+    if (!s) return;
+    openSubEditor(pack, s); return;
   }
   if (mact === 'del-sub'){
     const s = pack.subs.find(x => x.id === b.dataset.sid); if (!s) return;
@@ -2437,6 +2567,11 @@ $('#missionRoot').addEventListener('click', async e => {
     if (view.missionSubId === s.id){ view.missionSubId = null; view.missionPicker = false; }
     saveRun(); renderAll(); toast('Subgroup deleted — challenges kept'); return;
   }
+  if (mact === 'sub-up' || mact === 'sub-down'){
+    const i = pack.subs.findIndex(x => x.id === b.dataset.sid);
+    if (i >= 0 && swapInPlace(pack.subs, i, i + (mact === 'sub-up' ? -1 : 1))){ saveRun(); renderMissions(); }
+    return;
+  }
   if (!sub) return;
   if (mact === 'add-new-ch'){ openChEditor(null, {packId:pack.id, subId:sub.id}); return; }
   if (mact === 'add-existing'){ view.missionPicker = !view.missionPicker; renderMissions(); return; }
@@ -2445,30 +2580,6 @@ $('#missionRoot').addEventListener('click', async e => {
     view.missionPicker = false;
     await applyMembership(ch, {pack, sub});
     toast(`Added “${ch.title}” to “${sub.title}”`); return;
-  }
-  if (mact === 'shared-add'){
-    const label = await ask({title:'Shared counter', msg:'Name the shared counter for this subgroup (e.g. “Floors Survived”):', input:'', ok:'Add'});
-    if (label === null || !String(label).trim()) return;
-    sub.shared = {label:String(label).trim().slice(0,40), value:0};
-    saveRun(); renderMissions(); return;
-  }
-  if (mact === 'shared-edit' && sub.shared){
-    const label = await ask({title:'Shared counter label', msg:'New label:', input:sub.shared.label, ok:'Save'});
-    if (label === null || !String(label).trim()) return;
-    sub.shared.label = String(label).trim().slice(0,40); saveRun(); renderMissions(); return;
-  }
-  if (mact === 'shared-del' && sub.shared){
-    const ok = await ask({title:'Remove shared counter?', msg:`Remove the shared counter “${sub.shared.label}”? Linked counters keep their current value (${sub.shared.value}) as their own and unlink.`, ok:'Remove', danger:true});
-    if (!ok) return;
-    for (const cid of sub.challengeIds){ const ch = chById(cid); if (ch) for (const counter of (ch.counters || [])) if (counter.linked) counter.linked = false; }
-    sub.shared = null; saveRun(); renderAll(); toast('Shared counter removed'); return;
-  }
-  if (mact === 'shared-inc' && sub.shared){ await setSharedValue(sub, sub.shared.value + 1); return; }
-  if (mact === 'shared-dec' && sub.shared){ await setSharedValue(sub, sub.shared.value - 1); return; }
-  if (mact === 'shared-set' && sub.shared){
-    const v = await ask({title:'Set shared counter', msg:`${sub.shared.label}:`, input:String(sub.shared.value), ok:'Set', numeric:true});
-    if (v !== null && v !== '' && Number.isFinite(Number(v))) await setSharedValue(sub, Number(v));
-    return;
   }
 });
 /* Drag-to-reorder inside a subgroup: rewrites the subgroup's challengeIds. */
@@ -2504,6 +2615,64 @@ window.addEventListener('pointerup', e => {
   }
 });
 window.addEventListener('pointercancel', e => { if (missionDrag && e.pointerId === missionDrag.pointerId){ missionDrag = null; renderMissions(); } });
+/* Drag-to-reorder for the pack and subgroup rows: the same pointer pattern
+   as the card drags — the row moves live in the DOM, then the backing array
+   (run.missions / pack.subs, whose order IS the stored order) is rewritten
+   on drop. Handles are distinct from the card drag handles, and the arrow
+   buttons remain the fallback. */
+let packDrag = null;
+$('#missionRoot').addEventListener('pointerdown', e => {
+  const handle = e.target.closest('[data-drag-pack]'); if (!handle) return;
+  const card = handle.closest('.fr-card'); if (!card || !card.dataset.pid) return;
+  e.preventDefault();
+  packDrag = {card, pointerId:e.pointerId};
+  card.classList.add('dragging');
+  try { handle.setPointerCapture(e.pointerId); } catch { /* window listeners below still track */ }
+});
+let subDrag = null;
+$('#missionRoot').addEventListener('pointerdown', e => {
+  const handle = e.target.closest('[data-drag-sub]'); if (!handle) return;
+  const card = handle.closest('.fr-card'); if (!card || !card.dataset.sid) return;
+  const pack = view.missionId ? missionPackById(view.missionId) : null; if (!pack) return;
+  e.preventDefault();
+  subDrag = {card, pointerId:e.pointerId, packId:pack.id};
+  card.classList.add('dragging');
+  try { handle.setPointerCapture(e.pointerId); } catch { /* window listeners below still track */ }
+});
+function rowDragMove(state, listSel, e){
+  if (e.clientY < 70) window.scrollBy(0, -14); else if (e.clientY > window.innerHeight - 70) window.scrollBy(0, 14);
+  const list = document.querySelector(listSel); if (!list) return;
+  const card = state.card;
+  const siblings = [...list.querySelectorAll('.fr-card')].filter(el => el !== card);
+  const before = siblings.find(el => { const r = el.getBoundingClientRect(); return e.clientY < r.top + r.height / 2; });
+  if (before) list.insertBefore(card, before); else list.appendChild(card);
+}
+window.addEventListener('pointermove', e => {
+  if (packDrag && e.pointerId === packDrag.pointerId){ e.preventDefault(); rowDragMove(packDrag, '#missionPacks', e); }
+  if (subDrag && e.pointerId === subDrag.pointerId){ e.preventDefault(); rowDragMove(subDrag, '#missionSubs', e); }
+}, {passive:false});
+window.addEventListener('pointerup', e => {
+  if (packDrag && e.pointerId === packDrag.pointerId){
+    const pd = packDrag; packDrag = null; pd.card.classList.remove('dragging');
+    const cur = run.missions || [];
+    const domOrder = [...document.querySelectorAll('#missionPacks .fr-card')].map(el => el.dataset.pid);
+    if (domOrder.length === cur.length && domOrder.some((id, i) => id !== cur[i].id)){ run.missions = reorderByIds(cur, domOrder); saveRun(); }
+    renderMissions();
+  }
+  if (subDrag && e.pointerId === subDrag.pointerId){
+    const sd = subDrag; subDrag = null; sd.card.classList.remove('dragging');
+    const pack = missionPackById(sd.packId);
+    if (pack){
+      const domOrder = [...document.querySelectorAll('#missionSubs .fr-card')].map(el => el.dataset.sid);
+      if (domOrder.length === pack.subs.length && domOrder.some((id, i) => id !== pack.subs[i].id)){ pack.subs = reorderByIds(pack.subs, domOrder); saveRun(); }
+    }
+    renderMissions();
+  }
+});
+window.addEventListener('pointercancel', e => {
+  if (packDrag && e.pointerId === packDrag.pointerId){ packDrag = null; renderMissions(); }
+  if (subDrag && e.pointerId === subDrag.pointerId){ subDrag = null; renderMissions(); }
+});
 
 /* ================= Friends (snapshots — not live sync) =================
    A friend entry is a snapshot of a friend's exported run, imported with the same
