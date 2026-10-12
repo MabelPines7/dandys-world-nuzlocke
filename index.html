@@ -221,6 +221,27 @@ footer a{color:var(--mint)}
 .ch .t{font-weight:700;font-size:17px;line-height:1.2;word-break:break-word}
 .ch.done .t{text-decoration:line-through;text-decoration-thickness:2px;color:#2f6b55}
 .ch .d{font-size:13.5px;color:#5d4b6e;margin-top:2px;word-break:break-word;white-space:pre-wrap}
+/* Rarity title colors (team tier, or a tier picked for any challenge) */
+.ch .t.tier-bronze{color:#a9713a}
+.ch .t.tier-silver{color:#7d8590}
+.ch .t.tier-gold{color:#b8860b}
+.ch .t.tier-iridescent{color:#8b46c7}
+.ch.excluded{opacity:.6}
+.ch-excl-chip{font-size:11px;font-weight:800;border:2px solid var(--ink);border-radius:999px;padding:0 7px;background:#d8d3e0;color:#4a4258;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
+.counter-link-tag{font-size:11px;font-weight:700;color:#5d4b6e;white-space:nowrap}
+.counter-config-row .counter-link{grid-column:1/-1;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
+.mission-crumb{font-size:18px}
+.mission-prog{font-weight:700;color:#e9defc}
+.shared-block{border:3px dashed #7a5fa8;border-radius:16px;padding:12px;margin-bottom:14px;background:#f6f0ff;color:var(--ink)}
+.shared-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.shared-label{font-weight:800;font-size:16px}
+.shared-acts{display:flex;gap:6px;flex-wrap:wrap}
+.shared-counter{max-width:340px}
+.mission-picker{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.tab[data-tab=missions][aria-selected=true]{background:var(--lilac)}
+.tile.success{background:#2fae72}
+.tile.fail{background:#574b66}
+.tile .tile-verdict{font-size:20px;font-weight:900;color:#fff;letter-spacing:.5px}
 .ch .meta-row{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-top:6px}
 .rew{font-size:12px;font-weight:800;border:2px solid var(--ink);border-radius:999px;padding:1px 8px;background:var(--yellow);text-transform:uppercase;letter-spacing:.3px}
 .rew.claimed{background:#c9f2df}
@@ -472,6 +493,7 @@ footer a{color:var(--mint)}
     <button class="tab" role="tab" data-tab="toons" aria-selected="false" aria-controls="sec-toons">Toons <span class="cnt" id="tabToons"></span></button>
     <button class="tab" role="tab" data-tab="trinkets" aria-selected="false" aria-controls="sec-trinkets">Trinkets <span class="cnt" id="tabTrinkets"></span></button>
     <button class="tab" role="tab" data-tab="friends" aria-selected="false" aria-controls="sec-friends">Friends <span class="cnt" id="tabFriends"></span></button>
+    <button class="tab" role="tab" data-tab="missions" aria-selected="false" aria-controls="sec-missions">Missions <span class="cnt" id="tabMissions"></span></button>
   </div>
 
   <section class="panel section" id="sec-challenges" role="tabpanel">
@@ -482,7 +504,8 @@ footer a{color:var(--mint)}
         <div class="spin-btns">
           <button type="button" class="btn pink" id="spinToon" data-spin="toon">Spin toon <span class="badge" id="credToon">0</span></button>
           <button type="button" class="btn sky" id="spinTrinket" data-spin="trinket">Spin trinket <span class="badge" id="credTrinket">0</span></button>
-          <button type="button" class="btn mint" id="spinRevival" data-spin="revival">Revival spin <span class="badge" id="credRevival">0</span></button></div>
+          <button type="button" class="btn mint" id="spinRevival" data-spin="revival">Revival spin <span class="badge" id="credRevival">0</span></button>
+          <button type="button" class="btn pink" id="spinChance" data-spin="chance">🎲 Chance spin <span class="badge" id="credChance">0</span></button></div>
         <label class="free"><input type="checkbox" id="freeSpin"> <span>Free spin <small>(spin without using a credit)</small></span></label>
       </div>
       <div class="ch-prog">
@@ -518,6 +541,11 @@ footer a{color:var(--mint)}
     <div id="friendList" class="fr-list"></div>
     <div id="friendDetail"></div>
   </section>
+  <section class="panel section" id="sec-missions" role="tabpanel" hidden>
+    <h3>🗺 Missions</h3>
+    <p class="howto"><b>Mission packs</b> group related challenges into subgroups — across rarities — so a series like “Survive 100 / 250 / 500 / 1000 Floors” is tracked together. Open a pack, then a subgroup, to work on its challenges. Deleting a pack or subgroup never deletes the challenges inside it.</p>
+    <div id="missionRoot"></div>
+  </section>
   <input type="file" id="friendFileIn" accept=".json,application/json" hidden>
 
   <footer>
@@ -527,7 +555,7 @@ footer a{color:var(--mint)}
   </footer>
 </div>
 
-<!-- Challenge editor --> <dialog id="chDlg"> <form method="dialog" id="chForm"> <div class="mh" style="background:var(--mint)"><div><h2 id="chDlgTitle">New challenge</h2><p id="chDlgHint">Finish it to earn a reward.</p></div></div> <div class="mb"> <label for="chTitle">Title</label> <input type="text" id="chTitle" maxlength="80" required placeholder="e.g. Survive 10 floors with Poppy" autocomplete="off"> <label for="chDesc" style="margin-top:12px">Description <span class="small">(optional · up to 3,000 characters)</span></label> <textarea id="chDesc" maxlength="3000" rows="6" placeholder="Add all the rules and details here…"></textarea> <fieldset class="state-pick" id="chCategory"><legend>Challenge tab</legend> <label class="st-unlocked"><input type="radio" name="chCategory" value="toon" checked><span>🎭 Toon challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="trinket"><span>💍 Trinket challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="team"><span>🏅 Team goal</span></label> </fieldset> <fieldset class="state-pick" id="teamTierWrap" hidden><legend>Team badge tier</legend> <label class="st-unlocked"><input type="radio" name="teamTier" value="bronze" checked><span>🥉 Bronze</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="silver"><span>🥈 Silver</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="gold"><span>🥇 Gold</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="iridescent"><span>🌈 Iridescent</span></label> <p class="ch-help" id="teamTierHint">Bronze badge · no reward.</p> </fieldset> <fieldset class="state-pick" id="chType"><legend>Progress — pick any combination</legend> <label class="st-unlocked"><input type="checkbox" name="chModes" value="goal"><span>☑ One-time goal</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="checklist" checked><span>☑ Checklist</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="counter"><span>🔢 Counters</span></label> <p class="ch-help">Combine modes freely — e.g. Counters with a Checklist attached. At least one mode must stay selected.</p> </fieldset> <div id="chTargetRow" class="counter-editor" hidden><div class="counter-editor-head"><strong>Counter goals</strong><button type="button" class="btn ghost" id="addCounterRow">＋ Add counter</button></div><div id="chCounterRows"></div><p class="ch-help">Add up to 20 counters. Each needs a label and target, and each counter counts as one condition (see “conditions met” below).</p></div> <div id="chChecklistRow" class="checklist-editor"><strong class="chlist-title">Checklists</strong><div id="chListEditors"></div><button type="button" class="btn ghost" id="addChecklistList">＋ Add checklist</button><p class="ch-help">Give each checklist a name and its items, one per line (up to 100 items across all lists). Check off each step as you complete it. Use Exclude for items that do not apply; every included item counts as one condition. On the card, each checklist can be shown or hidden on its own.</p></div> <p id="chGoalHelp" class="ch-help" hidden>Tick the challenge's main checkbox when the goal itself is done — the goal counts as one condition.</p> <div id="chReqRow"><label for="chReqCount">Complete when <input type="number" id="chReqCount" min="0" max="999" step="1" inputmode="numeric" style="width:80px"> conditions are met</label><p class="ch-help">Leave blank (or 0) to require <b>all</b> conditions. Each included checklist item, each counter, and the goal itself each count as one condition — e.g. set 2 to complete when any 2 of 3 conditions are met.</p></div> <fieldset class="state-pick" id="chIconKind"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="chIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="chIconEmojiRow" hidden><label for="chIconEmoji">Emoji</label> <input type="text" id="chIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🔥"></div> <div id="chIconSpriteRow" hidden><label for="chIconSprite">Sprite</label> <select id="chIconSprite"></select></div> <div id="chIconUploadRow" hidden><label for="chIconFile">Custom image</label> <input type="file" id="chIconFile" accept="image/*"> <p class="ch-help" id="chIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the challenge.</p><img id="chIconPreview" class="ch-icon-img" alt="" hidden></div> <fieldset class="state-pick reward-pick" id="chRewardWrap"><legend>Reward</legend> <label class="st-unlocked"><input type="radio" name="chReward" value="spin" checked><span>🎭 Toon spin</span></label> <label class="st-locked"><input type="radio" name="chReward" value="none"><span>No reward</span></label> <p class="ch-help" id="chRewardHint">A completed Toon challenge earns a Toon spin.</p> </fieldset> <p class="small" id="chErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"> <button type="button" class="btn ghost" id="chCancel">Cancel</button> <button type="submit" class="btn mint" id="chSave">Save</button> </div> </form> </dialog> <dialog id="revivalDlg" class="revival-dlg"><form method="dialog" id="revivalForm"><div class="mh" style="background:var(--pink)"><div><h2 id="revivalDialogTitle">Choose your spin</h2><p id="revivalDialogPrompt">Pick a Toon or Trinket spin for this completed challenge.</p></div></div><div class="mb"><p id="revivalSourceRow">Reward from <strong id="revivalChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="revivalKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="revivalKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="revivalErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="revivalCancel">Cancel</button><button type="submit" class="btn mint" id="revivalChoose">Earn this spin</button></div></form></dialog> <dialog id="choiceDlg" class="revival-dlg"><form method="dialog" id="choiceForm"><div class="mh" style="background:var(--pink)"><div><h2 id="choiceDialogTitle">Choose your Iridescent reward</h2><p id="choiceDialogPrompt">Pick a New Toon or a New Trinket spin for this completed team goal.</p></div></div><div class="mb"><p>Reward from <strong id="choiceChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="choiceKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="choiceKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="choiceErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="choiceCancel">Choose later</button><button type="submit" class="btn mint" id="choiceChoose">Earn this spin</button></div></form></dialog> <!-- Spinner -->
+<!-- Challenge editor --> <dialog id="chDlg"> <form method="dialog" id="chForm"> <div class="mh" style="background:var(--mint)"><div><h2 id="chDlgTitle">New challenge</h2><p id="chDlgHint">Finish it to earn a reward.</p></div></div> <div class="mb"> <label for="chTitle">Title</label> <input type="text" id="chTitle" maxlength="80" required placeholder="e.g. Survive 10 floors with Poppy" autocomplete="off"> <label for="chDesc" style="margin-top:12px">Description <span class="small">(optional · up to 3,000 characters)</span></label> <textarea id="chDesc" maxlength="3000" rows="6" placeholder="Add all the rules and details here…"></textarea> <fieldset class="state-pick" id="chCategory"><legend>Challenge tab</legend> <label class="st-unlocked"><input type="radio" name="chCategory" value="toon" checked><span>🎭 Toon challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="trinket"><span>💍 Trinket challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="team"><span>🏅 Team goal</span></label> </fieldset> <fieldset class="state-pick" id="teamTierWrap"><legend>Rarity / badge tier</legend> <label class="st-locked" id="tierNoneLabel"><input type="radio" name="teamTier" value="none"><span>None (default title color)</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="bronze" checked><span>🥉 Bronze</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="silver"><span>🥈 Silver</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="gold"><span>🥇 Gold</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="iridescent"><span>🌈 Iridescent</span></label> <p class="ch-help" id="teamTierHint">Bronze badge · no reward.</p> </fieldset> <fieldset class="state-pick" id="chType"><legend>Progress — pick any combination</legend> <label class="st-unlocked"><input type="checkbox" name="chModes" value="goal"><span>☑ One-time goal</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="checklist" checked><span>☑ Checklist</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="counter"><span>🔢 Counters</span></label> <p class="ch-help">Combine modes freely — e.g. Counters with a Checklist attached. At least one mode must stay selected.</p> </fieldset> <div id="chTargetRow" class="counter-editor" hidden><div class="counter-editor-head"><strong>Counter goals</strong><button type="button" class="btn ghost" id="addCounterRow">＋ Add counter</button></div><div id="chCounterRows"></div><p class="ch-help">Add up to 20 counters. Each needs a label and target, and each counter counts as one condition (see “conditions met” below).</p></div> <div id="chChecklistRow" class="checklist-editor"><strong class="chlist-title">Checklists</strong><div id="chListEditors"></div><button type="button" class="btn ghost" id="addChecklistList">＋ Add checklist</button><p class="ch-help">Give each checklist a name and its items, one per line (up to 100 items across all lists). Check off each step as you complete it. Use Exclude for items that do not apply; every included item counts as one condition. On the card, each checklist can be shown or hidden on its own.</p></div> <p id="chGoalHelp" class="ch-help" hidden>Tick the challenge's main checkbox when the goal itself is done — the goal counts as one condition.</p> <div id="chReqRow"><label for="chReqCount">Complete when <input type="number" id="chReqCount" min="0" max="999" step="1" inputmode="numeric" style="width:80px"> conditions are met</label><p class="ch-help">Leave blank (or 0) to require <b>all</b> conditions. Each included checklist item, each counter, and the goal itself each count as one condition — e.g. set 2 to complete when any 2 of 3 conditions are met.</p></div> <fieldset class="state-pick" id="chIconKind"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="chIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="chIconEmojiRow" hidden><label for="chIconEmoji">Emoji</label> <input type="text" id="chIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🔥"></div> <div id="chIconSpriteRow" hidden><label for="chIconSprite">Sprite</label> <select id="chIconSprite"></select></div> <div id="chIconUploadRow" hidden><label for="chIconFile">Custom image</label> <input type="file" id="chIconFile" accept="image/*"> <p class="ch-help" id="chIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the challenge.</p><img id="chIconPreview" class="ch-icon-img" alt="" hidden></div> <fieldset class="state-pick reward-pick" id="chRewardWrap"><legend>Default spin (used when Reward = Default)</legend> <label class="st-unlocked"><input type="radio" name="chReward" value="spin" checked><span>🎭 Toon spin</span></label> <label class="st-locked"><input type="radio" name="chReward" value="none"><span>No reward</span></label> <p class="ch-help" id="chRewardHint">A completed Toon challenge earns a Toon spin.</p> </fieldset> <fieldset class="state-pick" id="chRewardPickWrap"><legend>Reward</legend> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="default" checked><span>↩ Default for this tab/tier</span></label> <label class="st-locked"><input type="radio" name="chRewardPick" value="none"><span>No reward</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="toon"><span>🎭 Toon spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="trinket"><span>💍 Trinket spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="revival"><span>🎰 Revival Spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="choice"><span>✨ Your choice: Toon or Trinket spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="chance"><span>🎲 Revival chance…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="custom"><span>🎁 Custom reward…</span></label> <p class="ch-help">The reward is yours to choose, whatever the rarity — rarity stays as the badge/title color. “Default” keeps the standard reward above (tab spin, or the badge-tier reward for team goals).</p> </fieldset> <div id="chRewardChanceRow" hidden><label for="chRewardChance">Revival success chance</label> <input type="number" id="chRewardChance" min="1" max="99" step="1" value="50" style="width:80px"> % <p class="ch-help">Completing this challenge earns one revival chance at this success rate. Spin it from the wheel panel: success earns a Revival Spin, failure uses it up.</p></div> <div id="chRewardTextRow" hidden><label for="chRewardText">Custom reward text</label> <input type="text" id="chRewardText" maxlength="80" placeholder="e.g. Winner picks tonight's snack" autocomplete="off"> <p class="ch-help">Shown as the earned reward on the challenge card. The site displays it — it can't automate made-up effects.</p></div> <div id="chMissionRow"><label for="chMission">Mission group <span class="small">(optional)</span></label> <select id="chMission"></select> <p class="ch-help">Put this challenge in a mission subgroup (see the Missions tab). While it is in a subgroup with a shared counter, its counters can link to that shared counter.</p></div> <div id="chExcludeRow"><label><input type="checkbox" id="chExcluded"> Exclude from completion totals</label> <p class="ch-help">An excluded challenge still works and earns its reward — it just doesn't count toward 100% completion anywhere.</p></div> <p class="small" id="chErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"> <button type="button" class="btn ghost" id="chCancel">Cancel</button> <button type="submit" class="btn mint" id="chSave">Save</button> </div> </form> </dialog> <dialog id="revivalDlg" class="revival-dlg"><form method="dialog" id="revivalForm"><div class="mh" style="background:var(--pink)"><div><h2 id="revivalDialogTitle">Choose your spin</h2><p id="revivalDialogPrompt">Pick a Toon or Trinket spin for this completed challenge.</p></div></div><div class="mb"><p id="revivalSourceRow">Reward from <strong id="revivalChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="revivalKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="revivalKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="revivalErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="revivalCancel">Cancel</button><button type="submit" class="btn mint" id="revivalChoose">Earn this spin</button></div></form></dialog> <dialog id="choiceDlg" class="revival-dlg"><form method="dialog" id="choiceForm"><div class="mh" style="background:var(--pink)"><div><h2 id="choiceDialogTitle">Choose your Iridescent reward</h2><p id="choiceDialogPrompt">Pick a New Toon or a New Trinket spin for this completed team goal.</p></div></div><div class="mb"><p>Reward from <strong id="choiceChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="choiceKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="choiceKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="choiceErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="choiceCancel">Choose later</button><button type="submit" class="btn mint" id="choiceChoose">Earn this spin</button></div></form></dialog> <!-- Spinner -->
 <dialog id="spinDlg" class="spin-dlg">
   <div class="mh" style="background:var(--yellow)"><div><h2 id="spinTitle">Spinning…</h2><p id="spinSub"></p></div></div>
   <div class="mb">
@@ -611,11 +639,20 @@ const STATES = ['locked','unlocked','eliminated'];
 const CHALLENGE_CATEGORIES = ['toon','trinket','team'];
 const TEAM_TIERS = ['bronze','silver','gold','iridescent'];
 const TEAM_TIER_REWARD = {bronze:'none', silver:'none', gold:'revival', iridescent:'choice'};
-const TEAM_TIER_HINT = {bronze:'Bronze badge · no reward.', silver:'Silver badge · no reward.', gold:'Gold badge · earn one Revival Spin. It only revives an eliminated Toon or Trinket; it is not a Toon or Trinket spin.', iridescent:'Iridescent badge · earn one spin of your choice: a New Toon or a New Trinket.'};
+const TEAM_TIER_HINT = {bronze:'Bronze badge · default reward: none (change it under Reward below).', silver:'Silver badge · default reward: none (change it under Reward below).', gold:'Gold badge · default reward: one Revival Spin (change it under Reward below). It only revives an eliminated Toon or Trinket; it is not a Toon or Trinket spin.', iridescent:'Iridescent badge · default reward: one spin of your choice — a New Toon or a New Trinket (change it under Reward below).'};
 const REWARDS = ['spin','none'];
-const SPIN_KINDS = ['toon','trinket','revival'];
-const challengeReward = c => c.category==='team' ? (TEAM_TIER_REWARD[c.teamTier] || 'none') : (c.reward==='none' ? 'none' : c.category);
-const freshRun = (name) => ({ app:'dandys-world-nuzlocke', version:8, name, created:new Date().toISOString(), updated:new Date().toISOString(),
+const SPIN_KINDS = ['toon','trinket','revival','chance'];
+/* Kinds that can be stored on a claimed challenge (rewardKind): spin kinds plus 'custom' (a free-text reward with no spin credit). */
+const CLAIM_KINDS = ['toon','trinket','revival','chance','custom'];
+const REWARD_PICKS = ['default','none','toon','trinket','revival','choice','chance','custom'];
+/* Effective reward for a challenge. A per-challenge Reward pick (feature: choose
+   your reward) wins over the default derivation: team tier map for team goals,
+   category spin / stored 'spin'|'none' for the rest. */
+const challengeReward = c => {
+  if (c && c.rewardPick && c.rewardPick !== 'default') return c.rewardPick;
+  return c.category==='team' ? (TEAM_TIER_REWARD[c.teamTier] || 'none') : (c.reward==='none' ? 'none' : c.category);
+};
+const freshRun = (name) => ({ app:'dandys-world-nuzlocke', version:8, name, created:new Date().toISOString(), updated:new Date().toISOString(), missions:[],
   status:{toons:Object.fromEntries(DEFAULT_UNLOCKED.toons.map(n=>[n,'unlocked'])), trinkets:Object.fromEntries(DEFAULT_UNLOCKED.trinkets.map(n=>[n,'unlocked']))},
   challenges:[], spins:[], history:[], spinUnlocks:{toons:{},trinkets:{}} });
 const clampInt = (v, lo, hi, d) => { v = Math.floor(Number(v)); return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
@@ -696,13 +733,13 @@ function sanitizeChallenge(o, seen){
         counter = counter && typeof counter==='object' ? counter : {};
         let counterId=String(counter.id||uid()).slice(0,40); while (counterIds.has(counterId)) counterId=uid(); counterIds.add(counterId);
         const label=String(counter.label||`Counter ${index+1}`).trim().slice(0,60)||`Counter ${index+1}`;
-        return {id:counterId,label,target:clampInt(counter.target,1,99999,10),value:clampInt(counter.value,0,99999,0)};
-      }) : [{id:uid(),label:'Counter 1',target:legacyTarget,value:legacyValue}])
+        return {id:counterId,label,target:clampInt(counter.target,1,99999,10),value:clampInt(counter.value,0,99999,0),linked:!!counter.linked};
+      }) : [{id:uid(),label:'Counter 1',target:legacyTarget,value:legacyValue,linked:false}])
     : rawCounters.slice(0,20).map((counter,index)=>{
         counter = counter && typeof counter==='object' ? counter : {};
         let counterId=String(counter.id||uid()).slice(0,40); while (counterIds.has(counterId)) counterId=uid(); counterIds.add(counterId);
         const label=String(counter.label||`Counter ${index+1}`).trim().slice(0,60)||`Counter ${index+1}`;
-        return {id:counterId,label,target:clampInt(counter.target,1,99999,10),value:clampInt(counter.value,0,99999,0)};
+        return {id:counterId,label,target:clampInt(counter.target,1,99999,10),value:clampInt(counter.value,0,99999,0),linked:!!counter.linked};
       });
   const target=counters.length ? counters[0].target : legacyTarget;
   const value=hasCounter && counters.length ? counters[0].value : 0;
@@ -739,11 +776,41 @@ function sanitizeChallenge(o, seen){
     if (listState.some(e=>e.name===name)) continue;
     listState.push({name, collapsed:!!entry.collapsed});
   }
-  const rewardKind = SPIN_KINDS.includes(o.rewardKind) ? o.rewardKind : null;
-  return {id, title, desc:String(o.desc||'').slice(0,3000), category, teamTier, type:legacyTypeForModes(modes), modes, requiredCount, icon:sanitizeIcon(o.icon), goalDone, target, value, counters, counterRestore, checklistRestore, collapsed:!!o.collapsed, itemsCollapsed:!!o.itemsCollapsed, items, listState, done, reward, claimed:done && reward!=='none' && !!o.claimed, rewardKind, rewardGrantId:o.rewardGrantId ? String(o.rewardGrantId).slice(0,40) : null};
+  const rewardKind = CLAIM_KINDS.includes(o.rewardKind) ? o.rewardKind : null;
+  const rewardPick = REWARD_PICKS.includes(o.rewardPick) ? o.rewardPick : 'default';
+  const rewardChance = clampInt(o.rewardChance, 1, 99, 50);
+  const rewardText = String(o.rewardText || '').slice(0, 80);
+  const tierSet = category==='team' ? true : !!o.tierSet;
+  const effReward = challengeReward({category, teamTier, reward, rewardPick});
+  return {id, title, desc:String(o.desc||'').slice(0,3000), category, teamTier, type:legacyTypeForModes(modes), modes, requiredCount, icon:sanitizeIcon(o.icon), goalDone, target, value, counters, counterRestore, checklistRestore, collapsed:!!o.collapsed, itemsCollapsed:!!o.itemsCollapsed, items, listState, done, reward, rewardPick, rewardChance, rewardText, excluded:!!o.excluded, tierSet, claimed:done && effReward!=='none' && !!o.claimed, rewardKind, rewardGrantId:o.rewardGrantId ? String(o.rewardGrantId).slice(0,40) : null};
 }
 const toMaps = r => ({toons:new Map(Object.entries(r.status.toons)), trinkets:new Map(Object.entries(r.status.trinkets))});
 
+/* Missions: packs -> subgroups -> challenge memberships. A challenge id belongs
+   to at most one subgroup across the whole run (first occurrence wins). */
+function sanitizeMissions(raw, validIds){
+  const packs = [], used = new Set(), seenIds = new Set();
+  const freshId = (v) => { let id = String(v || uid()).slice(0,40); while (seenIds.has(id)) id = uid(); seenIds.add(id); return id; };
+  if (!Array.isArray(raw)) return packs;
+  for (const p of raw.slice(0,30)){
+    if (!p || typeof p !== 'object') continue;
+    const pack = {id:freshId(p.id), title:String(p.title || 'Mission pack').trim().slice(0,60) || 'Mission pack', subs:[]};
+    const rawSubs = Array.isArray(p.subs) ? p.subs.slice(0,30) : [];
+    for (const s of rawSubs){
+      if (!s || typeof s !== 'object') continue;
+      const sub = {id:freshId(s.id), title:String(s.title || 'Subgroup').trim().slice(0,60) || 'Subgroup', shared:null, challengeIds:[]};
+      if (s.shared && typeof s.shared === 'object' && String(s.shared.label || '').trim())
+        sub.shared = {label:String(s.shared.label).trim().slice(0,40), value:clampInt(s.shared.value, 0, 1000000, 0)};
+      if (Array.isArray(s.challengeIds)) for (const cid of s.challengeIds){
+        const id = String(cid);
+        if (validIds.has(id) && !used.has(id)){ used.add(id); sub.challengeIds.push(id); }
+      }
+      pack.subs.push(sub);
+    }
+    packs.push(pack);
+  }
+  return packs;
+}
 function normalizeRun(r, fallbackName){
   if (!r || typeof r !== 'object' || Array.isArray(r)) throw new Error('Not a run');
   if (!(r.app==='dandys-world-nuzlocke' || 'status' in r || 'unlocked' in r || 'eliminated' in r || 'notes' in r || 'challenges' in r)) throw new Error('Not a run');
@@ -763,6 +830,20 @@ function normalizeRun(r, fallbackName){
   const seen = new Set();
   out.challenges = Array.isArray(r.challenges) ? r.challenges.filter(o => o && typeof o==='object' && String(o.title||'').trim()).slice(0,300).map(o => sanitizeChallenge(o, seen)) : [];
   const challengeById = new Map(out.challenges.map(c => [c.id,c]));
+  out.missions = sanitizeMissions(r.missions, new Set(out.challenges.map(c => c.id)));
+  /* Linked counters take their value from their subgroup's shared counter.
+     Reconcile defensively: a linked counter whose challenge is not in a subgroup
+     WITH a shared counter materializes with its last synced value and unlinks. */
+  {
+    const locOf = new Map();
+    for (const p of out.missions) for (const s of p.subs) for (const cid of s.challengeIds) locOf.set(cid, s);
+    for (const c of out.challenges) for (const counter of (c.counters || [])){
+      if (!counter.linked) continue;
+      const sub = locOf.get(c.id);
+      if (sub && sub.shared) counter.value = sub.shared.value; else counter.linked = false;
+    }
+    for (const c of out.challenges) c.done = computeDone(c);
+  }
   const migratedSpinKind = g => {
     const challenge = g.challengeId ? challengeById.get(String(g.challengeId)) : null;
     const reward = challenge ? challengeReward(challenge) : null;
@@ -770,11 +851,12 @@ function normalizeRun(r, fallbackName){
     return g.kind==='either' ? 'toon' : g.kind;
   };
   out.spins = Array.isArray(r.spins) ? r.spins.filter(g => g && (SPIN_KINDS.includes(g.kind) || g.kind==='either')).slice(0,500)
-    .map(g => ({id:String(g.id||uid()).slice(0,40), kind:migratedSpinKind(g), challengeId:g.challengeId ? String(g.challengeId).slice(0,40) : null, title:g.title ? String(g.title).slice(0,80) : null, ts:isoOr(g.ts)})) : [];
-  out.history = Array.isArray(r.history) ? r.history.filter(h => h && KINDS.includes(h.kind) && ITEMS[h.kind].has(h.name)).slice(0,1000)
+    .map(g => { const kind = migratedSpinKind(g); const grant = {id:String(g.id||uid()).slice(0,40), kind, challengeId:g.challengeId ? String(g.challengeId).slice(0,40) : null, title:g.title ? String(g.title).slice(0,80) : null, ts:isoOr(g.ts)}; if (kind === 'chance') grant.pct = clampInt(g.pct, 1, 99, 50); return grant; }) : [];
+  out.history = Array.isArray(r.history) ? r.history.filter(h => h && ((KINDS.includes(h.kind) && ITEMS[h.kind].has(h.name)) || (h.chanceRoll && typeof h.challengeRoll === 'object'))).slice(0,1000)
     .map(h => {
       const challenge = h.challengeId ? challengeById.get(String(h.challengeId)) : null;
       const reward = challenge ? challengeReward(challenge) : null;
+      if (h.chanceRoll && typeof h.challengeRoll === 'object') return {id:String(h.id||uid()).slice(0,40), kind:null, name:null, challenge:h.challenge ? String(h.challenge).slice(0,80) : null, challengeId:h.challengeId ? String(h.challengeId).slice(0,40) : null, spinKind:'chance', spinPoolKind:null, free:!!h.free, chanceRoll:{pct:clampInt(h.chanceRoll.pct, 1, 99, 50), success:!!h.challengeRoll.success}, ts:isoOr(h.ts)};
       const migratedKind = ['toon','trinket','revival'].includes(reward) ? reward : (SPIN_KINDS.includes(h.spinKind) ? h.spinKind : null);
       return {id:String(h.id||uid()).slice(0,40), kind:h.kind, name:h.name, challenge:h.challenge ? String(h.challenge).slice(0,80) : null, challengeId:h.challengeId ? String(h.challengeId).slice(0,40) : null, spinKind:migratedKind, spinPoolKind:['toon','trinket'].includes(h.spinPoolKind) ? h.spinPoolKind : null, free:!!h.free, ts:isoOr(h.ts)};
     }) : [];
@@ -808,12 +890,12 @@ function normalizeRun(r, fallbackName){
       const grant = out.spins.find(g => g.challengeId===c.id);
       const used = out.history.find(h => h.challengeId===c.id);
       if (grant || used) c.claimed=true;
-      if (c.claimed) { const reward=challengeReward(c); if (SPIN_KINDS.includes(reward)) c.rewardKind=reward; else if (grant) c.rewardKind=grant.kind; else if (used && used.spinKind) c.rewardKind=used.spinKind; }
+      if (c.claimed) { const reward=challengeReward(c); if (CLAIM_KINDS.includes(reward)) c.rewardKind=reward; else if (grant) c.rewardKind=grant.kind; else if (used && used.spinKind) c.rewardKind=used.spinKind; }
       if (grant) c.rewardGrantId=grant.id;
     }
   }
   out.version = 8;
-  out._needsSave = Number(r.version)!==8 || JSON.stringify(out.status)!==JSON.stringify(r.status||null) || JSON.stringify(out.challenges)!==JSON.stringify(r.challenges||[]) || JSON.stringify(out.spins)!==JSON.stringify(r.spins||[]) || JSON.stringify(out.history)!==JSON.stringify(r.history||[]) || JSON.stringify(out.spinUnlocks)!==JSON.stringify(r.spinUnlocks||null);
+  out._needsSave = Number(r.version)!==8 || JSON.stringify(out.status)!==JSON.stringify(r.status||null) || JSON.stringify(out.challenges)!==JSON.stringify(r.challenges||[]) || JSON.stringify(out.spins)!==JSON.stringify(r.spins||[]) || JSON.stringify(out.history)!==JSON.stringify(r.history||[]) || JSON.stringify(out.spinUnlocks)!==JSON.stringify(r.spinUnlocks||null) || JSON.stringify(out.missions)!==JSON.stringify(r.missions||null);
   return out;
 }
 
@@ -852,7 +934,7 @@ function saveRun(){
 const exportable = () => { saveRun(); return plainRun(); };
 
 /* ---------- UI state ---------- */
-const view = { tab:'challenges', cf:'all', cc:'toon', tf:'all', friendId:null, free:false, toons:{q:'',f:'all',cat:'all'}, trinkets:{q:'',f:'all',cat:'all'} };
+const view = { tab:'challenges', cf:'all', cc:'toon', tf:'all', friendId:null, free:false, missionId:null, missionSubId:null, missionPicker:false, toons:{q:'',f:'all',cat:'all'}, trinkets:{q:'',f:'all',cat:'all'} };
 const cats = k => (DATA.catOrder && DATA.catOrder[k]) || [...new Set(DATA[k].flatMap(i => i.cats))];
 
 function buildSection(kind){
@@ -916,7 +998,7 @@ function renderCard(card){
 }
 function renderAll(){
   document.querySelectorAll('.card').forEach(renderCard);
-  KINDS.forEach(applyFilter); renderCounts(); renderRuns(); renderChallenges(); renderFriends();
+  KINDS.forEach(applyFilter); renderCounts(); renderRuns(); renderChallenges(); renderFriends(); renderMissions();
 }
 function renderCounts(){
   for (const k of KINDS){
@@ -1018,9 +1100,10 @@ $('#deleteRun').addEventListener('click', async () => {
 $('#resetRun').addEventListener('click', async () => {
   const res = await ask({title:'Reset run?', msg:`Reset “${run.name}”? Only Poppy & Boxten stay unlocked, all trinkets locked, eliminations, spin credits and history cleared. Challenges are kept but marked not done.`,
     ok:'Reset', danger:true, check:'Also delete all challenges'});
-  if (!res) return; const name = run.name, created = run.created, keep = res.checked ? [] : run.challenges;
+  if (!res) return; const name = run.name, created = run.created, keep = res.checked ? [] : run.challenges, keepMissions = res.checked ? [] : (run.missions || []);
   run = Object.assign(freshRun(name), {created}); run._st = toMaps(run);
   run.challenges = keep.map(c => ({...c, done:false, goalDone:false, value:0, claimed:false, rewardKind:null, rewardGrantId:null}));
+  run.missions = keepMissions;
   saveRun(); renderAll(); toast(res.checked ? 'Run reset — challenges deleted' : 'Run reset — challenges kept');
 });
 
@@ -1169,15 +1252,50 @@ $('#fileIn').addEventListener('change', async e => {
 });
 
 /* ================= Challenges ================= */
-const REWARD_LABEL = {toon:'Toon spin', trinket:'Trinket spin', revival:'Revival Spin', choice:'Your choice: Toon or Trinket spin', none:'No reward'};
+const REWARD_LABEL = {toon:'Toon spin', trinket:'Trinket spin', revival:'Revival Spin', choice:'Your choice: Toon or Trinket spin', chance:'Revival chance', custom:'Custom reward', none:'No reward'};
+/* Label for rewards that carry per-challenge data (chance %, custom text). */
+function rewardLabelFor(c){
+  const reward = challengeReward(c);
+  if (reward === 'chance') return `Revival chance (${clampInt(c.rewardChance, 1, 99, 50)}%)`;
+  if (reward === 'custom') return c.rewardText ? `Reward: ${c.rewardText}` : 'Custom reward';
+  return REWARD_LABEL[reward] || 'No reward';
+}
 const CATEGORY_LABEL = {toon:'Toon challenge', trinket:'Trinket challenge', team:'Team goal'};
 const chById = id => run.challenges.find(c => c.id === id);
+/* Mission membership: a challenge lives in at most one subgroup. */
+function missionLoc(challengeId){
+  for (const p of (run.missions || [])) for (const s of p.subs) if (s.challengeIds.includes(challengeId)) return {pack:p, sub:s};
+  return null;
+}
+function missionPackById(id){ return (run.missions || []).find(p => p.id === id) || null; }
+function detachFromMissions(challengeId){
+  for (const p of (run.missions || [])) for (const s of p.subs){
+    const i = s.challengeIds.indexOf(challengeId);
+    if (i >= 0) s.challengeIds.splice(i, 1);
+  }
+}
+/* Completion counts over a set of challenge ids, EXCLUDING excluded challenges
+   from both numbers (feature: excluded challenges don't count toward totals). */
+function missionProgress(ids){
+  let done = 0, total = 0;
+  for (const id of ids){ const c = chById(id); if (!c || c.excluded) continue; total++; if (c.done) done++; }
+  return {done, total};
+}
 function grantFor(ch, kind){
   const reward = challengeReward(ch);
-  if (reward==='none' || !SPIN_KINDS.includes(kind) || ch.claimed) return null;
+  if (reward==='none' || ch.claimed) return null;
+  if (reward==='custom'){
+    // A custom free-text reward has no spin credit: claiming just marks the
+    // challenge claimed with rewardKind 'custom' so the badge can show it earned.
+    if (kind !== 'custom') return null;
+    ch.claimed = true; ch.rewardKind = 'custom'; ch.rewardGrantId = null;
+    return {id:null, kind:'custom', challengeId:ch.id, title:ch.title, ts:new Date().toISOString()};
+  }
+  if (!SPIN_KINDS.includes(kind)) return null;
   const accepted = reward==='choice' ? (kind==='toon' || kind==='trinket') : kind===reward;
   if (!accepted) return null;
   const grant = {id:uid(), kind, challengeId:ch.id, title:ch.title, ts:new Date().toISOString()};
+  if (kind === 'chance') grant.pct = clampInt(ch.rewardChance, 1, 99, 50);
   run.spins.push(grant); ch.claimed=true; ch.rewardKind=kind; ch.rewardGrantId=grant.id;
   return grant;
 }
@@ -1270,10 +1388,14 @@ async function afterChange(ch, wasDone, previousReward=challengeReward(ch)){
   }
   saveRun(); renderAll(); renderSpinPanel();
   if (pendingChoice){
-    toast(`✔ “${ch.title}” complete! Iridescent reward — pick your spin.`);
+    toast(`✔ “${ch.title}” complete! Reward — pick your spin.`);
     await grantChoiceReward(ch);
   } else if (granted && reward==='revival'){
     toast(`✔ “${ch.title}” complete! Revival Spin earned.`, () => startSpin('revival', ch.id), 'Spin now');
+  } else if (granted && reward==='chance'){
+    toast(`✔ “${ch.title}” complete! Revival chance (${clampInt(ch.rewardChance, 1, 99, 50)}%) earned.`, () => startSpin('chance', ch.id), 'Spin now');
+  } else if (granted && reward==='custom'){
+    toast(`✔ “${ch.title}” complete! Reward earned: ${ch.rewardText || 'Custom reward'}`);
   } else if (granted && (reward==='toon' || reward==='trinket')){
     const kindLabel=reward==='toon' ? 'Toon' : 'Trinket';
     toast(`✔ “${ch.title}” complete! ${kindLabel} spin earned.`, () => startSpin(reward, ch.id), 'Spin now');
@@ -1306,16 +1428,16 @@ async function setDone(ch, done){
         if (hasMode(ch,'counter')) ch.counterRestore=oldCounters.map(({id,value})=>({id,value}));
         if (hasMode(ch,'checklist')) ch.checklistRestore=oldItems.map((item,index)=>({index,text:item.text,done:!!item.done}));
       }
-      if (hasMode(ch,'counter')) ch.counters.forEach(counter=>counter.value=Math.max(counter.value,counter.target));
+      if (hasMode(ch,'counter')) ch.counters.forEach(counter=>{ if (!counter.linked) counter.value=Math.max(counter.value,counter.target); });
       if (hasMode(ch,'checklist')) ch.items.filter(item=>!item.excluded).forEach(item=>item.done=true);
     }
     else {
       if (hasMode(ch,'counter')){
         const savedById=was && Array.isArray(ch.counterRestore) ? new Map(ch.counterRestore.map(counter=>[counter.id,counter.value])) : null;
-        const restored=savedById ? ch.counters.filter(counter=>savedById.has(counter.id)) : [];
+        const restored=savedById ? ch.counters.filter(counter=>!counter.linked && savedById.has(counter.id)) : [];
         if (restored.length) restored.forEach(counter=>counter.value=clampInt(savedById.get(counter.id),0,99999,counter.value));
         else {
-          const completed=[...ch.counters].reverse().find(counter=>counter.value>=counter.target) || ch.counters[0];
+          const completed=[...ch.counters].reverse().find(counter=>!counter.linked && counter.value>=counter.target) || ch.counters.find(counter=>!counter.linked);
           if (completed) completed.value=Math.min(completed.value,completed.target-1);
         }
       }
@@ -1331,8 +1453,30 @@ async function setDone(ch, done){
   const accepted=await afterChange(ch,was);
   if (!accepted){ ch.counters=oldCounters; ch.items=oldItems; ch.counterRestore=oldCounterRestore; ch.checklistRestore=oldChecklistRestore; ch.goalDone=oldGoalDone; syncLegacyCounterFields(ch); ch.done=was; saveRun(); renderAll(); renderSpinPanel(); }
 }
+/* Shared subgroup counter: one value drives every linked counter in the
+   subgroup. Changing it writes the value into each linked counter (so stored
+   data never goes stale) and re-evaluates each linked challenge's completion
+   through the normal afterChange path. */
+async function setSharedValue(sub, v){
+  if (!sub || !sub.shared) return;
+  sub.shared.value = clampInt(v, 0, 1000000, sub.shared.value);
+  const changed = [];
+  for (const cid of sub.challengeIds){
+    const ch = chById(cid); if (!ch) continue;
+    let touched = false;
+    for (const counter of (ch.counters || [])) if (counter.linked){ counter.value = sub.shared.value; touched = true; }
+    if (touched){ syncLegacyCounterFields(ch); const was = ch.done; ch.done = computeDone(ch); if (ch.done !== was) changed.push([ch, was]); }
+  }
+  saveRun(); renderAll(); renderSpinPanel();
+  for (const [ch, was] of changed) await afterChange(ch, was);
+}
 async function setValue(ch,index,v){
   const counter=(ch.counters||[])[index]; if (!counter) return;
+  if (counter.linked){
+    const loc = missionLoc(ch.id);
+    if (loc && loc.sub.shared){ await setSharedValue(loc.sub, v); return; }
+    counter.linked = false; /* stale link: materialize with its stored value */
+  }
   const was=ch.done, oldCounters=ch.counters.map(item=>({...item}));
   const oldCounterRestore=Array.isArray(ch.counterRestore) ? ch.counterRestore.map(item=>({...item})) : null, oldChecklistRestore=Array.isArray(ch.checklistRestore) ? ch.checklistRestore.map(item=>({...item})) : null, previousValue=counter.value;
   counter.value=clampInt(v,0,99999,counter.value); if (counter.value!==previousValue){ ch.counterRestore=null; ch.checklistRestore=null; } syncLegacyCounterFields(ch); ch.done=computeDone(ch);
@@ -1369,13 +1513,61 @@ function checklistGroupsMarkup(c){
     return `<div class="checklist-group"><div class="checklist-group-head"><span class="checklist-group-name">${esc(g.name)}</span><span class="checklist-group-count">${doneCount}/${req.length}</span><button type="button" class="ch-collapse" data-act="collapse-list" data-list="${esc(g.name)}" aria-expanded="${!collapsed}" aria-label="${collapsed?'Show':'Hide'} ${esc(g.name)} for ${esc(c.title)}">${collapsed?'Show':'Hide'}</button></div><div class="checklist" ${collapsed?'hidden':''}>${g.entries.map(e => checklistItemRow(e.item, e.index)).join('')}</div></div>`;
   }).join('');
 }
+/* One challenge card, shared by the Challenges tab and the Missions
+   subgroup view (opts.mission adds group-only actions). */
+function challengeCardMarkup(c, i, listLen, opts){
+  const inMission=!!(opts && opts.mission);
+
+      const reward=challengeReward(c);
+      const categoryTag=c.category==='team'
+        ? `<span class="tier-badge ${esc(c.teamTier)}">${esc(c.teamTier[0].toUpperCase()+c.teamTier.slice(1))} badge</span>`
+        : `<span class="ch-kind">${CATEGORY_LABEL[c.category]}</span>`;
+      let rewardText='No reward';
+      if (reward==='toon') rewardText=c.claimed ? 'Toon spin earned' : 'Toon spin';
+      if (reward==='trinket') rewardText=c.claimed ? 'Trinket spin earned' : 'Trinket spin';
+      if (reward==='revival') rewardText=c.claimed ? 'Revival Spin earned' : 'Revival Spin · revives an eliminated Toon or Trinket';
+      if (reward==='choice') rewardText=c.claimed ? `${c.rewardKind==='trinket' ? 'Trinket' : 'Toon'} spin earned` : 'Reward — your choice';
+      if (reward==='chance') rewardText=c.claimed ? `Revival chance (${clampInt(c.rewardChance,1,99,50)}%) earned` : `Revival chance (${clampInt(c.rewardChance,1,99,50)}%)`;
+      if (reward==='custom') rewardText=c.claimed ? `Reward earned: ${c.rewardText || 'Custom reward'}` : `Reward: ${c.rewardText || 'Custom reward'}`;
+      const badgeIcon=reward==='chance' ? '🎲 ' : reward==='custom' ? '🎁 ' : '🎰 ';
+      const rew=reward==='none' ? `<span class="rew none">${esc(rewardText)}</span>`
+        : `<span class="rew ${c.claimed?'claimed':''}">${c.claimed ? '✓ ' : badgeIcon}${esc(rewardText)}</span>`;
+      const chooseBtn=reward==='choice' && c.done && !c.claimed ? `<button type="button" class="btn mint sm" data-act="choose-reward">✨ Choose reward</button>` : '';
+      const excludeBtn=`<button type="button" class="btn ghost sm" data-act="exclude" aria-pressed="${!!c.excluded}">${c.excluded?'Include in totals':'Exclude'}</button>`;
+      const unlinkBtn=inMission ? `<button type="button" class="btn ghost sm" data-act="unlink">Remove from group</button>` : '';
+      const tierTitleClass=(c.category==='team' || c.tierSet) ? `tier-${c.teamTier}` : '';
+      const modes=modesOf(c), hasChecklist=modes.includes('checklist'), hasCounters=modes.includes('counter'), hasGoal=modes.includes('goal');
+      const cond=challengeConditions(c), bothSections=hasChecklist && hasCounters, checklistHidden=bothSections ? c.itemsCollapsed : c.collapsed;
+      const summary=checklistSummary(c, cond), checklistGroups=hasChecklist ? checklistGroupsMarkup(c) : '';
+      const toggleBtn=(act,flag,label)=>`<button type="button" class="ch-collapse" data-act="${act}" aria-expanded="${!flag}" aria-label="${flag?'Show':'Hide'} ${label} for ${esc(c.title)}">${flag?'Show':'Hide'} ${label}</button>`;
+      const progressToggle=(!hasChecklist && !hasCounters) ? '' : bothSections
+        ? toggleBtn('collapse', c.collapsed, 'counters') + toggleBtn('collapse-items', c.itemsCollapsed, 'checklist')
+        : toggleBtn('collapse', c.collapsed, hasChecklist ? 'checklist' : 'counters');
+      const cardLoc=missionLoc(c.id), cardShared=(cardLoc && cardLoc.sub.shared) ? cardLoc.sub.shared : null;
+      const counterMarkup=(c.counters||[]).map((counter,index)=>{
+        const isLinked=!!counter.linked && !!cardShared;
+        const pct=Math.min(100,counter.value/counter.target*100);
+        return `<div class="counter-unit"><div class="counter-label">${esc(counter.label)}${isLinked ? ` <span class="counter-link-tag" title="Linked to the group counter — its value drives this counter">🔗 ${esc(cardShared.label)}</span>` : ''}</div><div class="counter"><button type="button" class="cbtn" data-act="dec" data-counter-index="${index}" aria-label="Decrease ${esc(counter.label)}">−</button><button type="button" class="cval" data-act="setval" data-counter-index="${index}" aria-label="Edit ${esc(counter.label)} progress">${counter.value} / ${counter.target}</button><button type="button" class="cbtn" data-act="inc" data-counter-index="${index}" aria-label="Increase ${esc(counter.label)}">+</button><div class="bar"><i style="width:${pct}%"></i></div></div></div>`;
+      }).join('');
+      return `<div class="ch ${c.done?'done':''}${c.excluded?' excluded':''} ${modes.length===1 && modes[0]==='checklist' ? 'checklist-ch':''}" data-id="${esc(c.id)}">
+        ${hasCounters || hasGoal ? `<button type="button" class="chk" data-act="toggle" aria-pressed="${c.done}" aria-label="${c.done?'Mark not done':'Mark done'}: ${esc(c.title)}">${c.done?'✓':''}</button>` : ''}
+        <div class="body">
+          <div class="ch-heading">${categoryTag}${iconMarkup(c)}<div class="t ${tierTitleClass}">${esc(c.title)}</div>${c.excluded?'<span class="ch-excl-chip">Excluded</span>':''}${progressToggle}</div>
+          ${c.desc ? `<div class="d">${esc(c.desc)}</div>` : ''}
+          ${hasCounters ? `<div class="ch-progress" ${c.collapsed?'hidden':''}><div class="counter-stack">${counterMarkup}</div></div>` : ''}
+          ${hasChecklist ? `<div class="ch-progress" ${checklistHidden?'hidden':''}><div class="checklist-progress"><span>${summary.label}</span><div class="bar"><i style="width:${summary.pct}%"></i></div></div>${checklistGroups}</div>` : ''}
+          <div class="meta-row">${rew}${chooseBtn}${excludeBtn}${unlinkBtn}</div>
+        </div>
+        <div class="acts"><div class="row"><span class="drag-handle" data-drag title="Drag to reorder" aria-label="Drag to reorder">⠿</span></div><div class="row"><button type="button" class="ibtn" data-act="up" aria-label="Move up" ${i===0?'disabled':''}>▲</button><button type="button" class="ibtn" data-act="down" aria-label="Move down" ${i===listLen-1?'disabled':''}>▼</button></div><div class="row"><button type="button" class="ibtn" data-act="edit" aria-label="Edit">✎</button><button type="button" class="ibtn del" data-act="del" aria-label="Delete">🗑</button></div></div>
+      </div>`;
+    }
 function renderChallenges(){
-  const list=$('#chList'), all=run.challenges, nDone=all.filter(c=>c.done).length;
-  $('#chCount').textContent=`${nDone}/${all.length}`;
-  $('#chBar').style.width=(all.length ? nDone/all.length*100 : 0)+'%';
-  $('#tabChallenges').textContent=`${nDone}/${all.length}`;
+  const list=$('#chList'), all=run.challenges, counted=all.filter(c=>!c.excluded), nDone=counted.filter(c=>c.done).length;
+  $('#chCount').textContent=`${nDone}/${counted.length}`;
+  $('#chBar').style.width=(counted.length ? nDone/counted.length*100 : 0)+'%';
+  $('#tabChallenges').textContent=`${nDone}/${counted.length}`;
   for (const category of CHALLENGE_CATEGORIES){
-    const group=all.filter(c=>c.category===category), done=group.filter(c=>c.done).length;
+    const group=all.filter(c=>c.category===category && !c.excluded), done=group.filter(c=>c.done).length;
     const id=category==='toon' ? '#chToonCount' : category==='trinket' ? '#chTrinketCount' : '#chTeamCount';
     $(id).textContent=`${done}/${group.length}`;
   }
@@ -1383,7 +1575,7 @@ function renderChallenges(){
   const tierTabs=$('#chTierTabs'); tierTabs.hidden=view.cc!=='team';
   if (view.cc==='team'){
     for (const tier of TEAM_TIERS){
-      const group=categoryChallenges.filter(c=>c.teamTier===tier);
+      const group=categoryChallenges.filter(c=>c.teamTier===tier && !c.excluded);
       $('#chTierCount'+tier[0].toUpperCase()+tier.slice(1)).textContent=`${group.filter(c=>c.done).length}/${group.length}`;
     }
     tierTabs.querySelectorAll('[data-tf]').forEach(x=>x.setAttribute('aria-pressed', x.dataset.tf===view.tf));
@@ -1398,42 +1590,7 @@ function renderChallenges(){
   } else if (!shown.length){
     list.innerHTML=`<div class="ch-empty">${view.cf==='done' ? 'Nothing completed in this tab yet — go get ’em!' : (view.cc==='team' && view.tf!=='all' && view.cf==='all') ? `No ${esc(view.tf)} team goals here yet.` : 'Everything in this tab is done! 🎉 Add another goal?'}</div>`;
   } else {
-    list.innerHTML=shown.map(c=>{
-      const i=categoryChallenges.indexOf(c), reward=challengeReward(c);
-      const categoryTag=c.category==='team'
-        ? `<span class="tier-badge ${esc(c.teamTier)}">${esc(c.teamTier[0].toUpperCase()+c.teamTier.slice(1))} badge</span>`
-        : `<span class="ch-kind">${CATEGORY_LABEL[c.category]}</span>`;
-      let rewardText='No reward';
-      if (reward==='toon') rewardText=c.claimed ? 'Toon spin earned' : 'Toon spin';
-      if (reward==='trinket') rewardText=c.claimed ? 'Trinket spin earned' : 'Trinket spin';
-      if (reward==='revival') rewardText=c.claimed ? 'Revival Spin earned' : 'Revival Spin · revives an eliminated Toon or Trinket';
-      if (reward==='choice') rewardText=c.claimed ? `${c.rewardKind==='trinket' ? 'Trinket' : 'Toon'} spin earned` : 'Iridescent reward — your choice';
-      const rew=reward==='none' ? `<span class="rew none">${rewardText}</span>`
-        : `<span class="rew ${c.claimed?'claimed':''}">${c.claimed ? '✓ ' : '🎰 '}${rewardText}</span>`;
-      const chooseBtn=reward==='choice' && c.done && !c.claimed ? `<button type="button" class="btn mint sm" data-act="choose-reward">✨ Choose reward</button>` : '';
-      const modes=modesOf(c), hasChecklist=modes.includes('checklist'), hasCounters=modes.includes('counter'), hasGoal=modes.includes('goal');
-      const cond=challengeConditions(c), bothSections=hasChecklist && hasCounters, checklistHidden=bothSections ? c.itemsCollapsed : c.collapsed;
-      const summary=checklistSummary(c, cond), checklistGroups=hasChecklist ? checklistGroupsMarkup(c) : '';
-      const toggleBtn=(act,flag,label)=>`<button type="button" class="ch-collapse" data-act="${act}" aria-expanded="${!flag}" aria-label="${flag?'Show':'Hide'} ${label} for ${esc(c.title)}">${flag?'Show':'Hide'} ${label}</button>`;
-      const progressToggle=(!hasChecklist && !hasCounters) ? '' : bothSections
-        ? toggleBtn('collapse', c.collapsed, 'counters') + toggleBtn('collapse-items', c.itemsCollapsed, 'checklist')
-        : toggleBtn('collapse', c.collapsed, hasChecklist ? 'checklist' : 'counters');
-      const counterMarkup=(c.counters||[]).map((counter,index)=>{
-        const pct=Math.min(100,counter.value/counter.target*100);
-        return `<div class="counter-unit"><div class="counter-label">${esc(counter.label)}</div><div class="counter"><button type="button" class="cbtn" data-act="dec" data-counter-index="${index}" aria-label="Decrease ${esc(counter.label)}">−</button><button type="button" class="cval" data-act="setval" data-counter-index="${index}" aria-label="Edit ${esc(counter.label)} progress">${counter.value} / ${counter.target}</button><button type="button" class="cbtn" data-act="inc" data-counter-index="${index}" aria-label="Increase ${esc(counter.label)}">+</button><div class="bar"><i style="width:${pct}%"></i></div></div></div>`;
-      }).join('');
-      return `<div class="ch ${c.done?'done':''} ${modes.length===1 && modes[0]==='checklist' ? 'checklist-ch':''}" data-id="${esc(c.id)}">
-        ${hasCounters || hasGoal ? `<button type="button" class="chk" data-act="toggle" aria-pressed="${c.done}" aria-label="${c.done?'Mark not done':'Mark done'}: ${esc(c.title)}">${c.done?'✓':''}</button>` : ''}
-        <div class="body">
-          <div class="ch-heading">${categoryTag}${iconMarkup(c)}<div class="t">${esc(c.title)}</div>${progressToggle}</div>
-          ${c.desc ? `<div class="d">${esc(c.desc)}</div>` : ''}
-          ${hasCounters ? `<div class="ch-progress" ${c.collapsed?'hidden':''}><div class="counter-stack">${counterMarkup}</div></div>` : ''}
-          ${hasChecklist ? `<div class="ch-progress" ${checklistHidden?'hidden':''}><div class="checklist-progress"><span>${summary.label}</span><div class="bar"><i style="width:${summary.pct}%"></i></div></div>${checklistGroups}</div>` : ''}
-          <div class="meta-row">${rew}${chooseBtn}</div>
-        </div>
-        <div class="acts"><div class="row"><span class="drag-handle" data-drag title="Drag to reorder" aria-label="Drag to reorder">⠿</span></div><div class="row"><button type="button" class="ibtn" data-act="up" aria-label="Move up" ${i===0?'disabled':''}>▲</button><button type="button" class="ibtn" data-act="down" aria-label="Move down" ${i===categoryChallenges.length-1?'disabled':''}>▼</button></div><div class="row"><button type="button" class="ibtn" data-act="edit" aria-label="Edit">✎</button><button type="button" class="ibtn del" data-act="del" aria-label="Delete">🗑</button></div></div>
-      </div>`;
-    }).join('');
+    list.innerHTML=shown.map(c=>challengeCardMarkup(c, categoryChallenges.indexOf(c), categoryChallenges.length, {})).join('');
   }
   renderHistory();
 }
@@ -1494,6 +1651,7 @@ $('#chList').addEventListener('click', async e=>{
   if (act==='collapse-list'){ const name=b.dataset.list; if (!Array.isArray(ch.listState)) ch.listState=[]; const st=ch.listState.find(en=>en && en.name===name); if (st) st.collapsed=!st.collapsed; else ch.listState.push({name, collapsed:true}); saveRun(); renderChallenges(); return; }
   const categoryChallenges=run.challenges.filter(c=>c.category===view.cc), localIndex=categoryChallenges.indexOf(ch);
   if (act==='choose-reward'){ if (challengeReward(ch)==='choice' && ch.done && !ch.claimed) await grantChoiceReward(ch); return; }
+  if (act==='exclude'){ ch.excluded=!ch.excluded; saveRun(); renderAll(); toast(ch.excluded ? `“${ch.title}” excluded from completion totals` : `“${ch.title}” counts toward completion totals again`); return; }
   if (act==='toggle') await setDone(ch,!ch.done);
   if (act==='check-item') await toggleChecklistItem(ch,Number(b.dataset.index));
   if (act==='exclude-item') await toggleChecklistExcluded(ch,Number(b.dataset.index));
@@ -1512,7 +1670,7 @@ $('#chList').addEventListener('click', async e=>{
   if (act==='edit') openChEditor(ch);
   if (act==='del'){
     const ok=await ask({title:'Delete challenge?',msg:`Delete “${ch.title}”? Any unspent spin reward will be removed, and any Toon or Trinket unlocked by its challenge spin will be relocked.`,ok:'Delete',danger:true});
-    if (ok){ revokeChallengeReward(ch); run.challenges=run.challenges.filter(c=>c!==ch); saveRun(); renderAll(); renderSpinPanel(); toast('Challenge deleted and its rewards removed'); }
+    if (ok){ revokeChallengeReward(ch); detachFromMissions(ch.id); run.challenges=run.challenges.filter(c=>c!==ch); saveRun(); renderAll(); renderSpinPanel(); toast('Challenge deleted and its rewards removed'); }
   }
 });
 $('#addCh').addEventListener('click',()=>openChEditor(null));
@@ -1537,6 +1695,7 @@ function selectedModes(){ return CH_MODES.filter(m=>document.querySelector(`inpu
 function syncTargetRow(){
   let modes=selectedModes();
   if (!modes.length){ document.querySelector('input[name="chModes"][value="checklist"]').checked=true; modes=['checklist']; $('#chErr').textContent='Pick at least one progress mode — Checklist has been re-selected for you.'; }
+  else { const err=$('#chErr'); if (err && err.textContent.startsWith('Pick at least one progress mode')) err.textContent=''; }
   $('#chTargetRow').hidden=!modes.includes('counter'); $('#chChecklistRow').hidden=!modes.includes('checklist'); $('#chGoalHelp').hidden=!modes.includes('goal');
 }
 function syncIconRow(){
@@ -1590,13 +1749,14 @@ $('#chChecklistRow').addEventListener('click',e=>{
 });
 function renderCounterEditor(counters){
   const rows=$('#chCounterRows');
-  rows.innerHTML=(counters||[]).map((counter,index)=>`<div class="counter-config-row" data-counter-id="${esc(counter.id||uid())}"><input type="text" data-counter-label maxlength="60" required autocomplete="off" aria-label="Counter ${index+1} label" placeholder="Counter ${index+1}" value="${esc(counter.label||`Counter ${index+1}`)}"><input class="counter-target" type="number" data-counter-target min="1" max="99999" step="1" required inputmode="numeric" aria-label="Counter ${index+1} target" value="${clampInt(counter.target,1,99999,10)}"><button type="button" class="ibtn del" data-remove-counter aria-label="Remove counter ${index+1}" title="Remove counter" ${counters.length===1?'disabled':''}>−</button></div>`).join('');
+  rows.innerHTML=(counters||[]).map((counter,index)=>`<div class="counter-config-row" data-counter-id="${esc(counter.id||uid())}"><input type="text" data-counter-label maxlength="60" required autocomplete="off" aria-label="Counter ${index+1} label" placeholder="Counter ${index+1}" value="${esc(counter.label||`Counter ${index+1}`)}"><input class="counter-target" type="number" data-counter-target min="1" max="99999" step="1" required inputmode="numeric" aria-label="Counter ${index+1} target" value="${clampInt(counter.target,1,99999,10)}"><button type="button" class="ibtn del" data-remove-counter aria-label="Remove counter ${index+1}" title="Remove counter" ${counters.length===1?'disabled':''}>−</button><label class="counter-link" title="This counter's value comes from the subgroup's shared counter"><input type="checkbox" data-counter-link ${counter.linked?'checked':''}> 🔗 Group</label></div>`).join('');
   $('#addCounterRow').disabled=counters.length>=20;
+  syncMissionLinkState();
 }
 $('#addCounterRow').addEventListener('click',()=>{
   const rows=[...$('#chCounterRows').querySelectorAll('.counter-config-row')];
   if (rows.length>=20) return;
-  const counters=rows.map((row,index)=>({id:row.dataset.counterId,label:row.querySelector('[data-counter-label]').value||`Counter ${index+1}`,target:row.querySelector('[data-counter-target]').value||10,value:0}));
+  const counters=rows.map((row,index)=>({id:row.dataset.counterId,label:row.querySelector('[data-counter-label]').value||`Counter ${index+1}`,target:row.querySelector('[data-counter-target]').value||10,value:0,linked:!!row.querySelector('[data-counter-link]')?.checked}));
   counters.push({id:uid(),label:`Counter ${counters.length+1}`,target:10,value:0});
   renderCounterEditor(counters); $('#chCounterRows').lastElementChild?.querySelector('[data-counter-label]')?.focus();
 });
@@ -1604,13 +1764,16 @@ $('#chCounterRows').addEventListener('click',e=>{
   const remove=e.target.closest('[data-remove-counter]'); if (!remove) return;
   const rows=[...$('#chCounterRows').querySelectorAll('.counter-config-row')];
   if (rows.length<=1) return;
-  const counters=rows.filter(row=>row!==remove.closest('.counter-config-row')).map((row,index)=>({id:row.dataset.counterId,label:row.querySelector('[data-counter-label]').value||`Counter ${index+1}`,target:row.querySelector('[data-counter-target]').value||10,value:0}));
+  const counters=rows.filter(row=>row!==remove.closest('.counter-config-row')).map((row,index)=>({id:row.dataset.counterId,label:row.querySelector('[data-counter-label]').value||`Counter ${index+1}`,target:row.querySelector('[data-counter-target]').value||10,value:0,linked:!!row.querySelector('[data-counter-link]')?.checked}));
   renderCounterEditor(counters);
 });
 function syncCategoryFields(){
-  const category=radioVal('chCategory')||'toon', tier=radioVal('teamTier')||'bronze';
-  $('#teamTierWrap').hidden=category!=='team'; $('#chRewardWrap').hidden=category==='team';
-  $('#teamTierHint').textContent=TEAM_TIER_HINT[tier]||TEAM_TIER_HINT.bronze;
+  const category=radioVal('chCategory')||'toon';
+  $('#teamTierWrap').hidden=false; $('#chRewardWrap').hidden=category==='team';
+  const noneRadio=document.querySelector('input[name="teamTier"][value="none"]');
+  if (noneRadio){ noneRadio.disabled=category==='team'; if (noneRadio.parentElement) noneRadio.parentElement.style.display=category==='team' ? 'none' : ''; if (category==='team' && noneRadio.checked) setRadio('teamTier','bronze'); }
+  const tier=radioVal('teamTier')||'bronze';
+  $('#teamTierHint').textContent=category==='team' ? (TEAM_TIER_HINT[tier]||TEAM_TIER_HINT.bronze) : (tier==='none' ? 'No rarity — the title keeps the default color, and the reward follows the Reward settings.' : `${tier[0].toUpperCase()+tier.slice(1)} rarity — colors this challenge's title to match. It doesn't change the default reward for this tab.`);
   const kind=category==='trinket' ? 'Trinket' : 'Toon';
   const spinInput=document.querySelector('input[name="chReward"][value="spin"]');
   if (spinInput) spinInput.parentElement.querySelector('span').textContent=`${category==='trinket'?'💍':'🎭'} ${kind} spin`;
@@ -1618,6 +1781,33 @@ function syncCategoryFields(){
   $('#chDlgHint').textContent=category==='team' ? 'Complete the goal to earn its badge-tier reward.' : `Complete it to earn a ${kind} spin.`;
 }
 document.querySelectorAll('input[name="chModes"]').forEach(r=>r.addEventListener('change',syncTargetRow));
+function syncRewardPick(){
+  const pick=radioVal('chRewardPick')||'default';
+  $('#chRewardChanceRow').hidden=pick!=='chance';
+  $('#chRewardTextRow').hidden=pick!=='custom';
+}
+document.querySelectorAll('input[name="chRewardPick"]').forEach(r=>r.addEventListener('change',syncRewardPick));
+function buildMissionOptions(){
+  const sel=$('#chMission'); if (!sel) return;
+  const opts=['<option value="">Not in a mission group</option>'];
+  for (const p of (run.missions || [])) for (const s of p.subs) opts.push(`<option value="${esc(p.id)}|${esc(s.id)}">${esc(p.title)} › ${esc(s.title)}</option>`);
+  sel.innerHTML=opts.join('');
+}
+function selectedMissionTarget(){
+  const v=($('#chMission') && $('#chMission').value) || '';
+  if (!v) return null;
+  const [pid, sid]=v.split('|');
+  const pack=missionPackById(pid), sub=pack && pack.subs.find(s=>s.id===sid);
+  return pack && sub ? {pack, sub} : null;
+}
+/* A counter can only link while the challenge is headed for a subgroup WITH a
+   shared counter — disable (and uncheck) the link boxes otherwise. */
+function syncMissionLinkState(){
+  const target=selectedMissionTarget();
+  const has=!!(target && target.sub.shared);
+  document.querySelectorAll('[data-counter-link]').forEach(cb => { cb.disabled=!has; if (!has) cb.checked=false; });
+}
+$('#chMission').addEventListener('change',syncMissionLinkState);
 document.querySelectorAll('input[name="chIconKind"]').forEach(r=>r.addEventListener('change',syncIconRow));
 document.querySelectorAll('input[name="chCategory"],input[name="teamTier"]').forEach(r=>r.addEventListener('change',syncCategoryFields));
 let chIconUploadData='';
@@ -1648,11 +1838,11 @@ $('#chIconFile').addEventListener('change', async e=>{
     $('#chErr').textContent='';
   } catch { $('#chErr').textContent='Could not read that image file.'; }
 });
-function openChEditor(ch){
+function openChEditor(ch, missionTarget=null){
   chEditing=ch ? ch.id : null;
   $('#chDlgTitle').textContent=ch ? 'Edit challenge' : 'New challenge';
   $('#chTitle').value=ch ? ch.title : ''; $('#chDesc').value=ch ? ch.desc : '';
-  setRadio('chCategory',ch ? ch.category : view.cc); setRadio('teamTier',ch ? ch.teamTier : 'bronze');
+  setRadio('chCategory',ch ? ch.category : view.cc); setRadio('teamTier',ch ? ((ch.category==='team' || ch.tierSet) ? ch.teamTier : 'none') : (view.cc==='team' ? 'bronze' : 'none'));
   const editModes=ch ? modesOf(ch) : ['checklist'];
   document.querySelectorAll('input[name="chModes"]').forEach(r=>r.checked=editModes.includes(r.value));
   $('#chReqCount').value=ch && ch.requiredCount ? ch.requiredCount : '';
@@ -1666,14 +1856,28 @@ function openChEditor(ch){
   const counters=ch && Array.isArray(ch.counters) && ch.counters.length ? ch.counters : [{id:uid(),label:'Counter 1',target:10,value:0}];
   renderCounterEditor(counters);
   setRadio('chReward',ch && ch.reward==='none' ? 'none' : 'spin'); $('#chErr').textContent='';
-  syncTargetRow(); syncIconRow(); syncCategoryFields(); $('#chDlg').showModal(); setTimeout(()=>$('#chTitle').focus(),30);
+  setRadio('chRewardPick',ch ? (ch.rewardPick || 'default') : 'default');
+  $('#chRewardChance').value=ch ? clampInt(ch.rewardChance,1,99,50) : 50;
+  $('#chRewardText').value=ch ? (ch.rewardText || '') : '';
+  $('#chExcluded').checked=ch ? !!ch.excluded : false;
+  buildMissionOptions();
+  const curLoc=ch ? missionLoc(ch.id) : null;
+  $('#chMission').value=curLoc ? `${curLoc.pack.id}|${curLoc.sub.id}` : (missionTarget ? `${missionTarget.packId}|${missionTarget.subId}` : '');
+  syncTargetRow(); syncIconRow(); syncCategoryFields(); syncRewardPick(); syncMissionLinkState(); $('#chDlg').showModal(); setTimeout(()=>$('#chTitle').focus(),30);
 }
 $('#chCancel').addEventListener('click',()=>$('#chDlg').close());
 $('#chForm').addEventListener('submit',async e=>{
   e.preventDefault();
   const title=$('#chTitle').value.trim();
   if (!title){ $('#chErr').textContent='Give your challenge a title.'; $('#chTitle').focus(); return; }
-  const category=radioVal('chCategory')||'toon', teamTier=radioVal('teamTier')||'bronze';
+  const category=radioVal('chCategory')||'toon', tierRadio=radioVal('teamTier')||'none';
+  const teamTier=TEAM_TIERS.includes(tierRadio) ? tierRadio : 'bronze';
+  const tierSet=category==='team' ? true : TEAM_TIERS.includes(tierRadio);
+  const rewardPick=radioVal('chRewardPick')||'default';
+  const rewardChance=clampInt($('#chRewardChance').value,1,99,50);
+  const rewardText=$('#chRewardText').value.trim().slice(0,80);
+  if (rewardPick==='custom' && !rewardText){ $('#chErr').textContent='Type the custom reward text, or choose a different reward.'; $('#chRewardText').focus(); return; }
+  const excluded=$('#chExcluded').checked;
   const modes=selectedModes(), type=legacyTypeForModes(modes), reward=category==='team' ? TEAM_TIER_REWARD[teamTier] : (radioVal('chReward')==='none' ? 'none' : 'spin');
   if (!modes.length){ $('#chErr').textContent='Pick at least one progress mode.'; return; }
   let ch=chEditing && chById(chEditing); const isNew=!ch, before=ch ? {...ch} : null;
@@ -1691,7 +1895,7 @@ $('#chForm').addEventListener('submit',async e=>{
     if (modes.includes('counter') && !label){ $('#chErr').textContent=`Give counter ${index+1} a label.`; row.querySelector('[data-counter-label]').focus(); return; }
     if (modes.includes('counter') && (!Number.isInteger(target) || target<1 || target>99999)){ $('#chErr').textContent=`Set a target from 1 to 99,999 for counter ${index+1}.`; row.querySelector('[data-counter-target]').focus(); return; }
     const id=row.dataset.counterId, previous=(ch?.counters||[]).find(counter=>counter.id===id);
-    counterConfigs.push({id,label:label||`Counter ${index+1}`,target:clampInt(rawTarget,1,99999,10),value:previous ? clampInt(previous.value,0,99999,0) : 0});
+    counterConfigs.push({id,label:label||`Counter ${index+1}`,target:clampInt(rawTarget,1,99999,10),value:previous ? clampInt(previous.value,0,99999,0) : 0,linked:!!row.querySelector('[data-counter-link]')?.checked});
   }
   const prevItems=ch && Array.isArray(ch.items) ? ch.items : [];
   const resolvedLists=[];
@@ -1712,11 +1916,11 @@ $('#chForm').addEventListener('submit',async e=>{
   else if (iconKind==='upload'){ if (!chIconUploadData){ $('#chErr').textContent='Choose an image for the icon, or choose a different icon option.'; return; } icon={kind:'upload',value:chIconUploadData}; }
   icon=sanitizeIcon(icon);
   if (iconKind!=='none' && !icon){ $('#chErr').textContent='That icon could not be saved — try a different one.'; return; }
-  if (isNew){ ch={id:uid(),title,desc:'',category,teamTier,type,modes,requiredCount,icon,goalDone:false,target:10,value:0,counters:counterConfigs,counterRestore:null,collapsed:false,itemsCollapsed:false,listState:[],items:[],done:false,reward,claimed:false,rewardKind:null,rewardGrantId:null,checklistRestore:null}; run.challenges.push(ch); }
+  if (isNew){ ch={id:uid(),title,desc:'',category,teamTier,tierSet,type,modes,requiredCount,icon,goalDone:false,target:10,value:0,counters:counterConfigs,counterRestore:null,collapsed:false,itemsCollapsed:false,listState:[],items:[],done:false,reward,rewardPick,rewardChance,rewardText,excluded,claimed:false,rewardKind:null,rewardGrantId:null,checklistRestore:null}; run.challenges.push(ch); }
   const was=ch.done, previousReward=challengeReward(ch), counterConfigChanged=ch.type!==type || JSON.stringify(modesOf(ch))!==JSON.stringify(modes) || (ch.counters||[]).length!==counterConfigs.length || (ch.counters||[]).some((counter,index)=>counter.id!==counterConfigs[index]?.id || counter.target!==counterConfigs[index]?.target);
   const nextItems=modes.includes('checklist') ? checklistItems : ch.items;
   const checklistConfigChanged=(ch.items||[]).length!==nextItems.length || (ch.items||[]).some((item,index)=>item.text!==nextItems[index]?.text || item.excluded!==nextItems[index]?.excluded || (item.list||'Checklist')!==(nextItems[index]?.list||'Checklist'));
-  Object.assign(ch,{title,desc:$('#chDesc').value.trim().slice(0,3000),category,teamTier,type,modes,requiredCount,icon,counters:counterConfigs,items:nextItems,reward});
+  Object.assign(ch,{title,desc:$('#chDesc').value.trim().slice(0,3000),category,teamTier,tierSet,type,modes,requiredCount,icon,counters:counterConfigs,items:nextItems,reward,rewardPick,rewardChance,rewardText,excluded});
   if (modes.includes('checklist') && Array.isArray(ch.listState)){ const listNames=new Set(nextItems.map(item=>item.list||'Checklist')); ch.listState=ch.listState.filter(e=>e && listNames.has(e.name)); }
   if (counterConfigChanged) ch.counterRestore=null;
   if (counterConfigChanged || checklistConfigChanged) ch.checklistRestore=null;
@@ -1729,6 +1933,9 @@ $('#chForm').addEventListener('submit',async e=>{
     saveRun(); renderAll(); renderSpinPanel();
     return;
   }
+  const liveGrant=ch.rewardGrantId ? run.spins.find(g=>g.id===ch.rewardGrantId) : null;
+  if (liveGrant && liveGrant.kind==='chance') liveGrant.pct=rewardChance;
+  await applyMembership(ch, selectedMissionTarget());
   if (isNew) toast(`Added “${title}”`);
 });
 /* ================= Spin =================
@@ -1746,15 +1953,16 @@ const poolFor = (kind, category=null) => {
 };
 const credits = k => run.spins.filter(g => g.kind === k).length;
 function renderSpinPanel(){
-  const t = credits('toon'), r = credits('trinket'), v = credits('revival'), total = t + r + v;
+  const t = credits('toon'), r = credits('trinket'), v = credits('revival'), cn = credits('chance'), total = t + r + v + cn;
   $('#creditTotal').textContent = `${total} spin${total===1?'':'s'}`;
   $('#credToon').textContent = view.free ? '∞' : t;
   $('#credTrinket').textContent = view.free ? '∞' : r;
   $('#credRevival').textContent = view.free ? '∞' : v;
+  const credChanceEl = $('#credChance'); if (credChanceEl) credChanceEl.textContent = view.free ? '∞' : cn;
   $('#creditChips').textContent = total
-    ? `Credits: ${t} toon · ${r} trinket · ${v} revival.${view.free ? ' Free spin is on — credits are not used.' : ''}`
+    ? `Credits: ${t} toon · ${r} trinket · ${v} revival · ${cn} chance.${view.free ? ' Free spin is on — credits are not used.' : ''}`
     : (view.free ? 'Free spin is on — spins won’t use credits.' : 'Complete a challenge or team goal to earn a spin (or turn on Free spin).');
-  const spinButtons = {toon:'spinToon', trinket:'spinTrinket', revival:'spinRevival'};
+  const spinButtons = {toon:'spinToon', trinket:'spinTrinket', revival:'spinRevival', chance:'spinChance'};
   for (const k of SPIN_KINDS) $('#' + spinButtons[k]).disabled = !view.free && !credits(k);
 }
 $('#freeSpin').addEventListener('change', e => { view.free = e.target.checked; renderSpinPanel(); });
@@ -1770,6 +1978,7 @@ let spinCtx = null, spinAnim = null, tickRaf = 0;
 const stripX = () => { const m = getComputedStyle($('#strip')).transform; if (!m || m === 'none') return 0; const v = m.match(/matrix(3d)?\(([^)]+)\)/); if (!v) return 0; const a = v[2].split(',').map(Number); return v[1] ? a[12] : a[4]; };
 async function startSpin(kind, challengeId = null){
   if (!SPIN_KINDS.includes(kind)) return;
+  if (kind === 'chance'){ await startChanceSpin(challengeId); return; }
   let revivalPoolKind=null;
   if (kind==='revival' && poolFor('revival').length){
     revivalPoolKind=await chooseRevivalPool();
@@ -1778,7 +1987,7 @@ async function startSpin(kind, challengeId = null){
   const dlg = $('#spinDlg');
   stopTicks();
   if (spinAnim){ try { spinAnim.cancel(); } catch {} spinAnim = null; }
-  ['#spinResult','#spinEmpty','#spinUndo','#spinAgain'].forEach(s => $(s).hidden = true);
+  ['#spinResult','#spinEmpty','#spinUndo','#spinAgain'].forEach(s => $(s).hidden = true); $('#spinImg').hidden = false;
   $('#reel').hidden = false; $('#reel').classList.remove('landed'); $('#spinSkip').hidden = false; $('#strip').innerHTML = ''; $('#confetti').innerHTML = '';
   const pool = poolFor(kind, revivalPoolKind);
   $('#spinTitle').textContent = kind==='revival' ? 'Revival Spin' : 'Spinning…';
@@ -1840,6 +2049,95 @@ async function startSpin(kind, challengeId = null){
   }
   startTicks(step, reel.clientWidth / 2);
 }
+/* ================= Revival chance spin =================
+   A chance credit is a gamble: the outcome is rolled first (at the credit's
+   success %), then the reel — ✓ SUCCESS / ✗ FAIL tiles like the other wheels —
+   lands on a tile of the rolled type. Success converts the consumed chance
+   into a Revival Spin credit for the same challenge and runs the normal
+   revival flow; failure consumes the credit and logs a history entry. */
+async function startChanceSpin(challengeId = null){
+  let grant = null, pct = 50;
+  if (!view.free){
+    grant = (challengeId ? run.spins.find(g => g.kind === 'chance' && g.challengeId === challengeId) : null) || run.spins.find(g => g.kind === 'chance') || null;
+    if (!grant){ toast('No revival-chance credits — complete a challenge with a Revival chance reward first'); renderSpinPanel(); return; }
+    pct = clampInt(grant.pct, 1, 99, 50);
+  }
+  /* Nothing to revive? The chance is NOT consumed. */
+  if (!poolFor('revival').length){ toast('No eliminated Toons or Trinkets to revive yet — your revival chance is saved.'); return; }
+  let credit = null;
+  if (!view.free){ const index = run.spins.indexOf(grant); credit = {grant, index}; run.spins.splice(index, 1); }
+  const success = randInt(100) < pct;
+  const dlg = $('#spinDlg');
+  stopTicks();
+  if (spinAnim){ try { spinAnim.cancel(); } catch {} spinAnim = null; }
+  ['#spinResult','#spinEmpty','#spinUndo','#spinAgain'].forEach(s => $(s).hidden = true);
+  $('#reel').hidden = false; $('#reel').classList.remove('landed'); $('#spinSkip').hidden = false; $('#strip').innerHTML = ''; $('#confetti').innerHTML = '';
+  $('#spinTitle').textContent = '🎲 Revival chance…';
+  $('#spinSub').textContent = credit ? `Revival chance (${pct}%) from “${credit.grant.title || 'challenge'}” — success earns a Revival Spin` : 'Free revival chance (50%) — success earns a Revival Spin';
+  renderSpinPanel();
+  spinCtx = {kind:'chance', chanceRoll:true, pct, success, credit};
+  const rm = reduceMotion();
+  const N = rm ? 18 : 40, W_INDEX = N - 4, tiles = [];
+  for (let i = 0; i < N; i++) tiles.push(i === W_INDEX ? success : randInt(100) < pct);
+  $('#strip').innerHTML = tiles.map((s, i) => `<div class="tile ${s ? 'success' : 'fail'}${i === W_INDEX ? ' winner' : ''}"><span class="tile-verdict">${s ? '✓ SUCCESS' : '✗ FAIL'}</span></div>`).join('');
+  if (!dlg.open) dlg.showModal();
+  const strip = $('#strip'), reel = $('#reel');
+  const tileW = strip.children[0].getBoundingClientRect().width, step = tileW + 12;
+  const jitter = (randInt(70) - 35) / 100 * tileW * 0.6;
+  const x = -(W_INDEX * step) + (reel.clientWidth / 2 - tileW / 2) + jitter;
+  const over = rm ? 0 : -Math.min(step * 0.28, 40);
+  const dur = rm ? 1800 : 3500;
+  strip.style.transform = 'translateX(0px)';
+  const frames = rm
+    ? [{transform:'translateX(0px)', easing:'cubic-bezier(.35,.1,.2,1)'}, {transform:`translateX(${x}px)`}]
+    : [{transform:'translateX(0px)', easing:'cubic-bezier(.32,.08,.12,1)', offset:0},
+       {transform:`translateX(${x + over}px)`, easing:'cubic-bezier(.4,0,.4,1)', offset:.86},
+       {transform:`translateX(${x}px)`, offset:1}];
+  if (typeof strip.animate === 'function'){
+    spinAnim = strip.animate(frames, {duration:dur, fill:'forwards'});
+    spinAnim.onfinish = () => { strip.style.transform = `translateX(${x}px)`; spinAnim = null; landChanceSpin(); };
+  } else {
+    strip.style.transition = `transform ${dur}ms cubic-bezier(.1,.55,.18,1)`;
+    requestAnimationFrame(() => requestAnimationFrame(() => { strip.style.transform = `translateX(${x}px)`; }));
+    const t = setTimeout(() => { strip.style.transition = ''; spinAnim = null; landChanceSpin(); }, dur + 30);
+    spinAnim = {finish(){ clearTimeout(t); strip.style.transition = ''; strip.style.transform = `translateX(${x}px)`; spinAnim = null; landChanceSpin(); }, cancel(){ clearTimeout(t); }};
+  }
+  startTicks(step, reel.clientWidth / 2);
+}
+async function landChanceSpin(){
+  stopTicks();
+  if (!spinCtx || !spinCtx.chanceRoll || spinCtx.landed) return;
+  spinCtx.landed = true;
+  const {pct, success, credit} = spinCtx;
+  $('#spinSkip').hidden = true;
+  $('#reel').classList.add('landed');
+  const w = $('#strip .winner'); if (w) w.classList.add('win');
+  $('#spinUndo').hidden = true;
+  $('#spinAgain').hidden = !(view.free || credits('chance'));
+  $('#spinImg').hidden = true;
+  if (!success){
+    const entry = {id:uid(), kind:null, name:null, spinKind:'chance', spinPoolKind:null, challenge:credit ? credit.grant.title : null, challengeId:credit ? credit.grant.challengeId : null, free:!credit, chanceRoll:{pct, success:false}, ts:new Date().toISOString()};
+    run.history.unshift(entry);
+    saveRun(); renderHistory(); renderSpinPanel();
+    $('#spinTitle').textContent = '💔 It failed…';
+    $('#spinName').textContent = 'The revival chance failed.';
+    $('#spinFrom').textContent = `Revival chance (${pct}%)${credit ? ` · from “${credit.grant.title || 'challenge'}”` : ' · free spin'} — the credit was used up.`;
+    $('#spinResult').hidden = false;
+    $('#spinDone').focus();
+    return;
+  }
+  /* Success: turn the consumed chance into a Revival Spin credit for the same
+     challenge, then let the normal revival flow (pool choice + wheel) spend it. */
+  const src = credit ? credit.grant : null;
+  $('#spinTitle').textContent = '🎉 Success!';
+  $('#spinName').textContent = `Revival chance (${pct}%) succeeded!`;
+  $('#spinFrom').textContent = 'Turning it into a Revival Spin…';
+  $('#spinResult').hidden = false;
+  if (src) run.spins.push({id:uid(), kind:'revival', challengeId:src.challengeId, title:src.title, ts:new Date().toISOString()});
+  saveRun(); renderSpinPanel();
+  spinCtx = null;
+  setTimeout(() => { if ($('#spinDlg').open) $('#spinDlg').close(); startSpin('revival', src ? src.challengeId : null); }, 1100);
+}
 function startTicks(step, centre){
   // pointer flicks each time a new tile passes under it
   let last = null; const ptr = $('#pointer');
@@ -1876,7 +2174,7 @@ function confetti(){
 }
 $('#spinSkip').addEventListener('click', () => { if (spinAnim) spinAnim.finish(); });
 $('#spinUndo').addEventListener('click', () => {
-  if (!spinCtx) return;
+  if (!spinCtx || spinCtx.chanceRoll) return;
   const {win, entry, credit, previousState, previousUnlock} = spinCtx;
   if (spinAnim){ try { spinAnim.cancel(); } catch {} spinAnim = null; }
   stopTicks();
@@ -1897,7 +2195,7 @@ function renderHistory(){
   $('#clearHist').disabled = !h.length;
   if (!h.length){ ol.innerHTML = '<li class="empty">No spins yet. Your lucky draws will show up here.</li>'; return; }
   const fmt = ts => { try { return new Date(ts).toLocaleString([], {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'}); } catch { return ts; } };
-  ol.innerHTML = h.map(e => { const it = ITEMS[e.kind].get(e.name);
+  ol.innerHTML = h.map(e => { if (e.chanceRoll) return `<li><div><div class="ht">🎲 Revival chance (${clampInt(e.chanceRoll.pct, 1, 99, 50)}%) — ${e.chanceRoll.success ? 'succeeded' : 'failed'}</div><div class="hs">${e.free ? 'Free chance spin' : `From “${esc(e.challenge || 'challenge')}”`} · ${esc(fmt(e.ts))}</div></div></li>`; const it = ITEMS[e.kind].get(e.name);
     const spinLabel=e.spinKind==='revival' ? `Revival Spin${e.spinPoolKind ? ' · '+(e.spinPoolKind==='toon'?'Toon':'Trinket')+' pool' : ''}` : e.spinKind==='toon' ? 'Toon spin' : e.spinKind==='trinket' ? 'Trinket spin' : (e.kind==='toons'?'Toon spin':'Trinket spin');
     return `<li><img src="${it.src}" alt=""><div><div class="ht">${esc(e.name)} <span class="hs">(${e.kind==='toons'?'toon':'trinket'})</span></div>
       <div class="hs">${e.free ? `Free ${spinLabel}` : `From “${esc(e.challenge || 'challenge')}” · ${spinLabel}`} · ${esc(fmt(e.ts))}</div></div></li>`; }).join('');
@@ -1906,6 +2204,242 @@ $('#clearHist').addEventListener('click', async () => {
   const ok = await ask({title:'Clear spin history?', msg:'Remove the spin log for this run? Unlocked toons/trinkets stay unlocked.', ok:'Clear', danger:true});
   if (ok){ run.history = []; saveRun(); renderHistory(); toast('Spin history cleared'); }
 });
+
+/* ================= Missions (nested challenge groups) =================
+   Packs -> subgroups -> challenges, KTANE-style. Membership lives on the run
+   (run.missions); the challenges themselves stay in run.challenges and keep
+   working in the Challenges tab exactly as before. */
+
+/* Move a challenge into a subgroup (target {pack, sub}) or out of missions
+   (target null). Reconciles linked counters against the (new) subgroup's
+   shared counter and re-evaluates completion through afterChange. */
+async function applyMembership(ch, target){
+  const was = ch.done;
+  const cur = missionLoc(ch.id);
+  const sameSub = (!target && !cur) || (!!target && !!cur && cur.sub === target.sub);
+  if (!sameSub){
+    detachFromMissions(ch.id);
+    if (target) target.sub.challengeIds.push(ch.id);
+  }
+  const shared = target ? target.sub.shared : (cur && sameSub ? cur.sub.shared : null);
+  let touched = false;
+  for (const counter of (ch.counters || [])){
+    if (!counter.linked) continue;
+    if (shared){ counter.value = shared.value; touched = true; }
+    else counter.linked = false;
+  }
+  if (touched) syncLegacyCounterFields(ch);
+  ch.done = computeDone(ch);
+  saveRun(); renderAll(); renderSpinPanel();
+  if (ch.done !== was) await afterChange(ch, was);
+}
+function missionTotals(){
+  let done = 0, total = 0;
+  for (const p of (run.missions || [])) for (const s of p.subs){ const pr = missionProgress(s.challengeIds); done += pr.done; total += pr.total; }
+  return {done, total};
+}
+function renderMissions(){
+  const badge = $('#tabMissions');
+  if (badge){ const t = missionTotals(); badge.textContent = `${t.done}/${t.total}`; }
+  const root = $('#missionRoot'); if (!root) return;
+  const packs = run.missions || [];
+  let pack = view.missionId ? missionPackById(view.missionId) : null;
+  if (view.missionId && !pack){ view.missionId = null; view.missionSubId = null; view.missionPicker = false; }
+  let sub = null;
+  if (pack && view.missionSubId){ sub = pack.subs.find(s => s.id === view.missionSubId) || null; if (!sub){ view.missionSubId = null; view.missionPicker = false; } }
+  if (!pack){
+    root.innerHTML = `<div class="filters"><button type="button" class="btn mint" data-mact="new-pack">＋ New mission pack</button></div>` +
+      (packs.length ? packs.map(p => {
+        let done = 0, total = 0;
+        for (const s of p.subs){ const pr = missionProgress(s.challengeIds); done += pr.done; total += pr.total; }
+        return `<div class="fr-card"><div class="fr-head"><span class="fr-runname">${esc(p.title)}</span><span class="fr-stats">${done}/${total} challenges complete · ${p.subs.length} subgroup${p.subs.length === 1 ? '' : 's'}</span><span class="fr-acts"><button type="button" class="btn mint sm" data-mact="open-pack" data-pid="${esc(p.id)}">Open</button><button type="button" class="btn ghost sm" data-mact="rename-pack" data-pid="${esc(p.id)}">Rename</button><button type="button" class="btn ghost sm" data-mact="del-pack" data-pid="${esc(p.id)}">Delete</button></span></div></div>`;
+      }).join('') : `<div class="ch-empty"><span class="big">🗺</span>No mission packs yet.<br>Create one to group related challenges — like a “Survive Floors” series — across rarities.</div>`);
+    return;
+  }
+  if (!sub){
+    root.innerHTML = `<div class="filters"><button type="button" class="btn ghost" data-mact="back">← Back</button><strong class="mission-crumb">${esc(pack.title)}</strong><button type="button" class="btn mint" data-mact="new-sub">＋ New subgroup</button></div>` +
+      (pack.subs.length ? pack.subs.map(s => {
+        const pr = missionProgress(s.challengeIds);
+        return `<div class="fr-card"><div class="fr-head"><span class="fr-runname">${esc(s.title)}</span><span class="fr-stats">${pr.done}/${pr.total} challenges complete${s.shared ? ` · 🔗 ${esc(s.shared.label)}: ${s.shared.value}` : ''}</span><span class="fr-acts"><button type="button" class="btn mint sm" data-mact="open-sub" data-sid="${esc(s.id)}">Open</button><button type="button" class="btn ghost sm" data-mact="rename-sub" data-sid="${esc(s.id)}">Rename</button><button type="button" class="btn ghost sm" data-mact="del-sub" data-sid="${esc(s.id)}">Delete</button></span></div></div>`;
+      }).join('') : `<div class="ch-empty">No subgroups in this pack yet. Add one to start grouping challenges.</div>`);
+    return;
+  }
+  const pr = missionProgress(sub.challengeIds);
+  const members = sub.challengeIds.map(id => chById(id)).filter(Boolean);
+  const sharedBlock = sub.shared
+    ? `<div class="shared-block"><div class="shared-head"><span class="shared-label">🔗 ${esc(sub.shared.label)}</span><span class="shared-acts"><button type="button" class="btn ghost sm" data-mact="shared-edit">Edit label</button><button type="button" class="btn ghost sm" data-mact="shared-del">Remove</button></span></div><div class="counter shared-counter"><button type="button" class="cbtn" data-mact="shared-dec" aria-label="Decrease ${esc(sub.shared.label)}">−</button><button type="button" class="cval" data-mact="shared-set" aria-label="Set ${esc(sub.shared.label)}">${sub.shared.value}</button><button type="button" class="cbtn" data-mact="shared-inc" aria-label="Increase ${esc(sub.shared.label)}">+</button></div><p class="ch-help">One shared value — it drives every 🔗 linked counter in this subgroup.</p></div>`
+    : `<div class="shared-block"><button type="button" class="btn ghost sm" data-mact="shared-add">＋ Add shared counter</button><p class="ch-help">A shared counter (e.g. “Floors Survived”) can drive several challenges in this subgroup at once — link a counter from each challenge's editor.</p></div>`;
+  const unaffiliated = run.challenges.filter(c => !missionLoc(c.id));
+  const picker = view.missionPicker
+    ? `<div class="mission-picker">${unaffiliated.length ? unaffiliated.map(c => `<button type="button" class="btn ghost sm mission-pick" data-mact="pick-ch" data-cid="${esc(c.id)}">${esc(c.title)}</button>`).join('') : '<p class="ch-help">Every challenge is already in a subgroup.</p>'}</div>`
+    : '';
+  root.innerHTML = `<div class="filters"><button type="button" class="btn ghost" data-mact="back">← Back</button><strong class="mission-crumb">${esc(pack.title)} › ${esc(sub.title)}</strong><span class="mission-prog">${pr.done}/${pr.total} complete</span></div>` +
+    sharedBlock +
+    `<div class="filters"><button type="button" class="btn mint" data-mact="add-new-ch">＋ New challenge</button><button type="button" class="btn sky" data-mact="add-existing" aria-expanded="${!!view.missionPicker}">＋ Add existing challenge</button></div>` +
+    picker +
+    `<div id="missionCards" class="ch-list">${members.length ? members.map((c, idx) => challengeCardMarkup(c, idx, members.length, {mission:true})).join('') : '<div class="ch-empty">No challenges in this subgroup yet. Add a new one, or bring in an existing challenge.</div>'}</div>`;
+}
+/* Card actions inside the subgroup view: same behavior as the Challenges tab,
+   except reorder edits the subgroup's order and there is a Remove-from-group. */
+async function missionCardAction(b, sub){
+  const act = b.dataset.act;
+  const card = b.closest('.ch'); if (!card) return;
+  const ch = chById(card.dataset.id); if (!ch) return;
+  if (act === 'collapse'){ ch.collapsed = !ch.collapsed; saveRun(); renderMissions(); return; }
+  if (act === 'collapse-items'){ ch.itemsCollapsed = !ch.itemsCollapsed; saveRun(); renderMissions(); return; }
+  if (act === 'collapse-list'){ const name = b.dataset.list; if (!Array.isArray(ch.listState)) ch.listState = []; const st = ch.listState.find(en => en && en.name === name); if (st) st.collapsed = !st.collapsed; else ch.listState.push({name, collapsed:true}); saveRun(); renderMissions(); return; }
+  if (act === 'choose-reward'){ if (challengeReward(ch) === 'choice' && ch.done && !ch.claimed) await grantChoiceReward(ch); return; }
+  if (act === 'exclude'){ ch.excluded = !ch.excluded; saveRun(); renderAll(); toast(ch.excluded ? `“${ch.title}” excluded from completion totals` : `“${ch.title}” counts toward completion totals again`); return; }
+  if (act === 'unlink'){
+    if (sub){ const i = sub.challengeIds.indexOf(ch.id); if (i >= 0) sub.challengeIds.splice(i, 1); }
+    for (const counter of (ch.counters || [])) if (counter.linked) counter.linked = false;
+    saveRun(); renderAll(); toast(`Removed “${ch.title}” from this group`); return;
+  }
+  if (act === 'toggle') await setDone(ch, !ch.done);
+  if (act === 'check-item') await toggleChecklistItem(ch, Number(b.dataset.index));
+  if (act === 'exclude-item') await toggleChecklistExcluded(ch, Number(b.dataset.index));
+  const counterIndex = Number(b.dataset.counterIndex), counter = ch.counters?.[counterIndex];
+  if (act === 'inc' && counter) await setValue(ch, counterIndex, counter.value + 1);
+  if (act === 'dec' && counter) await setValue(ch, counterIndex, counter.value - 1);
+  if (act === 'setval' && counter){
+    const v = await ask({title:'Set progress', msg:`${ch.title} · ${counter.label} (target ${counter.target}):`, input:String(counter.value), ok:'Set', numeric:true});
+    if (v !== null && v !== '' && Number.isFinite(Number(v))) await setValue(ch, counterIndex, v);
+  }
+  if (sub && (act === 'up' || act === 'down')){
+    const ids = sub.challengeIds, i = ids.indexOf(ch.id), j = i + (act === 'up' ? -1 : 1);
+    if (i >= 0 && j >= 0 && j < ids.length){ [ids[i], ids[j]] = [ids[j], ids[i]]; saveRun(); renderMissions(); }
+    return;
+  }
+  if (act === 'edit'){ openChEditor(ch); return; }
+  if (act === 'del'){
+    const ok = await ask({title:'Delete challenge?', msg:`Delete “${ch.title}”? Any unspent spin reward will be removed, and any Toon or Trinket unlocked by its challenge spin will be relocked.`, ok:'Delete', danger:true});
+    if (ok){ revokeChallengeReward(ch); detachFromMissions(ch.id); run.challenges = run.challenges.filter(c => c !== ch); saveRun(); renderAll(); renderSpinPanel(); toast('Challenge deleted and its rewards removed'); }
+    return;
+  }
+  if (act === 'add') return;
+}
+$('#missionRoot').addEventListener('click', async e => {
+  const b = e.target.closest('[data-mact],[data-act]'); if (!b) return;
+  const pack = view.missionId ? missionPackById(view.missionId) : null;
+  const sub = pack && view.missionSubId ? pack.subs.find(s => s.id === view.missionSubId) : null;
+  const mact = b.dataset.mact;
+  if (!mact){ if (b.dataset.act) await missionCardAction(b, sub); return; }
+  if (mact === 'new-pack'){
+    const name = await ask({title:'New mission pack', msg:'Name this pack (e.g. “Floor Milestones”):', input:'', ok:'Create'});
+    if (name === null || !String(name).trim()) return;
+    (run.missions = run.missions || []).push({id:uid(), title:String(name).trim().slice(0,60), subs:[]});
+    saveRun(); renderMissions(); return;
+  }
+  if (mact === 'open-pack'){ view.missionId = b.dataset.pid; view.missionSubId = null; view.missionPicker = false; renderMissions(); return; }
+  if (mact === 'rename-pack'){
+    const p = missionPackById(b.dataset.pid); if (!p) return;
+    const name = await ask({title:'Rename mission pack', msg:'New name:', input:p.title, ok:'Rename'});
+    if (name === null || !String(name).trim()) return;
+    p.title = String(name).trim().slice(0,60); saveRun(); renderMissions(); return;
+  }
+  if (mact === 'del-pack'){
+    const p = missionPackById(b.dataset.pid); if (!p) return;
+    const ok = await ask({title:'Delete mission pack?', msg:`Delete the pack “${p.title}” and its subgroups? The challenges themselves are NOT deleted — they just leave the group.`, ok:'Delete pack', danger:true});
+    if (!ok) return;
+    for (const s of p.subs) for (const cid of s.challengeIds){ const ch = chById(cid); if (ch) for (const counter of (ch.counters || [])) counter.linked = false; }
+    run.missions = run.missions.filter(x => x !== p);
+    if (view.missionId === p.id){ view.missionId = null; view.missionSubId = null; view.missionPicker = false; }
+    saveRun(); renderAll(); toast('Mission pack deleted — challenges kept'); return;
+  }
+  if (!pack) return;
+  if (mact === 'back'){
+    if (view.missionSubId){ view.missionSubId = null; view.missionPicker = false; } else view.missionId = null;
+    renderMissions(); return;
+  }
+  if (mact === 'new-sub'){
+    const name = await ask({title:'New subgroup', msg:`Name this subgroup of “${pack.title}”:`, input:'', ok:'Create'});
+    if (name === null || !String(name).trim()) return;
+    pack.subs.push({id:uid(), title:String(name).trim().slice(0,60), shared:null, challengeIds:[]});
+    saveRun(); renderMissions(); return;
+  }
+  if (mact === 'open-sub'){ view.missionSubId = b.dataset.sid; view.missionPicker = false; renderMissions(); return; }
+  if (mact === 'rename-sub'){
+    const s = pack.subs.find(x => x.id === b.dataset.sid); if (!s) return;
+    const name = await ask({title:'Rename subgroup', msg:'New name:', input:s.title, ok:'Rename'});
+    if (name === null || !String(name).trim()) return;
+    s.title = String(name).trim().slice(0,60); saveRun(); renderMissions(); return;
+  }
+  if (mact === 'del-sub'){
+    const s = pack.subs.find(x => x.id === b.dataset.sid); if (!s) return;
+    const ok = await ask({title:'Delete subgroup?', msg:`Delete the subgroup “${s.title}”? Its challenges are NOT deleted — they just leave the group.`, ok:'Delete subgroup', danger:true});
+    if (!ok) return;
+    for (const cid of s.challengeIds){ const ch = chById(cid); if (ch) for (const counter of (ch.counters || [])) counter.linked = false; }
+    pack.subs = pack.subs.filter(x => x !== s);
+    if (view.missionSubId === s.id){ view.missionSubId = null; view.missionPicker = false; }
+    saveRun(); renderAll(); toast('Subgroup deleted — challenges kept'); return;
+  }
+  if (!sub) return;
+  if (mact === 'add-new-ch'){ openChEditor(null, {packId:pack.id, subId:sub.id}); return; }
+  if (mact === 'add-existing'){ view.missionPicker = !view.missionPicker; renderMissions(); return; }
+  if (mact === 'pick-ch'){
+    const ch = chById(b.dataset.cid); if (!ch) return;
+    view.missionPicker = false;
+    await applyMembership(ch, {pack, sub});
+    toast(`Added “${ch.title}” to “${sub.title}”`); return;
+  }
+  if (mact === 'shared-add'){
+    const label = await ask({title:'Shared counter', msg:'Name the shared counter for this subgroup (e.g. “Floors Survived”):', input:'', ok:'Add'});
+    if (label === null || !String(label).trim()) return;
+    sub.shared = {label:String(label).trim().slice(0,40), value:0};
+    saveRun(); renderMissions(); return;
+  }
+  if (mact === 'shared-edit' && sub.shared){
+    const label = await ask({title:'Shared counter label', msg:'New label:', input:sub.shared.label, ok:'Save'});
+    if (label === null || !String(label).trim()) return;
+    sub.shared.label = String(label).trim().slice(0,40); saveRun(); renderMissions(); return;
+  }
+  if (mact === 'shared-del' && sub.shared){
+    const ok = await ask({title:'Remove shared counter?', msg:`Remove the shared counter “${sub.shared.label}”? Linked counters keep their current value (${sub.shared.value}) as their own and unlink.`, ok:'Remove', danger:true});
+    if (!ok) return;
+    for (const cid of sub.challengeIds){ const ch = chById(cid); if (ch) for (const counter of (ch.counters || [])) if (counter.linked) counter.linked = false; }
+    sub.shared = null; saveRun(); renderAll(); toast('Shared counter removed'); return;
+  }
+  if (mact === 'shared-inc' && sub.shared){ await setSharedValue(sub, sub.shared.value + 1); return; }
+  if (mact === 'shared-dec' && sub.shared){ await setSharedValue(sub, sub.shared.value - 1); return; }
+  if (mact === 'shared-set' && sub.shared){
+    const v = await ask({title:'Set shared counter', msg:`${sub.shared.label}:`, input:String(sub.shared.value), ok:'Set', numeric:true});
+    if (v !== null && v !== '' && Number.isFinite(Number(v))) await setSharedValue(sub, Number(v));
+    return;
+  }
+});
+/* Drag-to-reorder inside a subgroup: rewrites the subgroup's challengeIds. */
+let missionDrag = null;
+$('#missionRoot').addEventListener('pointerdown', e => {
+  const handle = e.target.closest('[data-drag]'); if (!handle) return;
+  const card = handle.closest('.ch'); if (!card) return;
+  const pack = view.missionId ? missionPackById(view.missionId) : null;
+  const sub = pack && view.missionSubId ? pack.subs.find(s => s.id === view.missionSubId) : null;
+  if (!sub) return;
+  const ch = chById(card.dataset.id); if (!ch) return;
+  e.preventDefault();
+  missionDrag = {ch, card, pointerId:e.pointerId, sub};
+  card.classList.add('dragging');
+  try { handle.setPointerCapture(e.pointerId); } catch { /* window listeners below still track */ }
+});
+window.addEventListener('pointermove', e => {
+  if (!missionDrag || e.pointerId !== missionDrag.pointerId) return;
+  e.preventDefault();
+  if (e.clientY < 70) window.scrollBy(0, -14); else if (e.clientY > window.innerHeight - 70) window.scrollBy(0, 14);
+  const list = $('#missionCards'); if (!list) return;
+  const card = missionDrag.card;
+  const siblings = [...list.querySelectorAll('.ch')].filter(el => el !== card);
+  const before = siblings.find(el => { const r = el.getBoundingClientRect(); return e.clientY < r.top + r.height / 2; });
+  if (before) list.insertBefore(card, before); else list.appendChild(card);
+}, {passive:false});
+window.addEventListener('pointerup', e => {
+  if (missionDrag && e.pointerId === missionDrag.pointerId){
+    const md = missionDrag; missionDrag = null; md.card.classList.remove('dragging');
+    const domOrder = [...document.querySelectorAll('#missionCards .ch')].map(el => el.dataset.id);
+    if (domOrder.length === md.sub.challengeIds.length && domOrder.some((id, i) => id !== md.sub.challengeIds[i])){ md.sub.challengeIds = domOrder; saveRun(); }
+    renderMissions();
+  }
+});
+window.addEventListener('pointercancel', e => { if (missionDrag && e.pointerId === missionDrag.pointerId){ missionDrag = null; renderMissions(); } });
 
 /* ================= Friends (snapshots — not live sync) =================
    A friend entry is a snapshot of a friend's exported run, imported with the same
@@ -1929,12 +2463,12 @@ function loadFriends(){
 const saveFriends = () => store.set(LS_FRIENDS, JSON.stringify(friends));
 function runStats(r){
   const count = (kind, st) => Object.values((r.status && r.status[kind]) || {}).filter(v => v === st).length;
-  return {challengesDone:r.challenges.filter(c => c.done).length, challengesTotal:r.challenges.length,
+  return {challengesDone:r.challenges.filter(c => c.done && !c.excluded).length, challengesTotal:r.challenges.filter(c => !c.excluded).length,
     toonsUnlocked:count('toons','unlocked'), toonsEliminated:count('toons','eliminated'),
     trinketsUnlocked:count('trinkets','unlocked'), trinketsEliminated:count('trinkets','eliminated')};
 }
 function myStats(){
-  return {challengesDone:run.challenges.filter(c => c.done).length, challengesTotal:run.challenges.length,
+  return {challengesDone:run.challenges.filter(c => c.done && !c.excluded).length, challengesTotal:run.challenges.filter(c => !c.excluded).length,
     toonsUnlocked:countState('toons','unlocked'), toonsEliminated:countState('toons','eliminated'),
     trinketsUnlocked:countState('trinkets','unlocked'), trinketsEliminated:countState('trinkets','eliminated')};
 }
@@ -1965,7 +2499,7 @@ function friendRoster(r, kind){
   return h;
 }
 function renderFriends(){
-  const tab = $('#tabFriends'); if (tab) { const fDone = friends.reduce((n,f)=>n + ((f.run && Array.isArray(f.run.challenges)) ? f.run.challenges.filter(c=>c.done).length : 0), 0); const fTotal = friends.reduce((n,f)=>n + ((f.run && Array.isArray(f.run.challenges)) ? f.run.challenges.length : 0), 0); let gDone = 0, gTotal = 0; try { const myId = grpMember ? grpMember.id : null; grpMembers.forEach(m => { if (m.memberId === myId) return; const s = runStats(m.run); gDone += s.challengesDone; gTotal += s.challengesTotal; }); } catch {} tab.textContent = `${fDone + gDone}/${fTotal + gTotal}`; }
+  const tab = $('#tabFriends'); if (tab) { const fDone = friends.reduce((n,f)=>n + ((f.run && Array.isArray(f.run.challenges)) ? f.run.challenges.filter(c=>c.done && !c.excluded).length : 0), 0); const fTotal = friends.reduce((n,f)=>n + ((f.run && Array.isArray(f.run.challenges)) ? f.run.challenges.filter(c=>!c.excluded).length : 0), 0); let gDone = 0, gTotal = 0; try { const myId = grpMember ? grpMember.id : null; grpMembers.forEach(m => { if (m.memberId === myId) return; const s = runStats(m.run); gDone += s.challengesDone; gTotal += s.challengesTotal; }); } catch {} tab.textContent = `${fDone + gDone}/${fTotal + gTotal}`; }
   renderGroup();
   const list = $('#friendList'), detail = $('#friendDetail'); if (!list || !detail) return;
   if (!friends.length){
@@ -2326,7 +2860,7 @@ loadFriends();
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
   view.tab = t.dataset.tab;
   document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x===t));
-  ['challenges', 'friends', ...KINDS].forEach(k => document.getElementById('sec-'+k).hidden = k !== view.tab);
+  ['challenges', 'friends', 'missions', ...KINDS].forEach(k => document.getElementById('sec-'+k).hidden = k !== view.tab);
 }));
 /* sync across tabs/windows */
 window.addEventListener('storage', e => { if (e.key && e.key.startsWith('dwNuzlocke:')) { loadIndex(); loadRun(index.active); loadFriends(); renderAll(); } });
