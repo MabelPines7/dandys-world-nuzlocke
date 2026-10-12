@@ -162,7 +162,7 @@ dialog::backdrop{background:rgba(10,4,16,.72);backdrop-filter:blur(3px)}
 .toggle-row{display:flex;align-items:center;gap:10px;margin-top:14px;font-weight:700}
 .state-pick{border:none;padding:0;margin:14px 0 0;display:flex;flex-wrap:wrap;gap:8px}
 .state-pick legend{font-weight:700;margin-bottom:6px;padding:0}
-.state-pick label{flex:1 1 0;min-width:96px;margin:0;cursor:pointer}
+.state-pick label{flex:1 1 0;min-width:96px;margin:0;cursor:pointer;position:relative}
 .state-pick input{position:absolute;opacity:0;width:1px;height:1px}
 .state-pick span{display:block;text-align:center;font-weight:700;font-size:14px;padding:9px 6px;border:3px solid var(--ink);border-radius:14px;background:#fff;box-shadow:3px 3px 0 var(--ink);transition:transform .08s}
 .state-pick input:focus-visible+span{outline:3px dashed var(--lilac);outline-offset:2px}
@@ -215,17 +215,17 @@ footer a{color:var(--mint)}
 .ch-prog .meta{flex:1;min-width:0}
 .ch-prog .lbl{font-weight:700;color:var(--lilac);font-size:14px;text-transform:uppercase;letter-spacing:1px}
 .ch-filters .grow{flex:1}
-.ch-list{display:flex;flex-direction:column;gap:12px}
-/* Missions subgroup view: the challenges form one connected stack — no gaps,
-   shared edges (each card overlaps the previous card's 3px border), and only
-   the stack's outer corners stay rounded. */
-.mission-stack{gap:0}
-.mission-stack>.ch{border-radius:0;box-shadow:none}
-.mission-stack>.ch+.ch{margin-top:-3px}
-.mission-stack>.ch:first-child{border-top-left-radius:18px;border-top-right-radius:18px}
-.mission-stack>.ch:last-child{border-bottom-left-radius:18px;border-bottom-right-radius:18px}
-.mission-stack>.ch:only-child{border-radius:18px}
-.mission-stack>.ch.dragging{box-shadow:4px 4px 0 var(--ink)}
+.ch-list{display:flex;flex-direction:column;gap:0}
+/* Every challenge list (Challenges tab, Mission Packs subgroup view) is one
+   connected stack — no gaps, shared edges (each card overlaps the previous
+   card's 3px border), and only the stack's outer corners stay rounded. This
+   is the single stack implementation; it used to be .mission-stack-only. */
+.ch-list>.ch{border-radius:0;box-shadow:none}
+.ch-list>.ch+.ch{margin-top:-3px}
+.ch-list>.ch:first-child{border-top-left-radius:18px;border-top-right-radius:18px}
+.ch-list>.ch:last-child{border-bottom-left-radius:18px;border-bottom-right-radius:18px}
+.ch-list>.ch:only-child{border-radius:18px}
+.ch-list>.ch.dragging{box-shadow:4px 4px 0 var(--ink)}
 .ch{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 14px;background:#fff4fb;color:var(--ink)}
 .ch.done{background:#d7f8ea}
 .ch .chk{width:46px;height:46px;border-radius:14px;border:3px solid var(--ink);background:#fff;box-shadow:3px 3px 0 var(--ink);cursor:pointer;display:grid;place-items:center;font-size:26px;font-weight:900;color:var(--ink);padding:0}
@@ -443,8 +443,18 @@ footer a{color:var(--mint)}
 .tier-badge.gold{background:#ffe066;color:#4a3400;}
 .tier-badge.iridescent{background:linear-gradient(110deg,#ffb4dd,#b5e6ff,#d7ffc5,#fff0a6);color:#312346;}
 #chDesc{min-height:180px;line-height:1.45;}
-#chDlg{max-height:90vh;}
-#chDlg .mb{max-height:66vh;overflow-y:auto;}
+/* Challenge editor dialog: hard viewport cap (dvh, with vh fallback for older
+   browsers) and a flex-column form — header and footer stay fixed, ONLY the
+   body scrolls. The old setup (dialog max-height 90vh fighting a separate
+   .mb max-height of 66vh over a plain block form) let the form overflow the
+   dialog box on iOS when a section unhid: footer stranded mid-dialog, a blank
+   "second screen" of dialog background below it, and vh measuring the large
+   (toolbar-hidden) viewport so the caps overshot the visible screen. */
+#chDlg{max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);}
+#chDlg form{display:flex;flex-direction:column;min-height:0;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);}
+#chDlg .mh{flex:none}
+#chDlg .mb{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+#chDlg .mf{flex:none}
 .ch-help{margin:7px 0 0;color:#5d4b6e;font-size:13px;line-height:1.35;}
 .revival-dlg{width:min(460px,calc(100vw - 28px));}
 .revival-dlg .mb p{line-height:1.4;}
@@ -454,7 +464,7 @@ footer a{color:var(--mint)}
 .revival-choices input{width:20px;height:20px;accent-color:#4d2873;}
 .revival-choices label:has(input:disabled){opacity:.45;cursor:not-allowed;}
 .revival-choices label:has(input:disabled) input{cursor:not-allowed;}
-@media(max-width:640px){.ch-category-tabs{flex-direction:column;}.ch-category-tabs button{flex:auto;justify-content:space-between;}#chDlg .mb{max-height:62vh;}}
+@media(max-width:640px){.ch-category-tabs{flex-direction:column;}.ch-category-tabs button{flex:auto;justify-content:space-between;}}
 
 
 /* Keep team badge choices in a stable 3 + 1 layout for every selected tier. */
@@ -1927,14 +1937,18 @@ const radioVal=name=>(document.querySelector(`input[name="${name}"]:checked`)||{
 const setRadio=(name,v)=>document.querySelectorAll(`input[name="${name}"]`).forEach(r=>r.checked=r.value===v);
 function selectedModes(){ return CH_MODES.filter(m=>document.querySelector(`input[name="chModes"][value="${m}"]`)?.checked); }
 function syncTargetRow(){
+  const _sy=chMbScrollTop();
   let modes=selectedModes();
   if (!modes.length){ document.querySelector('input[name="chModes"][value="checklist"]').checked=true; modes=['checklist']; $('#chErr').textContent='Pick at least one progress mode — Checklist has been re-selected for you.'; }
   else { const err=$('#chErr'); if (err && err.textContent.startsWith('Pick at least one progress mode')) err.textContent=''; }
   $('#chTargetRow').hidden=!modes.includes('counter'); $('#chChecklistRow').hidden=!modes.includes('checklist'); $('#chGoalHelp').hidden=!modes.includes('goal');
+  chMbRestoreScroll(_sy);
 }
 function syncIconRow(){
+  const _sy=chMbScrollTop();
   const kind=radioVal('chIconKind')||'none';
   $('#chIconEmojiRow').hidden=kind!=='emoji'; $('#chIconSpriteRow').hidden=kind!=='sprite'; $('#chIconUploadRow').hidden=kind!=='upload';
+  chMbRestoreScroll(_sy);
 }
 function checklistFromText(raw,previous=[]){
   const used=new Set();
@@ -2001,7 +2015,16 @@ $('#chCounterRows').addEventListener('click',e=>{
   const counters=rows.filter(row=>row!==remove.closest('.counter-config-row')).map((row,index)=>({id:row.dataset.counterId,label:row.querySelector('[data-counter-label]').value||`Counter ${index+1}`,target:row.querySelector('[data-counter-target]').value||10,value:0,linked:!!row.querySelector('[data-counter-link]')?.checked}));
   renderCounterEditor(counters);
 });
+/* Editor sync toggles (reward/mode/icon/category changes) show and hide whole
+   rows inside the scrolling dialog body. On iOS the tap also focuses the
+   picker's hidden input and the browser scrolls to reveal it, which yanked
+   the body to the bottom. Capture the body's scroll position before a toggle
+   and restore it after (and once more next frame, for late focus scrolls),
+   so changing an option never moves the user's place in the form. */
+function chMbScrollTop(){ const mb=$('#chDlg .mb'); return mb ? mb.scrollTop : 0; }
+function chMbRestoreScroll(y){ const mb=$('#chDlg .mb'); if (!mb) return; mb.scrollTop=y; requestAnimationFrame(()=>{ mb.scrollTop=y; }); }
 function syncCategoryFields(){
+  const _sy=chMbScrollTop();
   const category=radioVal('chCategory')||'toon';
   $('#teamTierWrap').hidden=false; $('#chRewardWrap').hidden=category==='team';
   const noneRadio=document.querySelector('input[name="teamTier"][value="none"]');
@@ -2014,13 +2037,16 @@ function syncCategoryFields(){
   $('#chRewardHint').textContent=category==='team' ? '' : `A completed ${kind} challenge earns a ${kind} spin.`;
   $('#chDlgHint').textContent=category==='team' ? 'Complete the goal to earn its badge-tier reward.' : `Complete it to earn a ${kind} spin.`;
   syncChoiceOptions();
+  chMbRestoreScroll(_sy);
 }
 document.querySelectorAll('input[name="chModes"]').forEach(r=>r.addEventListener('change',syncTargetRow));
 function syncRewardPick(){
+  const _sy=chMbScrollTop();
   const pick=radioVal('chRewardPick')||'default';
   $('#chRewardChanceRow').hidden=pick!=='chance';
   $('#chRewardTextRow').hidden=pick!=='custom';
   syncChoiceOptions();
+  chMbRestoreScroll(_sy);
 }
 /* The "Choice options" fieldset applies exactly when the primary reward
    resolves to a choice: an explicit Your-choice pick, or Default on a Team
@@ -2032,7 +2058,9 @@ function primaryResolvesToChoice(){
   return (radioVal('chCategory')||'toon')==='team' && (radioVal('teamTier')||'bronze')==='iridescent';
 }
 function syncChoiceOptions(){
+  const _sy=chMbScrollTop();
   const wrap=$('#chChoiceOptionsWrap'); if (wrap) wrap.hidden=!primaryResolvesToChoice();
+  chMbRestoreScroll(_sy);
 }
 /* ---------- Extra rewards editor (up to 3 entries) ---------- */
 const EXTRA_KIND_LABEL = {toon:'🎭 Toon spin', trinket:'💍 Trinket spin', revival:'🎰 Revival Spin', target:'🎯 Targeted revival (pick one)', chance:'🎲 Revival chance', custom:'🎁 Custom reward', choice:'✨ Choice credit'};
@@ -2072,10 +2100,12 @@ function readExtraEditor(){
 }
 $('#chExtraRows').addEventListener('change', e => {
   const sel=e.target.closest('[data-extra-kind]'); if (!sel) return;
+  const _sy=chMbScrollTop();
   const row=sel.closest('.extra-reward-row'), kind=sel.value;
   row.querySelector('[data-extra-pct-wrap]').hidden=kind!=='chance';
   row.querySelector('[data-extra-text]').hidden=kind!=='custom';
   row.querySelector('[data-extra-opts]').hidden=kind!=='choice';
+  chMbRestoreScroll(_sy);
 });
 $('#chExtraRows').addEventListener('click', e => {
   const rm=e.target.closest('[data-remove-extra]'); if (!rm) return;
@@ -2175,7 +2205,7 @@ function openChEditor(ch, missionTarget=null){
   buildMissionOptions();
   const curLoc=ch ? missionLoc(ch.id) : null;
   $('#chMission').value=curLoc ? `${curLoc.pack.id}|${curLoc.sub.id}` : (missionTarget ? `${missionTarget.packId}|${missionTarget.subId}` : '');
-  syncTargetRow(); syncIconRow(); syncCategoryFields(); syncRewardPick(); syncMissionLinkState(); $('#chDlg').showModal(); setTimeout(()=>$('#chTitle').focus(),30);
+  syncTargetRow(); syncIconRow(); syncCategoryFields(); syncRewardPick(); syncMissionLinkState(); $('#chDlg').showModal(); setTimeout(()=>{ const t=$('#chTitle'); try { t.focus({preventScroll:true}); } catch { t.focus(); } },30);
 }
 $('#chCancel').addEventListener('click',()=>$('#chDlg').close());
 
@@ -2214,7 +2244,7 @@ function openPackEditor(pack){
   $('#packIconUploadInfo').textContent=packIconUploadData ? 'Custom image saved — pick a new file to replace it.' : 'Pick an image — it is shrunk to at most 128×128 and stored inside the pack.';
   $('#packErr').textContent='';
   syncPackIconRow();
-  $('#packDlg').showModal(); setTimeout(()=>$('#packName').focus(),30);
+  $('#packDlg').showModal(); setTimeout(()=>{ const t=$('#packName'); try { t.focus({preventScroll:true}); } catch { t.focus(); } },30);
 }
 $('#packCancel').addEventListener('click',()=>{ packEditing=null; $('#packDlg').close(); });
 $('#packForm').addEventListener('submit',e=>{
@@ -2278,7 +2308,7 @@ function openSubEditor(pack, sub){
   syncSubIconRow();
   $('#subSharedNote').textContent='One shared value drives every 🔗 linked counter in this subgroup. Changing the value updates the linked challenges right away.';
   $('#subErr').textContent='';
-  $('#subDlg').showModal(); setTimeout(()=>$('#subName').focus(),30);
+  $('#subDlg').showModal(); setTimeout(()=>{ const t=$('#subName'); try { t.focus({preventScroll:true}); } catch { t.focus(); } },30);
 }
 $('#subSharedLabel').addEventListener('input',()=>{
   $('#subSharedValue').disabled=!(subHadShared || $('#subSharedLabel').value.trim());
@@ -2756,7 +2786,7 @@ function renderMissions(){
   root.innerHTML = `<div class="filters"><button type="button" class="btn ghost" data-mact="back">← Back</button>${entityIconMarkup(sub)}<strong class="mission-crumb">${esc(pack.title)} › ${esc(sub.title)}</strong><span class="mission-prog">${pr.done}/${pr.total} complete</span><button type="button" class="btn ghost sm" data-mact="edit-sub">Edit</button></div>` +
     `<div class="filters"><button type="button" class="btn mint" data-mact="add-new-ch">＋ New challenge</button><button type="button" class="btn sky" data-mact="add-existing" aria-expanded="${!!view.missionPicker}">＋ Add existing challenge</button></div>` +
     picker +
-    `<div id="missionCards" class="ch-list mission-stack">${members.length ? members.map((c, idx) => challengeCardMarkup(c, idx, members.length, {mission:true})).join('') : '<div class="ch-empty">No challenges in this subgroup yet. Add a new one, or bring in an existing challenge.</div>'}</div>`;
+    `<div id="missionCards" class="ch-list">${members.length ? members.map((c, idx) => challengeCardMarkup(c, idx, members.length, {mission:true})).join('') : '<div class="ch-empty">No challenges in this subgroup yet. Add a new one, or bring in an existing challenge.</div>'}</div>`;
 }
 /* Card actions inside the subgroup view: same behavior as the Challenges tab,
    except reorder edits the subgroup's order and there is a Remove-from-group. */
