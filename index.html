@@ -245,8 +245,8 @@ footer a{color:var(--mint)}
 .fr-name{font-weight:800;font-size:17px}
 .fr-stats{font-size:13px;font-weight:600;color:#5d4b6e}
 .fr-acts{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
-.fr-table{border-collapse:collapse;margin:10px 0;font-size:14px;font-weight:700}
-.fr-table td,.fr-table th{border:2px solid var(--ink);padding:5px 12px;background:#fff4fb;text-align:left}
+.fr-runname{flex-basis:100%;font-weight:900;font-size:19px;line-height:1.15}
+
 .fr-ch{padding:4px 0;border-bottom:1px dashed #cdb8e8;font-size:14px}
 .fr-ch:last-child{border-bottom:none}
 .drag-handle{cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none;font-size:19px;line-height:1;padding:7px 5px;color:#8a76a8;text-align:center;border-radius:8px}
@@ -1933,19 +1933,12 @@ function renderFriends(){
   }
   list.innerHTML = friends.map(f => {
     const s = runStats(f.run), when = new Date(f.importedAt);
-    return `<div class="fr-card"><div class="fr-head"><span class="fr-name">${esc(f.name)}</span><span class="fr-stats">${s.challengesDone}/${s.challengesTotal} challenges · 🎭 ${s.toonsUnlocked} unlocked, ☠ ${s.toonsEliminated} · 💍 ${s.trinketsUnlocked} unlocked, ☠ ${s.trinketsEliminated} · snapshot ${esc(isNaN(when) ? '' : when.toLocaleDateString())}</span><span class="fr-acts"><button type="button" class="btn ghost sm" data-fact="view" data-fid="${esc(f.id)}">${view.friendId === f.id ? 'Hide' : 'View'}</button><button type="button" class="btn ghost sm" data-fact="update" data-fid="${esc(f.id)}">Update</button><button type="button" class="btn ghost sm" data-fact="rename" data-fid="${esc(f.id)}">Rename</button><button type="button" class="btn ghost sm" data-fact="remove" data-fid="${esc(f.id)}">Remove</button></span></div></div>`;
+    return `<div class="fr-card"><div class="fr-head"><span class="fr-runname">${esc(f.run.name || 'Unnamed run')}</span><span class="fr-name">${esc(f.name)}</span><span class="fr-stats">${s.challengesDone}/${s.challengesTotal} challenges · 🎭 ${s.toonsUnlocked} unlocked, ☠ ${s.toonsEliminated} · 💍 ${s.trinketsUnlocked} unlocked, ☠ ${s.trinketsEliminated} · snapshot ${esc(isNaN(when) ? '' : when.toLocaleDateString())}</span><span class="fr-acts"><button type="button" class="btn ghost sm" data-fact="view" data-fid="${esc(f.id)}">${view.friendId === f.id ? 'Hide' : 'View'}</button><button type="button" class="btn ghost sm" data-fact="update" data-fid="${esc(f.id)}">Update</button><button type="button" class="btn ghost sm" data-fact="rename" data-fid="${esc(f.id)}">Rename</button><button type="button" class="btn ghost sm" data-fact="remove" data-fid="${esc(f.id)}">Remove</button></span></div></div>`;
   }).join('');
   const f = friends.find(x => x.id === view.friendId);
   if (!f){ detail.innerHTML = ''; return; }
-  const mine = myStats(), theirs = runStats(f.run);
-  const row = (label, a, b) => `<tr><th>${label}</th><td>${a}</td><td>${b}</td></tr>`;
-  detail.innerHTML = `<div class="fr-card"><h3>You vs ${esc(f.name)}</h3>
-    <table class="fr-table"><tr><th></th><th>You</th><th>${esc(f.name)}</th></tr>
-    ${row('Challenges done', `${mine.challengesDone}/${mine.challengesTotal}`, `${theirs.challengesDone}/${theirs.challengesTotal}`)}
-    ${row('Toons unlocked', mine.toonsUnlocked, theirs.toonsUnlocked)}
-    ${row('Toons eliminated', mine.toonsEliminated, theirs.toonsEliminated)}
-    ${row('Trinkets unlocked', mine.trinketsUnlocked, theirs.trinketsUnlocked)}
-    ${row('Trinkets eliminated', mine.trinketsEliminated, theirs.trinketsEliminated)}</table>
+  detail.innerHTML = `<div class="fr-card"><h3>${esc(f.run.name || 'Unnamed run')}</h3>
+    <p class="fr-stats">${esc(f.name)}'s nuzlocke run</p>
     <h4>${esc(f.name)}'s toons</h4>
     ${friendRoster(f.run, 'toons')}
     <h4>${esc(f.name)}'s trinkets</h4>
@@ -2214,15 +2207,8 @@ function grpWirePanel(){
   });
 }
 function grpMemberDetail(m){
-  const mine = myStats(), theirs = runStats(m.run);
-  const row = (label, a, b) => `<tr><th>${label}</th><td>${a}</td><td>${b}</td></tr>`;
-  return `<div class="fr-card"><h3>You vs ${esc(m.name)}</h3>
-    <table class="fr-table"><tr><th></th><th>You</th><th>${esc(m.name)}</th></tr>
-    ${row('Challenges done', `${mine.challengesDone}/${mine.challengesTotal}`, `${theirs.challengesDone}/${theirs.challengesTotal}`)}
-    ${row('Toons unlocked', mine.toonsUnlocked, theirs.toonsUnlocked)}
-    ${row('Toons eliminated', mine.toonsEliminated, theirs.toonsEliminated)}
-    ${row('Trinkets unlocked', mine.trinketsUnlocked, theirs.trinketsUnlocked)}
-    ${row('Trinkets eliminated', mine.trinketsEliminated, theirs.trinketsEliminated)}</table>
+  return `<div class="fr-card"><h3>${esc(m.run.name || 'Unnamed run')}</h3>
+    <p class="fr-stats">${esc(m.name)}'s nuzlocke run</p>
     <h4>${esc(m.name)}'s toons</h4>
     ${friendRoster(m.run, 'toons')}
     <h4>${esc(m.name)}'s trinkets</h4>
@@ -2268,7 +2254,7 @@ function renderGroup(){
     } else {
       list.innerHTML = entries.map(m => {
         const s = runStats(m.run), when = new Date(m.updatedAt), self = m.memberId === me.id;
-        return `<div class="fr-card"><div class="fr-head"><span class="fr-name">${esc(m.name)}${self ? ' (You)' : ''} <span class="grp-live">● Live</span></span><span class="fr-stats">${s.challengesDone}/${s.challengesTotal} challenges · 🎭 ${s.toonsUnlocked} unlocked, ☠ ${s.toonsEliminated} · 💍 ${s.trinketsUnlocked} unlocked, ☠ ${s.trinketsEliminated} · updated ${esc(isNaN(when) ? '' : when.toLocaleString())}</span><span class="fr-acts"><button type="button" class="btn ghost sm" data-gact="view" data-gid="${esc(m.memberId)}">${grpSelectedId === m.memberId ? 'Hide' : 'View'}</button></span></div></div>`;
+        return `<div class="fr-card"><div class="fr-head"><span class="fr-runname">${esc(m.run.name || 'Unnamed run')}</span><span class="fr-name">${esc(m.name)}${self ? ' (You)' : ''} <span class="grp-live">● Live</span></span><span class="fr-stats">${s.challengesDone}/${s.challengesTotal} challenges · 🎭 ${s.toonsUnlocked} unlocked, ☠ ${s.toonsEliminated} · 💍 ${s.trinketsUnlocked} unlocked, ☠ ${s.trinketsEliminated} · updated ${esc(isNaN(when) ? '' : when.toLocaleString())}</span><span class="fr-acts"><button type="button" class="btn ghost sm" data-gact="view" data-gid="${esc(m.memberId)}">${grpSelectedId === m.memberId ? 'Hide' : 'View'}</button></span></div></div>`;
       }).join('');
     }
     const sel = grpSelectedId ? grpMembers.get(grpSelectedId) : null;
