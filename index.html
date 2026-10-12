@@ -260,7 +260,7 @@ footer a{color:var(--mint)}
 .ch-collapse{margin-left:auto;white-space:nowrap;padding:4px 9px;border:2px solid var(--ink);border-radius:10px;background:#f1e8f8;color:var(--ink);font:inherit;font-size:12px;font-weight:800;cursor:pointer}
 .ch-collapse:focus-visible{outline:3px dashed var(--lilac);outline-offset:2px}
 .ch-icon{font-size:24px;line-height:1}
-.ch-icon-img{width:30px;height:30px;object-fit:contain;border-radius:8px;vertical-align:middle}
+.ch-icon-img{width:30px;height:30px;object-fit:contain;border-radius:8px;vertical-align:middle} .pack-ico{display:inline-flex;align-items:center;flex:none;vertical-align:middle;margin-right:8px} .pack-ico .ch-icon{font-size:30px} .pack-ico .ch-icon-img{width:34px;height:34px}
 .ch-tier-tabs{margin:0 0 12px}
 .fr-list{display:flex;flex-direction:column;gap:10px}
 .fr-card{border:3px solid var(--ink);border-radius:16px;padding:12px;background:#fff4fb;color:var(--ink);box-shadow:3px 3px 0 var(--ink);margin-bottom:12px}
@@ -555,7 +555,7 @@ footer a{color:var(--mint)}
   </footer>
 </div>
 
-<!-- Challenge editor --> <dialog id="chDlg"> <form method="dialog" id="chForm"> <div class="mh" style="background:var(--mint)"><div><h2 id="chDlgTitle">New challenge</h2><p id="chDlgHint">Finish it to earn a reward.</p></div></div> <div class="mb"> <label for="chTitle">Title</label> <input type="text" id="chTitle" maxlength="80" required placeholder="e.g. Survive 10 floors with Poppy" autocomplete="off"> <label for="chDesc" style="margin-top:12px">Description <span class="small">(optional · up to 3,000 characters)</span></label> <textarea id="chDesc" maxlength="3000" rows="6" placeholder="Add all the rules and details here…"></textarea> <fieldset class="state-pick" id="chCategory"><legend>Challenge tab</legend> <label class="st-unlocked"><input type="radio" name="chCategory" value="toon" checked><span>🎭 Toon challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="trinket"><span>💍 Trinket challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="team"><span>🏅 Team goal</span></label> </fieldset> <fieldset class="state-pick" id="teamTierWrap"><legend>Rarity / badge tier</legend> <label class="st-locked" id="tierNoneLabel"><input type="radio" name="teamTier" value="none"><span>None (default title color)</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="bronze" checked><span>🥉 Bronze</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="silver"><span>🥈 Silver</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="gold"><span>🥇 Gold</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="iridescent"><span>🌈 Iridescent</span></label> <p class="ch-help" id="teamTierHint">Bronze badge · no reward.</p> </fieldset> <fieldset class="state-pick" id="chType"><legend>Progress — pick any combination</legend> <label class="st-unlocked"><input type="checkbox" name="chModes" value="goal"><span>☑ One-time goal</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="checklist" checked><span>☑ Checklist</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="counter"><span>🔢 Counters</span></label> <p class="ch-help">Combine modes freely — e.g. Counters with a Checklist attached. At least one mode must stay selected.</p> </fieldset> <div id="chTargetRow" class="counter-editor" hidden><div class="counter-editor-head"><strong>Counter goals</strong><button type="button" class="btn ghost" id="addCounterRow">＋ Add counter</button></div><div id="chCounterRows"></div><p class="ch-help">Add up to 20 counters. Each needs a label and target, and each counter counts as one condition (see “conditions met” below).</p></div> <div id="chChecklistRow" class="checklist-editor"><strong class="chlist-title">Checklists</strong><div id="chListEditors"></div><button type="button" class="btn ghost" id="addChecklistList">＋ Add checklist</button><p class="ch-help">Give each checklist a name and its items, one per line (up to 100 items across all lists). Check off each step as you complete it. Use Exclude for items that do not apply; every included item counts as one condition. On the card, each checklist can be shown or hidden on its own.</p></div> <p id="chGoalHelp" class="ch-help" hidden>Tick the challenge's main checkbox when the goal itself is done — the goal counts as one condition.</p> <div id="chReqRow"><label for="chReqCount">Complete when <input type="number" id="chReqCount" min="0" max="999" step="1" inputmode="numeric" style="width:80px"> conditions are met</label><p class="ch-help">Leave blank (or 0) to require <b>all</b> conditions. Each included checklist item, each counter, and the goal itself each count as one condition — e.g. set 2 to complete when any 2 of 3 conditions are met.</p></div> <fieldset class="state-pick" id="chIconKind"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="chIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="chIconEmojiRow" hidden><label for="chIconEmoji">Emoji</label> <input type="text" id="chIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🔥"></div> <div id="chIconSpriteRow" hidden><label for="chIconSprite">Sprite</label> <select id="chIconSprite"></select></div> <div id="chIconUploadRow" hidden><label for="chIconFile">Custom image</label> <input type="file" id="chIconFile" accept="image/*"> <p class="ch-help" id="chIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the challenge.</p><img id="chIconPreview" class="ch-icon-img" alt="" hidden></div> <fieldset class="state-pick reward-pick" id="chRewardWrap"><legend>Default spin (used when Reward = Default)</legend> <label class="st-unlocked"><input type="radio" name="chReward" value="spin" checked><span>🎭 Toon spin</span></label> <label class="st-locked"><input type="radio" name="chReward" value="none"><span>No reward</span></label> <p class="ch-help" id="chRewardHint">A completed Toon challenge earns a Toon spin.</p> </fieldset> <fieldset class="state-pick" id="chRewardPickWrap"><legend>Reward</legend> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="default" checked><span>↩ Default for this tab/tier</span></label> <label class="st-locked"><input type="radio" name="chRewardPick" value="none"><span>No reward</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="toon"><span>🎭 Toon spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="trinket"><span>💍 Trinket spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="revival"><span>🎰 Revival Spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="choice"><span>✨ Your choice: Toon or Trinket spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="chance"><span>🎲 Revival chance…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="custom"><span>🎁 Custom reward…</span></label> <p class="ch-help">The reward is yours to choose, whatever the rarity — rarity stays as the badge/title color. “Default” keeps the standard reward above (tab spin, or the badge-tier reward for team goals).</p> </fieldset> <div id="chRewardChanceRow" hidden><label for="chRewardChance">Revival success chance</label> <input type="number" id="chRewardChance" min="1" max="99" step="1" value="50" style="width:80px"> % <p class="ch-help">Completing this challenge earns one revival chance at this success rate. Spin it from the wheel panel: success earns a Revival Spin, failure uses it up.</p></div> <div id="chRewardTextRow" hidden><label for="chRewardText">Custom reward text</label> <input type="text" id="chRewardText" maxlength="80" placeholder="e.g. Winner picks tonight's snack" autocomplete="off"> <p class="ch-help">Shown as the earned reward on the challenge card. The site displays it — it can't automate made-up effects.</p></div> <div id="chMissionRow"><label for="chMission">Mission group <span class="small">(optional)</span></label> <select id="chMission"></select> <p class="ch-help">Put this challenge in a mission subgroup (see the Missions tab). While it is in a subgroup with a shared counter, its counters can link to that shared counter.</p></div> <div id="chExcludeRow"><label><input type="checkbox" id="chExcluded"> Exclude from completion totals</label> <p class="ch-help">An excluded challenge still works and earns its reward — it just doesn't count toward 100% completion anywhere.</p></div> <p class="small" id="chErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"> <button type="button" class="btn ghost" id="chCancel">Cancel</button> <button type="submit" class="btn mint" id="chSave">Save</button> </div> </form> </dialog> <dialog id="revivalDlg" class="revival-dlg"><form method="dialog" id="revivalForm"><div class="mh" style="background:var(--pink)"><div><h2 id="revivalDialogTitle">Choose your spin</h2><p id="revivalDialogPrompt">Pick a Toon or Trinket spin for this completed challenge.</p></div></div><div class="mb"><p id="revivalSourceRow">Reward from <strong id="revivalChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="revivalKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="revivalKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="revivalErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="revivalCancel">Cancel</button><button type="submit" class="btn mint" id="revivalChoose">Earn this spin</button></div></form></dialog> <dialog id="choiceDlg" class="revival-dlg"><form method="dialog" id="choiceForm"><div class="mh" style="background:var(--pink)"><div><h2 id="choiceDialogTitle">Choose your Iridescent reward</h2><p id="choiceDialogPrompt">Pick a New Toon or a New Trinket spin for this completed team goal.</p></div></div><div class="mb"><p>Reward from <strong id="choiceChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="choiceKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="choiceKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="choiceErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="choiceCancel">Choose later</button><button type="submit" class="btn mint" id="choiceChoose">Earn this spin</button></div></form></dialog> <!-- Spinner -->
+<!-- Challenge editor --> <dialog id="chDlg"> <form method="dialog" id="chForm"> <div class="mh" style="background:var(--mint)"><div><h2 id="chDlgTitle">New challenge</h2><p id="chDlgHint">Finish it to earn a reward.</p></div></div> <div class="mb"> <label for="chTitle">Title</label> <input type="text" id="chTitle" maxlength="80" required placeholder="e.g. Survive 10 floors with Poppy" autocomplete="off"> <label for="chDesc" style="margin-top:12px">Description <span class="small">(optional · up to 3,000 characters)</span></label> <textarea id="chDesc" maxlength="3000" rows="6" placeholder="Add all the rules and details here…"></textarea> <fieldset class="state-pick" id="chCategory"><legend>Challenge tab</legend> <label class="st-unlocked"><input type="radio" name="chCategory" value="toon" checked><span>🎭 Toon challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="trinket"><span>💍 Trinket challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="team"><span>🏅 Team goal</span></label> </fieldset> <fieldset class="state-pick" id="teamTierWrap"><legend>Rarity / badge tier</legend> <label class="st-locked" id="tierNoneLabel"><input type="radio" name="teamTier" value="none"><span>None (default title color)</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="bronze" checked><span>🥉 Bronze</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="silver"><span>🥈 Silver</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="gold"><span>🥇 Gold</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="iridescent"><span>🌈 Iridescent</span></label> <p class="ch-help" id="teamTierHint">Bronze badge · no reward.</p> </fieldset> <fieldset class="state-pick" id="chType"><legend>Progress — pick any combination</legend> <label class="st-unlocked"><input type="checkbox" name="chModes" value="goal"><span>☑ One-time goal</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="checklist" checked><span>☑ Checklist</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="counter"><span>🔢 Counters</span></label> <p class="ch-help">Combine modes freely — e.g. Counters with a Checklist attached. At least one mode must stay selected.</p> </fieldset> <div id="chTargetRow" class="counter-editor" hidden><div class="counter-editor-head"><strong>Counter goals</strong><button type="button" class="btn ghost" id="addCounterRow">＋ Add counter</button></div><div id="chCounterRows"></div><p class="ch-help">Add up to 20 counters. Each needs a label and target, and each counter counts as one condition (see “conditions met” below).</p></div> <div id="chChecklistRow" class="checklist-editor"><strong class="chlist-title">Checklists</strong><div id="chListEditors"></div><button type="button" class="btn ghost" id="addChecklistList">＋ Add checklist</button><p class="ch-help">Give each checklist a name and its items, one per line (up to 100 items across all lists). Check off each step as you complete it. Use Exclude for items that do not apply; every included item counts as one condition. On the card, each checklist can be shown or hidden on its own.</p></div> <p id="chGoalHelp" class="ch-help" hidden>Tick the challenge's main checkbox when the goal itself is done — the goal counts as one condition.</p> <div id="chReqRow"><label for="chReqCount">Complete when <input type="number" id="chReqCount" min="0" max="999" step="1" inputmode="numeric" style="width:80px"> conditions are met</label><p class="ch-help">Leave blank (or 0) to require <b>all</b> conditions. Each included checklist item, each counter, and the goal itself each count as one condition — e.g. set 2 to complete when any 2 of 3 conditions are met.</p></div> <fieldset class="state-pick" id="chIconKind"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="chIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="chIconEmojiRow" hidden><label for="chIconEmoji">Emoji</label> <input type="text" id="chIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🔥"></div> <div id="chIconSpriteRow" hidden><label for="chIconSprite">Sprite</label> <select id="chIconSprite"></select></div> <div id="chIconUploadRow" hidden><label for="chIconFile">Custom image</label> <input type="file" id="chIconFile" accept="image/*"> <p class="ch-help" id="chIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the challenge.</p><img id="chIconPreview" class="ch-icon-img" alt="" hidden></div> <fieldset class="state-pick reward-pick" id="chRewardWrap"><legend>Default spin (used when Reward = Default)</legend> <label class="st-unlocked"><input type="radio" name="chReward" value="spin" checked><span>🎭 Toon spin</span></label> <label class="st-locked"><input type="radio" name="chReward" value="none"><span>No reward</span></label> <p class="ch-help" id="chRewardHint">A completed Toon challenge earns a Toon spin.</p> </fieldset> <fieldset class="state-pick" id="chRewardPickWrap"><legend>Reward</legend> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="default" checked><span>↩ Default for this tab/tier</span></label> <label class="st-locked"><input type="radio" name="chRewardPick" value="none"><span>No reward</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="toon"><span>🎭 Toon spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="trinket"><span>💍 Trinket spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="revival"><span>🎰 Revival Spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="choice"><span>✨ Your choice: Toon or Trinket spin</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="chance"><span>🎲 Revival chance…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="custom"><span>🎁 Custom reward…</span></label> <p class="ch-help">The reward is yours to choose, whatever the rarity — rarity stays as the badge/title color. “Default” keeps the standard reward above (tab spin, or the badge-tier reward for team goals).</p> </fieldset> <div id="chRewardChanceRow" hidden><label for="chRewardChance">Revival success chance</label> <input type="number" id="chRewardChance" min="1" max="99" step="1" value="50" style="width:80px"> % <p class="ch-help">Completing this challenge earns one revival chance at this success rate. Spin it from the wheel panel: success earns a Revival Spin, failure uses it up.</p></div> <div id="chRewardTextRow" hidden><label for="chRewardText">Custom reward text</label> <input type="text" id="chRewardText" maxlength="80" placeholder="e.g. Winner picks tonight's snack" autocomplete="off"> <p class="ch-help">Shown as the earned reward on the challenge card. The site displays it — it can't automate made-up effects.</p></div> <div id="chMissionRow"><label for="chMission">Mission group <span class="small">(optional)</span></label> <select id="chMission"></select> <p class="ch-help">Put this challenge in a mission subgroup (see the Missions tab). While it is in a subgroup with a shared counter, its counters can link to that shared counter.</p></div> <div id="chExcludeRow"><label><input type="checkbox" id="chExcluded"> Exclude from completion totals</label> <p class="ch-help">An excluded challenge still works and earns its reward — it just doesn't count toward 100% completion anywhere.</p></div> <p class="small" id="chErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"> <button type="button" class="btn ghost" id="chCancel">Cancel</button> <button type="submit" class="btn mint" id="chSave">Save</button> </div> </form> </dialog> <!-- Mission pack editor --> <dialog id="packDlg"> <form method="dialog" id="packForm"> <div class="mh" style="background:var(--lilac)"><div><h2 id="packDlgTitle">New mission pack</h2><p id="packDlgHint">Name the pack, and give it an icon if you like.</p></div></div> <div class="mb"> <label for="packName">Pack name</label> <input type="text" id="packName" maxlength="60" autocomplete="off" placeholder="e.g. Floor Milestones"> <fieldset class="state-pick" id="packIconKindWrap"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="packIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="packIconEmojiRow" hidden><label for="packIconEmoji">Emoji</label> <input type="text" id="packIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🗺"></div> <div id="packIconSpriteRow" hidden><label for="packIconSprite">Sprite</label> <select id="packIconSprite"></select></div> <div id="packIconUploadRow" hidden><label for="packIconFile">Custom image</label> <input type="file" id="packIconFile" accept="image/*"> <p class="ch-help" id="packIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the pack.</p><img id="packIconPreview" class="ch-icon-img" alt="" hidden></div> <p class="small" id="packErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"><button type="button" class="btn ghost" id="packCancel">Cancel</button><button type="submit" class="btn mint" id="packSave">Save pack</button></div> </form> </dialog> <dialog id="revivalDlg" class="revival-dlg"><form method="dialog" id="revivalForm"><div class="mh" style="background:var(--pink)"><div><h2 id="revivalDialogTitle">Choose your spin</h2><p id="revivalDialogPrompt">Pick a Toon or Trinket spin for this completed challenge.</p></div></div><div class="mb"><p id="revivalSourceRow">Reward from <strong id="revivalChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="revivalKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="revivalKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="revivalErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="revivalCancel">Cancel</button><button type="submit" class="btn mint" id="revivalChoose">Earn this spin</button></div></form></dialog> <dialog id="choiceDlg" class="revival-dlg"><form method="dialog" id="choiceForm"><div class="mh" style="background:var(--pink)"><div><h2 id="choiceDialogTitle">Choose your Iridescent reward</h2><p id="choiceDialogPrompt">Pick a New Toon or a New Trinket spin for this completed team goal.</p></div></div><div class="mb"><p>Reward from <strong id="choiceChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="choiceKind" value="toon"><span>🎭 Toon spin</span></label><label><input type="radio" name="choiceKind" value="trinket"><span>💍 Trinket spin</span></label></fieldset><p class="small" id="choiceErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="choiceCancel">Choose later</button><button type="submit" class="btn mint" id="choiceChoose">Earn this spin</button></div></form></dialog> <!-- Spinner -->
 <dialog id="spinDlg" class="spin-dlg">
   <div class="mh" style="background:var(--yellow)"><div><h2 id="spinTitle">Spinning…</h2><p id="spinSub"></p></div></div>
   <div class="mb">
@@ -688,6 +688,11 @@ function iconMarkup(c){
   if (icon.kind === 'upload' && typeof icon.value === 'string' && icon.value.startsWith('data:image/')) return `<img class="ch-icon-img" src="${esc(icon.value)}" alt="">`;
   return '';
 }
+/* Mission pack icons reuse the challenge icon renderer; .pack-ico sizes them up. */
+function packIconMarkup(pack){
+  const m = iconMarkup(pack);
+  return m ? `<span class="pack-ico">${m}</span>` : '';
+}
 /* One condition = one required checklist item, one counter, or the manual goal flag. */
 function challengeConditions(ch){
   const modes = modesOf(ch);
@@ -794,7 +799,7 @@ function sanitizeMissions(raw, validIds){
   if (!Array.isArray(raw)) return packs;
   for (const p of raw.slice(0,30)){
     if (!p || typeof p !== 'object') continue;
-    const pack = {id:freshId(p.id), title:String(p.title || 'Mission pack').trim().slice(0,60) || 'Mission pack', subs:[]};
+    const pack = {id:freshId(p.id), title:String(p.title || 'Mission pack').trim().slice(0,60) || 'Mission pack', icon:sanitizeIcon(p.icon), subs:[]};
     const rawSubs = Array.isArray(p.subs) ? p.subs.slice(0,30) : [];
     for (const s of rawSubs){
       if (!s || typeof s !== 'object') continue;
@@ -1816,28 +1821,36 @@ let chIconUploadData='';
   const group=(label,kind)=>`<optgroup label="${label}">${DATA[kind].map(it=>`<option value="${esc(it.name)}">${esc(it.name)}</option>`).join('')}</optgroup>`;
   sel.innerHTML=group('Toons','toons')+group('Trinkets','trinkets');
 })();
+/* Shared icon upload helper: reads an image file and shrinks it to a PNG of
+   at most 128x128, halving the size until the data URL fits the 300k icon
+   storage cap. Resolves with the data URL, or null when it stays too big. */
+async function shrinkIconImage(f){
+  const url=await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(f); });
+  const img=await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=url; });
+  let size=128, data='';
+  while (size>=16){
+    const cv=document.createElement('canvas');
+    const scale=Math.min(1, size/Math.max(img.width||size, img.height||size));
+    cv.width=Math.max(1,Math.round((img.width||size)*scale)); cv.height=Math.max(1,Math.round((img.height||size)*scale));
+    cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+    data=cv.toDataURL('image/png');
+    if (data.length<=300000) break;
+    size=Math.floor(size/2);
+  }
+  return data && data.length<=300000 ? data : null;
+}
 $('#chIconFile').addEventListener('change', async e=>{
   const f=e.target.files[0]; e.target.value=''; if (!f) return;
   try {
-    const url=await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(f); });
-    const img=await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=url; });
-    let size=128, data='';
-    while (size>=16){
-      const cv=document.createElement('canvas');
-      const scale=Math.min(1, size/Math.max(img.width||size, img.height||size));
-      cv.width=Math.max(1,Math.round((img.width||size)*scale)); cv.height=Math.max(1,Math.round((img.height||size)*scale));
-      cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
-      data=cv.toDataURL('image/png');
-      if (data.length<=300000) break;
-      size=Math.floor(size/2);
-    }
-    if (!data || data.length>300000){ $('#chErr').textContent='That image is still too detailed to store, even shrunk. Try a simpler image.'; return; }
+    const data=await shrinkIconImage(f);
+    if (!data){ $('#chErr').textContent='That image is still too detailed to store, even shrunk. Try a simpler image.'; return; }
     chIconUploadData=data;
     const prev=$('#chIconPreview'); prev.src=data; prev.hidden=false;
     $('#chIconUploadInfo').textContent='Custom image ready — it will be saved inside the challenge.';
     $('#chErr').textContent='';
   } catch { $('#chErr').textContent='Could not read that image file.'; }
 });
+
 function openChEditor(ch, missionTarget=null){
   chEditing=ch ? ch.id : null;
   $('#chDlgTitle').textContent=ch ? 'Edit challenge' : 'New challenge';
@@ -1866,6 +1879,64 @@ function openChEditor(ch, missionTarget=null){
   syncTargetRow(); syncIconRow(); syncCategoryFields(); syncRewardPick(); syncMissionLinkState(); $('#chDlg').showModal(); setTimeout(()=>$('#chTitle').focus(),30);
 }
 $('#chCancel').addEventListener('click',()=>$('#chDlg').close());
+
+/* ---------- Mission pack editor (name + icon) ---------- */
+let packEditing=null, packIconUploadData='';
+function syncPackIconRow(){
+  const kind=radioVal('packIconKind')||'none';
+  $('#packIconEmojiRow').hidden=kind!=='emoji'; $('#packIconSpriteRow').hidden=kind!=='sprite'; $('#packIconUploadRow').hidden=kind!=='upload';
+}
+document.querySelectorAll('input[name="packIconKind"]').forEach(r=>r.addEventListener('change',syncPackIconRow));
+(function buildPackIconSpriteOptions(){
+  const sel=$('#packIconSprite'); if (!sel) return;
+  const group=(label,kind)=>`<optgroup label="${label}">${DATA[kind].map(it=>`<option value="${esc(it.name)}">${esc(it.name)}</option>`).join('')}</optgroup>`;
+  sel.innerHTML=group('Toons','toons')+group('Trinkets','trinkets');
+})();
+$('#packIconFile').addEventListener('change', async e=>{
+  const f=e.target.files[0]; e.target.value=''; if (!f) return;
+  try {
+    const data=await shrinkIconImage(f);
+    if (!data){ $('#packErr').textContent='That image is still too detailed to store, even shrunk. Try a simpler image.'; return; }
+    packIconUploadData=data;
+    const prev=$('#packIconPreview'); prev.src=data; prev.hidden=false;
+    $('#packIconUploadInfo').textContent='Custom image ready — it will be saved inside the pack.';
+    $('#packErr').textContent='';
+  } catch { $('#packErr').textContent='Could not read that image file.'; }
+});
+function openPackEditor(pack){
+  packEditing=pack ? pack.id : null;
+  $('#packDlgTitle').textContent=pack ? 'Edit mission pack' : 'New mission pack';
+  $('#packName').value=pack ? pack.title : '';
+  setRadio('packIconKind', pack && pack.icon ? pack.icon.kind : 'none');
+  $('#packIconEmoji').value=pack && pack.icon && pack.icon.kind==='emoji' ? pack.icon.value : '';
+  if (pack && pack.icon && pack.icon.kind==='sprite') $('#packIconSprite').value=pack.icon.value;
+  packIconUploadData=pack && pack.icon && pack.icon.kind==='upload' ? pack.icon.value : '';
+  const prev=$('#packIconPreview'); prev.hidden=!packIconUploadData; if (packIconUploadData) prev.src=packIconUploadData;
+  $('#packIconUploadInfo').textContent=packIconUploadData ? 'Custom image saved — pick a new file to replace it.' : 'Pick an image — it is shrunk to at most 128×128 and stored inside the pack.';
+  $('#packErr').textContent='';
+  syncPackIconRow();
+  $('#packDlg').showModal(); setTimeout(()=>$('#packName').focus(),30);
+}
+$('#packCancel').addEventListener('click',()=>{ packEditing=null; $('#packDlg').close(); });
+$('#packForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const title=$('#packName').value.trim().slice(0,60);
+  if (!title){ $('#packErr').textContent='Give your pack a name.'; $('#packName').focus(); return; }
+  const iconKind=radioVal('packIconKind')||'none';
+  let icon=null;
+  if (iconKind==='emoji'){ const v=$('#packIconEmoji').value.trim(); if (!v){ $('#packErr').textContent='Type an emoji for the icon, or choose a different icon option.'; $('#packIconEmoji').focus(); return; } icon={kind:'emoji',value:v}; }
+  else if (iconKind==='sprite'){ icon={kind:'sprite',value:$('#packIconSprite').value}; }
+  else if (iconKind==='upload'){ if (!packIconUploadData){ $('#packErr').textContent='Choose an image for the icon, or choose a different icon option.'; return; } icon={kind:'upload',value:packIconUploadData}; }
+  icon=sanitizeIcon(icon);
+  if (iconKind!=='none' && !icon){ $('#packErr').textContent='That icon could not be saved — try a different one.'; return; }
+  if (!Array.isArray(run.missions)) run.missions=[];
+  const existing=packEditing ? missionPackById(packEditing) : null;
+  if (existing){ existing.title=title; existing.icon=icon; }
+  else run.missions.push({id:uid(), title, icon, subs:[]});
+  packEditing=null;
+  $('#packDlg').close();
+  saveRun(); renderMissions();
+});
 $('#chForm').addEventListener('submit',async e=>{
   e.preventDefault();
   const title=$('#chTitle').value.trim();
@@ -2252,12 +2323,12 @@ function renderMissions(){
       (packs.length ? packs.map(p => {
         let done = 0, total = 0;
         for (const s of p.subs){ const pr = missionProgress(s.challengeIds); done += pr.done; total += pr.total; }
-        return `<div class="fr-card"><div class="fr-head"><span class="fr-runname">${esc(p.title)}</span><span class="fr-stats">${done}/${total} challenges complete · ${p.subs.length} subgroup${p.subs.length === 1 ? '' : 's'}</span><span class="fr-acts"><button type="button" class="btn mint sm" data-mact="open-pack" data-pid="${esc(p.id)}">Open</button><button type="button" class="btn ghost sm" data-mact="rename-pack" data-pid="${esc(p.id)}">Rename</button><button type="button" class="btn ghost sm" data-mact="del-pack" data-pid="${esc(p.id)}">Delete</button></span></div></div>`;
+        return `<div class="fr-card"><div class="fr-head"><span class="fr-runname">${packIconMarkup(p)}${esc(p.title)}</span><span class="fr-stats">${done}/${total} challenges complete · ${p.subs.length} subgroup${p.subs.length === 1 ? '' : 's'}</span><span class="fr-acts"><button type="button" class="btn mint sm" data-mact="open-pack" data-pid="${esc(p.id)}">Open</button><button type="button" class="btn ghost sm" data-mact="edit-pack" data-pid="${esc(p.id)}">Edit</button><button type="button" class="btn ghost sm" data-mact="del-pack" data-pid="${esc(p.id)}">Delete</button></span></div></div>`;
       }).join('') : `<div class="ch-empty"><span class="big">🗺</span>No mission packs yet.<br>Create one to group related challenges — like a “Survive Floors” series — across rarities.</div>`);
     return;
   }
   if (!sub){
-    root.innerHTML = `<div class="filters"><button type="button" class="btn ghost" data-mact="back">← Back</button><strong class="mission-crumb">${esc(pack.title)}</strong><button type="button" class="btn mint" data-mact="new-sub">＋ New subgroup</button></div>` +
+    root.innerHTML = `<div class="filters"><button type="button" class="btn ghost" data-mact="back">← Back</button>${packIconMarkup(pack)}<strong class="mission-crumb">${esc(pack.title)}</strong><button type="button" class="btn mint" data-mact="new-sub">＋ New subgroup</button></div>` +
       (pack.subs.length ? pack.subs.map(s => {
         const pr = missionProgress(s.challengeIds);
         return `<div class="fr-card"><div class="fr-head"><span class="fr-runname">${esc(s.title)}</span><span class="fr-stats">${pr.done}/${pr.total} challenges complete${s.shared ? ` · 🔗 ${esc(s.shared.label)}: ${s.shared.value}` : ''}</span><span class="fr-acts"><button type="button" class="btn mint sm" data-mact="open-sub" data-sid="${esc(s.id)}">Open</button><button type="button" class="btn ghost sm" data-mact="rename-sub" data-sid="${esc(s.id)}">Rename</button><button type="button" class="btn ghost sm" data-mact="del-sub" data-sid="${esc(s.id)}">Delete</button></span></div></div>`;
@@ -2324,18 +2395,11 @@ $('#missionRoot').addEventListener('click', async e => {
   const sub = pack && view.missionSubId ? pack.subs.find(s => s.id === view.missionSubId) : null;
   const mact = b.dataset.mact;
   if (!mact){ if (b.dataset.act) await missionCardAction(b, sub); return; }
-  if (mact === 'new-pack'){
-    const name = await ask({title:'New mission pack', msg:'Name this pack (e.g. “Floor Milestones”):', input:'', ok:'Create'});
-    if (name === null || !String(name).trim()) return;
-    (run.missions = run.missions || []).push({id:uid(), title:String(name).trim().slice(0,60), subs:[]});
-    saveRun(); renderMissions(); return;
-  }
+  if (mact === 'new-pack'){ openPackEditor(null); return; }
   if (mact === 'open-pack'){ view.missionId = b.dataset.pid; view.missionSubId = null; view.missionPicker = false; renderMissions(); return; }
-  if (mact === 'rename-pack'){
+  if (mact === 'edit-pack'){
     const p = missionPackById(b.dataset.pid); if (!p) return;
-    const name = await ask({title:'Rename mission pack', msg:'New name:', input:p.title, ok:'Rename'});
-    if (name === null || !String(name).trim()) return;
-    p.title = String(name).trim().slice(0,60); saveRun(); renderMissions(); return;
+    openPackEditor(p); return;
   }
   if (mact === 'del-pack'){
     const p = missionPackById(b.dataset.pid); if (!p) return;
