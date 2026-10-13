@@ -237,16 +237,19 @@ button.cc-tile:hover .cc-frame{border-color:#ffb703}
 .ch-prog .lbl{font-weight:700;color:var(--lilac);font-size:14px;text-transform:uppercase;letter-spacing:1px}
 .ch-filters .grow{flex:1}
 .ch-list{display:flex;flex-direction:column;gap:0}
-/* Every challenge list (Challenges tab, Mission Packs subgroup view) is one
-   connected stack — no gaps, shared edges (each card overlaps the previous
-   card's 3px border), and only the stack's outer corners stay rounded. This
-   is the single stack implementation; it used to be .mission-stack-only. */
+/* Mission Pack subgroup lists stay one connected stack — no gaps, shared
+   edges (each card overlaps the previous card's 3px border), and only the
+   stack's outer corners stay rounded. */
 .ch-list>.ch{border-radius:0;box-shadow:none}
 .ch-list>.ch+.ch{margin-top:-3px}
 .ch-list>.ch:first-child{border-top-left-radius:18px;border-top-right-radius:18px}
 .ch-list>.ch:last-child{border-bottom-left-radius:18px;border-bottom-right-radius:18px}
 .ch-list>.ch:only-child{border-radius:18px}
 .ch-list>.ch.dragging{box-shadow:4px 4px 0 var(--ink)}
+#chList{gap:10px}
+#missionCards{gap:0}
+#chList>.ch{border-radius:18px;box-shadow:4px 4px 0 var(--ink)}
+#chList>.ch+.ch{margin-top:0}
 .ch{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 14px;background:var(--ch-surface,#fff4fb);color:var(--ch-card-ink,var(--ink))}
 .ch.done{background:var(--ch-surface,#d7f8ea)}
 .ch .chk{width:46px;height:46px;border-radius:14px;border:3px solid var(--ink);background:#fff;box-shadow:3px 3px 0 var(--ink);cursor:pointer;display:grid;place-items:center;font-size:26px;font-weight:900;color:var(--ink);padding:0}
