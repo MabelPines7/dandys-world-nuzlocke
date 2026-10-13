@@ -85,6 +85,8 @@ select.run{font-weight:700;font-size:16px;padding:8px 36px 8px 12px;border:3px s
 /* [hidden] must beat component display rules (.card{display:flex}, .btn, .hint…) or hidden elements stay visible */
 [hidden]{display:none!important}
 body[data-mode="player"] [data-developer-only]{display:none!important}
+body[data-mode="developer"] [data-player-only]{display:none!important}
+body[data-mode="player"] [data-player-only]{display:inline-flex!important}
 .filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
 .search{flex:1 1 220px;position:relative}
 .search input{width:100%;font-size:16px;font-weight:600;padding:10px 12px 10px 40px;border:3px solid var(--ink);border-radius:14px;background:#fff4fb;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
@@ -286,7 +288,7 @@ button.cc-tile:hover .cc-frame{border-color:#ffb703}
 .ch-list>.ch:last-child{border-bottom-left-radius:18px;border-bottom-right-radius:18px}
 .ch-list>.ch:only-child{border-radius:18px}
 .ch-list>.ch.dragging{box-shadow:4px 4px 0 var(--ink)}
-#chList{gap:10px}
+#chList{gap:10px;overflow-anchor:none}
 #missionCards{gap:0}
 #chList>.ch{border-radius:18px;box-shadow:4px 4px 0 var(--ink)}
 #chList>.ch+.ch{margin-top:0}
@@ -306,7 +308,9 @@ button.cc-tile:hover .cc-frame{border-color:#ffb703}
 .ch .t.tier-iridescent{color:#8b46c7}
 .ch.excluded{opacity:.6}
 .ch-excl-chip{font-size:11px;font-weight:800;border:2px solid var(--ink);border-radius:999px;padding:0 7px;background:#d8d3e0;color:#4a4258;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
-.ch-pin-chip{font-size:11px;font-weight:800;border:2px solid var(--ink);border-radius:999px;padding:0 7px;background:var(--pink);color:var(--ink);letter-spacing:.2px;white-space:nowrap}
+.ch-player-pin-btn{white-space:nowrap}
+.ch-player-pin-btn::before{content:"📌";font-size:12px}
+.ch-player-pin-btn:hover{transform:none;box-shadow:5px 5px 0 var(--ink)}
 .counter-link-tag{font-size:11px;font-weight:700;color:#5d4b6e;white-space:nowrap}
 .counter-config-row .counter-link{grid-column:1/-1;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
 .mission-crumb{font-size:18px}
@@ -510,6 +514,7 @@ button.cc-tile:hover .cc-frame{border-color:#ffb703}
 .ch-category-tabs button{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;white-space:normal;line-height:1.15;}
 .ch-category-tabs .cnt{background:var(--ink);color:#fff;border-radius:999px;padding:1px 7px;font-size:11px;min-width:34px;text-align:center;}
 .ch-heading{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin-bottom:4px;}
+.ch-heading-actions{margin-left:auto;display:flex;align-items:center;gap:6px;flex:0 0 auto}
 .ch-kind,.tier-badge{display:inline-flex;align-items:center;border:2px solid var(--ink);border-radius:999px;padding:2px 8px;font-size:11px;font-weight:800;line-height:1.15;}
 .ch-kind{background:#e7dbff;color:var(--ink);}
 .tier-badge.bronze{background:#e5b27f;color:#402513;}
@@ -979,6 +984,7 @@ KINDS.forEach(k => DATA[k].sort(byName)); // always A–Z; filters only hide car
 const DEFAULT_UNLOCKED = {toons:['Poppy','Boxten'], trinkets:[]};
 const LS_INDEX = 'dwNuzlocke:index';
 const LS_RUN = id => 'dwNuzlocke:run:' + id;
+const LS_PLAYER_PINS = id => 'dwNuzlocke:playerPins:' + id;
 const PALETTE = ['#ff8fc8','#ffe066','#7ef0c4','#8fd3ff','#c9a2ff','#ffb066','#ff9e9e','#b5f27a'];
 const $ = s => document.querySelector(s);
 const isDeveloperMode = new URLSearchParams(location.search).get("mode")?.toLowerCase() === "developer";
@@ -1369,7 +1375,7 @@ function sanitizeChallenge(o, seen){
   const effReward = challengeReward({category, teamTier, reward, rewardPick});
   const toonName=ITEMS.toons.has(String(o.toonName||'')) ? String(o.toonName) : null;
   const lockRule=sanitizeLockRule(o.lockRule);
-  return {id, title, desc:String(o.desc||'').slice(0,3000), toonName, lockRule, category, teamTier, type:legacyTypeForModes(modes), modes, requiredCount, icon:sanitizeIcon(o.icon), cardBg:sanitizeChallengeCardBg(o.cardBg), goalDone, target, value, counters, counterRestore, checklistRestore, collapsed:!!o.collapsed, itemsCollapsed:!!o.itemsCollapsed, items, listState, done, reward, rewardPick, rewardChance, rewardOdds, rewardText, choiceOptions, choiceChance, choiceReward, extraRewards, extraState, excluded:!!o.excluded, pinned:!!o.pinned, tierSet, claimed:done && effReward!=='none' && !!o.claimed, rewardKind, rewardGrantId:o.rewardGrantId ? String(o.rewardGrantId).slice(0,40) : null};
+  return {id, title, desc:String(o.desc||'').slice(0,3000), toonName, lockRule, category, teamTier, type:legacyTypeForModes(modes), modes, requiredCount, icon:sanitizeIcon(o.icon), cardBg:sanitizeChallengeCardBg(o.cardBg), goalDone, target, value, counters, counterRestore, checklistRestore, collapsed:!!o.collapsed, itemsCollapsed:!!o.itemsCollapsed, items, listState, done, reward, rewardPick, rewardChance, rewardOdds, rewardText, choiceOptions, choiceChance, choiceReward, extraRewards, extraState, excluded:!!o.excluded, tierSet, claimed:done && effReward!=='none' && !!o.claimed, rewardKind, rewardGrantId:o.rewardGrantId ? String(o.rewardGrantId).slice(0,40) : null};
 }
 const toMaps = r => ({toons:new Map(Object.entries(r.status.toons)), trinkets:new Map(Object.entries(r.status.trinkets))});
 
@@ -1508,12 +1514,13 @@ function normalizeRun(r, fallbackName){
       return {claimed:true, grantId:grant ? grant.id : null, rolled:true, granted:true};
     });
   }
-  out.version = 10;
-  out._needsSave = Number(r.version)!==10 || JSON.stringify(out.breakRoomClaims)!==JSON.stringify(r.breakRoomClaims||null) || JSON.stringify(out.status)!==JSON.stringify(r.status||null) || JSON.stringify(out.challenges)!==JSON.stringify(r.challenges||[]) || JSON.stringify(out.spins)!==JSON.stringify(r.spins||[]) || JSON.stringify(out.history)!==JSON.stringify(r.history||[]) || JSON.stringify(out.spinUnlocks)!==JSON.stringify(r.spinUnlocks||null) || JSON.stringify(out.missions)!==JSON.stringify(r.missions||null);
+  out.version = 11;
+  out._needsSave = Number(r.version)!==11 || JSON.stringify(out.breakRoomClaims)!==JSON.stringify(r.breakRoomClaims||null) || JSON.stringify(out.status)!==JSON.stringify(r.status||null) || JSON.stringify(out.challenges)!==JSON.stringify(r.challenges||[]) || JSON.stringify(out.spins)!==JSON.stringify(r.spins||[]) || JSON.stringify(out.history)!==JSON.stringify(r.history||[]) || JSON.stringify(out.spinUnlocks)!==JSON.stringify(r.spinUnlocks||null) || JSON.stringify(out.missions)!==JSON.stringify(r.missions||null);
   return out;
 }
 
 let index, run;
+let playerPins = new Set();
 let lockStateCache=null, lockStateRun=null;
 function loadIndex(){
   try { index = JSON.parse(store.get(LS_INDEX)); } catch { index = null; }
@@ -1524,6 +1531,14 @@ function loadIndex(){
   saveIndex();
 }
 const saveIndex = () => store.set(LS_INDEX, JSON.stringify(index));
+function loadPlayerPins(id){
+  const allowed=new Set((run?.challenges||[]).map(ch=>ch.id));
+  try {
+    const saved=JSON.parse(store.get(LS_PLAYER_PINS(id))||'[]');
+    playerPins=new Set(Array.isArray(saved)?saved.filter(chId=>allowed.has(chId)):[]);
+  } catch { playerPins=new Set(); }
+}
+function savePlayerPins(){ store.set(LS_PLAYER_PINS(index.active), JSON.stringify([...playerPins])); }
 function loadRun(id){
   let r; try { r = JSON.parse(store.get(LS_RUN(id))); } catch {}
   const meta = index.runs.find(x=>x.id===id);
@@ -1531,6 +1546,7 @@ function loadRun(id){
   if (meta) run.name = meta.name;
   const migrated = !!run._needsSave; delete run._needsSave;
   run._st = toMaps(run);
+  loadPlayerPins(id);
   if (migrated) saveRun();
 }
 const stateOf = (kind, name) => run._st[kind].get(name) || 'locked';
@@ -2480,7 +2496,8 @@ function challengeCardMarkup(c, i, listLen, opts){
         return `<span class="rew ${claimed?'claimed':''}">${esc(extraBadgeLabel(entry, st))}</span>`;
       }).join('');
       const chooseBtn=(reward==='choice' || CHOICE_REWARD_KINDS.includes(reward)) && c.done && !c.claimed ? `<button type="button" class="btn mint sm" data-act="choose-reward">✨ Choose reward</button>` : '';
-      const pinBtn=!inMission ? `<button type="button" class="btn ghost sm ch-pin-toggle" data-act="toggle-pin" data-developer-only aria-pressed="${!!c.pinned}" aria-label="${c.pinned?'Unpin':'Pin'} ${esc(c.title)}">📌 ${c.pinned?'Unpin':'Pin'}</button>` : '';
+      const playerPinned=playerPins.has(c.id);
+      const playerPinBtn=!inMission && !isDeveloperMode ? `<button type="button" class="btn ghost sm ch-player-pin-btn" data-act="toggle-player-pin" data-player-only aria-pressed="${playerPinned}" aria-label="${playerPinned?'Unpin':'Pin'} ${esc(c.title)}">${playerPinned?'Unpin':'Pin'}</button>` : '';
       const excludeBtn=`<button type="button" class="btn ghost sm" data-act="exclude" data-developer-only aria-pressed="${!!c.excluded}">${c.excluded?'Include in totals':'Exclude'}</button>`;
       const unlinkBtn=inMission ? `<button type="button" class="btn ghost sm" data-act="unlink" data-developer-only>Remove from group</button>` : '';
       const lockEditBtn=`<button type="button" class="btn ghost sm" data-act="edit-lock" data-developer-only>${lockRule?'Edit unlock rule':'Add unlock rule'}</button>`;
@@ -2504,13 +2521,13 @@ function challengeCardMarkup(c, i, listLen, opts){
         <div class="lock-original"${lockPending && lockDisabled ? ' inert aria-hidden="true"' : ''}>
         ${hasCounters || hasGoal ? `<button type="button" class="chk" data-act="toggle" aria-pressed="${c.done}" aria-label="${c.done?'Mark not done':'Mark done'}: ${esc(c.title)}">${c.done?'✓':''}</button>` : ''}
         <div class="body">
-          <div class="ch-heading">${categoryTag}${iconMarkup(c)}<div class="t ${tierTitleClass}">${esc(c.title)}</div>${c.pinned?'<span class="ch-pin-chip" title="Pinned within its rarity">📌 Pinned</span>':''}${c.excluded?'<span class="ch-excl-chip">Excluded</span>':''}${progressToggle}</div>
+          <div class="ch-heading">${categoryTag}${iconMarkup(c)}<div class="t ${tierTitleClass}">${esc(c.title)}</div>${c.excluded?'<span class="ch-excl-chip">Excluded</span>':''}<div class="ch-heading-actions">${progressToggle}${playerPinBtn}</div></div>
           ${c.desc ? `<div class="d">${esc(c.desc)}</div>` : ''}
           ${hasCounters ? `<div class="ch-progress" ${c.collapsed?'hidden':''}><div class="counter-stack">${counterMarkup}</div></div>` : ''}
           ${hasChecklist ? `<div class="ch-progress" ${checklistHidden?'hidden':''}><div class="checklist-progress"><span>${summary.label}</span><div class="bar"><i style="width:${summary.pct}%"></i></div></div>${checklistGroups}</div>` : ''}
           <div class="meta-row">${rew}${extraBadges}${chooseBtn}${excludeBtn}${unlinkBtn}${lockEditBtn}</div>
         </div>
-        <div class="acts" data-developer-only><div class="row">${pinBtn}</div><div class="row"><span class="drag-handle" data-drag title="Drag to reorder" aria-label="Drag to reorder">⠿</span></div><div class="row"><button type="button" class="ibtn" data-act="up" aria-label="Move up" ${i===0?'disabled':''}>▲</button><button type="button" class="ibtn" data-act="down" aria-label="Move down" ${i===listLen-1?'disabled':''}>▼</button></div><div class="row"><button type="button" class="ibtn" data-act="edit" aria-label="Edit">✎</button><button type="button" class="ibtn del" data-act="del" aria-label="Delete">🗑</button></div></div>
+        <div class="acts" data-developer-only><div class="row"><span class="drag-handle" data-drag title="Drag to reorder" aria-label="Drag to reorder">⠿</span></div><div class="row"><button type="button" class="ibtn" data-act="up" aria-label="Move up" ${i===0?'disabled':''}>▲</button><button type="button" class="ibtn" data-act="down" aria-label="Move down" ${i===listLen-1?'disabled':''}>▼</button></div><div class="row"><button type="button" class="ibtn" data-act="edit" aria-label="Edit">✎</button><button type="button" class="ibtn del" data-act="del" aria-label="Delete">🗑</button></div></div>
         </div>
         ${lockPending?`<div class="lock-overlay"><div class="lock-callout"><strong>🔒 CHALLENGE LOCKED</strong><small>${esc(lockRuleSummary(lockRule))}</small><button type="button" class="btn ghost sm" data-act="edit-lock" data-developer-only>Edit rule</button></div></div>`:''}
       </div>`;
@@ -2519,8 +2536,28 @@ function sortPinnedWithinRarity(items){
   const scope=ch=>`${ch.category}:${ch.category==='team'||ch.tierSet?(TEAM_TIERS.includes(ch.teamTier)?ch.teamTier:'bronze'):'unranked'}`;
   const groups=new Map();
   for (const ch of items){ const key=scope(ch); if(!groups.has(key)) groups.set(key,[]); groups.get(key).push(ch); }
-  for (const group of groups.values()) group.sort((a,b)=>Number(!!b.pinned)-Number(!!a.pinned));
-  return items.map(ch=>groups.get(scope(ch)).shift());
+  const isPinned=ch=>!isDeveloperMode && playerPins.has(ch.id);
+  for (const group of groups.values()) group.sort((a,b)=>Number(isPinned(b))-Number(isPinned(a)));
+  const offsets=new Map();
+  return items.map(ch=>{ const key=scope(ch), offset=offsets.get(key)||0; offsets.set(key,offset+1); return groups.get(key)[offset]; });
+}
+function reorderVisiblePinnedCards(){
+  const list=$('#chList'), cards=[...list.querySelectorAll('.ch')];
+  const visibleIds=new Set(cards.map(card=>card.dataset.id));
+  const visible=run.challenges.filter(ch=>visibleIds.has(ch.id));
+  const byId=new Map(cards.map(card=>[card.dataset.id,card]));
+  const ordered=sortPinnedWithinRarity(visible).map(ch=>byId.get(ch.id)).filter(Boolean);
+  for(let i=0;i<ordered.length;i++) if(list.children[i]!==ordered[i]) list.insertBefore(ordered[i],list.children[i]||null);
+}
+function syncVisiblePlayerPinControls(){
+  for(const card of $('#chList').querySelectorAll('.ch')){
+    const button=card.querySelector('[data-act="toggle-player-pin"]'); if(!button) continue;
+    const pinned=playerPins.has(card.dataset.id);
+    button.textContent=pinned?'Unpin':'Pin';
+    button.setAttribute('aria-pressed',String(pinned));
+    button.setAttribute('aria-label',`${pinned?'Unpin':'Pin'} ${card.querySelector('.t')?.textContent||''}`);
+  }
+  reorderVisiblePinnedCards();
 }
 function renderChallenges(){
   const list=$('#chList'), all=run.challenges, counted=all.filter(c=>!c.excluded), nDone=counted.filter(challengeCountsDone).length;
@@ -2613,7 +2650,20 @@ $('#chList').addEventListener('click', async e=>{
   if (act==='clear-search'){ const search=$('#chSearch'); search.value=''; renderChallenges(); search.focus(); return; }
   const ch=chById(b.closest('.ch')?.dataset.id); if (!ch) return;
   if (act==='edit-lock'){ beginLockEditor(ch.id); return; }
-  if (act==='toggle-pin'){ if(!isDeveloperMode) return; ch.pinned=!ch.pinned; saveRun(); renderChallenges(); return; }
+  if (act==='toggle-player-pin'){
+    if(isDeveloperMode) return;
+    const scrollX=window.scrollX, scrollY=window.scrollY, restoreFocus=document.activeElement===b;
+    if(playerPins.has(ch.id)) playerPins.delete(ch.id); else playerPins.add(ch.id);
+    const pinned=playerPins.has(ch.id);
+    b.textContent=pinned?'Unpin':'Pin';
+    b.setAttribute('aria-pressed',String(pinned));
+    b.setAttribute('aria-label',`${pinned?'Unpin':'Pin'} ${ch.title}`);
+    savePlayerPins();
+    reorderVisiblePinnedCards();
+    if(window.scrollX!==scrollX || window.scrollY!==scrollY) window.scrollTo(scrollX,scrollY);
+    if(restoreFocus) setTimeout(()=>{ if(b.isConnected && (document.activeElement===document.body || document.activeElement===document.documentElement)) b.focus({preventScroll:true}); },50);
+    return;
+  }
   if (isChallengeLocked(ch) && ch.lockRule && ch.lockRule.actionsDisabled) return;
   if (act==='collapse'){ ch.collapsed=!ch.collapsed; saveRun(); renderChallenges(); return; }
   if (act==='collapse-items'){ ch.itemsCollapsed=!ch.itemsCollapsed; saveRun(); renderChallenges(); return; }
@@ -3337,7 +3387,7 @@ $('#chForm').addEventListener('submit',async e=>{
   else if (iconKind==='upload'){ if (!chIconUploadData){ $('#chErr').textContent='Choose an image for the icon, or choose a different icon option.'; return; } icon={kind:'upload',value:chIconUploadData}; }
   icon=sanitizeIcon(icon);
   if (iconKind!=='none' && !icon){ $('#chErr').textContent='That icon could not be saved — try a different one.'; return; }
-  if (isNew){ ch={id:uid(),title,desc:'',toonName,lockRule:null,category,teamTier,tierSet,type,modes,requiredCount,icon,goalDone:false,target:10,value:0,counters:counterConfigs,counterRestore:null,collapsed:false,itemsCollapsed:false,listState:[],items:[],done:false,reward,rewardPick,rewardChance,rewardOdds,rewardText,choiceOptions,choiceChance,choiceReward,extraRewards,extraState:[],excluded,pinned:false,cardBg,claimed:false,rewardKind:null,rewardGrantId:null,checklistRestore:null}; run.challenges.push(ch); }
+  if (isNew){ ch={id:uid(),title,desc:'',toonName,lockRule:null,category,teamTier,tierSet,type,modes,requiredCount,icon,goalDone:false,target:10,value:0,counters:counterConfigs,counterRestore:null,collapsed:false,itemsCollapsed:false,listState:[],items:[],done:false,reward,rewardPick,rewardChance,rewardOdds,rewardText,choiceOptions,choiceChance,choiceReward,extraRewards,extraState:[],excluded,cardBg,claimed:false,rewardKind:null,rewardGrantId:null,checklistRestore:null}; run.challenges.push(ch); }
   const was=ch.done, previousReward=challengeReward(ch), counterConfigChanged=ch.type!==type || JSON.stringify(modesOf(ch))!==JSON.stringify(modes) || (ch.counters||[]).length!==counterConfigs.length || (ch.counters||[]).some((counter,index)=>counter.id!==counterConfigs[index]?.id || counter.target!==counterConfigs[index]?.target);
   const nextItems=modes.includes('checklist') ? checklistItems : ch.items;
   const checklistConfigChanged=(ch.items||[]).length!==nextItems.length || (ch.items||[]).some((item,index)=>item.text!==nextItems[index]?.text || item.excluded!==nextItems[index]?.excluded || (item.list||'Checklist')!==(nextItems[index]?.list||'Checklist'));
@@ -4836,7 +4886,7 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () =>
   view.tab=t.dataset.tab; view.settingsOpen=false; showActiveScreen();
 }));
 /* sync across tabs/windows */
-window.addEventListener('storage', e => { if (e.key===LS_UI_PREFS){ uiPrefs=readUiPrefs(); applyUiPrefs(); renderSettings(); return; } if (e.key && e.key.startsWith('dwNuzlocke:')) { loadIndex(); loadRun(index.active); loadFriends(); renderAll(); } });
+window.addEventListener('storage', e => { if (e.key===LS_UI_PREFS){ uiPrefs=readUiPrefs(); applyUiPrefs(); renderSettings(); return; } if (e.key?.startsWith('dwNuzlocke:playerPins:')) { if(e.key===LS_PLAYER_PINS(index.active)){ loadPlayerPins(index.active); if(!isDeveloperMode) syncVisiblePlayerPinControls(); } return; } if (e.key && e.key.startsWith('dwNuzlocke:')) { loadIndex(); loadRun(index.active); loadFriends(); renderAll(); } });
 
 KINDS.forEach(buildSection);
 loadIndex(); loadRun(index.active); renderAll(); renderSpinPanel(); renderSettings(); showActiveScreen();
