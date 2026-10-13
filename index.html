@@ -2656,6 +2656,10 @@ $('#chCounterRows').addEventListener('click',e=>{
    so changing an option never moves the user's place in the form. */
 function chMbScrollTop(){ const mb=$('#chDlg .mb'); return mb ? mb.scrollTop : 0; }
 function chMbRestoreScroll(y){ const mb=$('#chDlg .mb'); if (!mb) return; mb.scrollTop=y; requestAnimationFrame(()=>{ mb.scrollTop=y; }); }
+function syncChallengeRewardHint(category=radioVal('chCategory')||'toon', pick=radioVal('chRewardPick')||'default'){
+  if (CHOICE_REWARD_KINDS.includes(pick)){ $('#chDlgHint').textContent=`Complete it to unlock ${CHOICE_REWARD_LABEL[pick]}.`; return; }
+  $('#chDlgHint').textContent=category==='team' ? 'Complete the goal to earn its badge-tier reward.' : `Complete it to earn a ${category==='trinket'?'Trinket':'Toon'} spin.`;
+}
 function syncCategoryFields(){
   const _sy=chMbScrollTop();
   const category=radioVal('chCategory')||'toon';
@@ -2668,7 +2672,7 @@ function syncCategoryFields(){
   const spinInput=document.querySelector('input[name="chReward"][value="spin"]');
   if (spinInput) spinInput.parentElement.querySelector('span').textContent=`${category==='trinket'?'💍':'🎭'} ${kind} spin`;
   $('#chRewardHint').textContent=category==='team' ? '' : `A completed ${kind} challenge earns a ${kind} spin.`;
-  $('#chDlgHint').textContent=category==='team' ? 'Complete the goal to earn its badge-tier reward.' : `Complete it to earn a ${kind} spin.`;
+  syncChallengeRewardHint(category);
   syncChoiceOptions();
   chMbRestoreScroll(_sy);
 }
@@ -2730,6 +2734,7 @@ $('#chOutcomeRows').addEventListener('click',e=>{
 function syncRewardPick(){
   const _sy=chMbScrollTop();
   const pick=radioVal('chRewardPick')||'default';
+  syncChallengeRewardHint(undefined,pick);
   $('#chRewardChanceRow').hidden=pick!=='chance';
   $('#chRewardTextRow').hidden=pick!=='custom';
   $('#chChoiceChanceRow').hidden=pick!=='choicechance';
