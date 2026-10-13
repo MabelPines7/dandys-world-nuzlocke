@@ -200,6 +200,8 @@ footer a{color:var(--mint)}
 .spin-panel,.ch-prog,.history,.ch{background:#3a2850;border:3px solid var(--ink);border-radius:18px;box-shadow:4px 4px 0 var(--ink)}
 .spin-panel{padding:12px 14px;background:linear-gradient(160deg,#4a2f63,#3a2850)}
 .spin-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.spin-head-actions{display:flex;align-items:center;gap:8px;flex:none}
+.spin-stock-toggle{padding:4px 9px;font-size:11px;border-radius:11px;box-shadow:2px 2px 0 var(--ink)}
 .spin-head h3,.hist-head h3{font-family:var(--fh);font-weight:400;margin:0;font-size:22px;letter-spacing:.5px;color:var(--yellow);-webkit-text-stroke:1px var(--ink);text-shadow:2px 2px 0 var(--ink)}
 .credit-total{font-weight:800;background:var(--ink);color:var(--yellow);border-radius:999px;padding:3px 10px;font-size:14px;white-space:nowrap}
 .free{display:flex;align-items:center;gap:8px;margin-top:10px;font-weight:700;font-size:14px;cursor:pointer}
@@ -215,6 +217,16 @@ footer a{color:var(--mint)}
 .ui-button-icon{width:24px;height:24px;flex:none;object-fit:contain;display:inline-block}
 .wheel-title-icon{width:30px;height:30px;flex:none;object-fit:contain;display:block}
 .spin-head h3{display:flex;align-items:center;gap:9px}
+.spin-inventory{flex:1 1 auto;min-height:0;overflow:hidden;padding:7px 9px;border:2px solid rgba(255,255,255,.2);border-radius:12px;background:rgba(0,0,0,.12);display:flex;flex-direction:column}
+.spin-inventory-head{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#ffe9f7;font-size:11px;font-weight:800;letter-spacing:.35px;text-transform:uppercase}
+.spin-inventory-total{flex:none;padding:2px 6px;border-radius:999px;background:var(--ink);color:var(--yellow);font-size:10px;white-space:nowrap}
+.spin-stock-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:3px 7px;margin-top:5px;min-height:0;max-height:124px;overflow:auto}
+.spin-stock-grid[hidden]{display:none!important}
+.spin-stock-kind{min-width:0;overflow:hidden;border:1px solid rgba(255,255,255,.2);border-radius:9px;background:rgba(255,244,251,.08)}
+.spin-stock-kind[open]{grid-column:1/-1}
+.spin-stock-kind>summary{display:block;overflow:hidden;padding:4px 6px;color:#ffe9f7;font-size:10px;font-weight:700;line-height:1.15;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
+.spin-stock-rows{display:flex;flex-direction:column;gap:4px;padding:0 4px 4px}
+.spin-stock-rows .chance-row-label{font-size:11px}
 .revival-stock,.cc-stock{margin-top:9px;padding:9px;border:2px solid rgba(255,255,255,.2);border-radius:12px;background:rgba(0,0,0,.12)}
 .break-room-milestones{display:grid;gap:8px;margin-top:12px;padding-top:10px;border-top:2px solid rgba(255,255,255,.2)}
 .break-room-milestones>p{margin:0;color:#fff;font-size:12px;font-weight:700;line-height:1.35}
@@ -252,7 +264,8 @@ button.cc-tile:hover .cc-frame{border-color:#ffb703}
 .cc-entry-row [data-cc-thumb]{width:28px;height:28px;vertical-align:middle}
 .extra-cc{flex-basis:100%;margin-top:2px}
 .badge{background:var(--ink);color:#fff;border-radius:999px;padding:1px 8px;font-size:12px;min-width:22px;text-align:center}
-.ch-prog{padding:12px 14px;display:flex;align-items:center;gap:14px}
+.ch-prog{padding:12px 14px;display:flex;flex-direction:column;align-items:stretch;gap:10px;min-height:0}
+.challenge-progress{display:flex;align-items:center;gap:14px;flex:none}
 .ch-prog .num{font-family:var(--fh);font-size:34px;line-height:1;color:#fff;-webkit-text-stroke:1.5px var(--ink);text-shadow:3px 3px 0 var(--ink)}
 .ch-prog .meta{flex:1;min-width:0}
 .ch-prog .lbl{font-weight:700;color:var(--lilac);font-size:14px;text-transform:uppercase;letter-spacing:1px}
@@ -790,7 +803,7 @@ body[data-page-theme="light"]{background:#eee9f1;background-attachment:initial}
   <section class="panel section" id="sec-challenges" role="tabpanel">
     <div class="ch-top">
       <div class="spin-panel">
-        <div class="spin-head"><h3><img class="wheel-title-icon" src="assets/ui/gigi.webp" alt="" aria-hidden="true"><span>SPIN THE WHEEL</span></h3><span class="credit-total" id="creditTotal">0 spins</span></div>
+        <div class="spin-head"><h3><img class="wheel-title-icon" src="assets/ui/gigi.webp" alt="" aria-hidden="true"><span>SPIN THE WHEEL</span></h3><div class="spin-head-actions"><button type="button" class="btn lilac sm spin-stock-toggle" id="spinStockToggle" aria-controls="spinInventoryBody" aria-expanded="false">Stock list</button><span class="credit-total" id="creditTotal">0 spins</span></div></div>
         <p class="spin-sub" id="creditChips">Complete a challenge or team goal to earn a spin.</p>
         <div class="spin-btns">
           <div class="spin-btn-row">
@@ -808,14 +821,12 @@ body[data-page-theme="light"]{background:#eee9f1;background-attachment:initial}
             <button type="button" class="btn sky" id="spinTarget" data-spin="target"><img class="ui-button-icon" src="assets/ui/IridescentUnstoppablyHealthy.png" alt="" aria-hidden="true"><span>Revival Choice</span><span class="badge" id="credTarget">0</span></button>
           </div>
         </div>
-        </div>
         <div class="revival-stock" id="revivalStock" hidden></div>
         <div class="chance-stock" id="chanceStock" hidden></div>
         <div class="cc-stock" id="ccStock" hidden></div>
         <div class="cc-stock" id="mixedChoiceStock" hidden></div>
         <div class="chance-stock" id="toonChanceStock" hidden></div>
         <div class="chance-stock" id="trinketChanceStock" hidden></div>
-        <div class="spin-inventory" id="spinInventory"><details><summary>Spin stock by type · <span id="spinInventoryTotal">0</span> tokens</summary><div id="spinInventoryBody"></div></details></div>
         <label class="free"><input type="checkbox" id="freeSpin"> <span>Free spin <small>(spin without using a credit)</small></span></label>
         <div class="break-room-milestones">
           <p>Each click adds one guaranteed token to Guaranteed Mixed Revival stock. Floor 25 tokens carry a 1% Mixed Revival Chance; Floor 50 tokens carry a 5% Mixed Revival Chance. These are success odds on the token, not reward-drop odds.</p>
@@ -826,8 +837,14 @@ body[data-page-theme="light"]{background:#eee9f1;background-attachment:initial}
         </div>
       </div>
       <div class="ch-prog">
-        <div class="num" id="chCount">0/0</div>
-        <div class="meta"><div class="lbl">Challenges complete</div><div class="bar"><i id="chBar"></i></div></div>
+        <div class="spin-inventory" id="spinInventory">
+          <div class="spin-inventory-head"><span>Spin stock by type</span><span class="spin-inventory-total"><span id="spinInventoryTotal">0</span> tokens</span></div>
+          <div class="spin-stock-grid" id="spinInventoryBody" hidden></div>
+        </div>
+        <div class="challenge-progress">
+          <div class="num" id="chCount">0/0</div>
+          <div class="meta"><div class="lbl">Challenges complete</div><div class="bar"><i id="chBar"></i></div></div>
+        </div>
       </div>
     </div>
     <div class="ch-category-tabs seg" role="group" aria-label="Challenge categories" id="chCategories"> <button type="button" data-cc="toon" aria-pressed="true"><img class="category-icon" src="assets/ui/Dandy.webp" alt="" aria-hidden="true"> Toon Challenges <span class="cnt" id="chToonCount">0/0</span></button> <button type="button" data-cc="trinket" aria-pressed="false"><img class="category-icon" src="assets/ui/VeesRemote.webp" alt="" aria-hidden="true"> Trinket Challenges <span class="cnt" id="chTrinketCount">0/0</span></button> <button type="button" data-cc="team" aria-pressed="false"><img class="category-icon" src="assets/ui/team-goals.png" alt="" aria-hidden="true"> Team Goals <span class="cnt" id="chTeamCount">0/0</span></button> </div><div class="seg ch-tier-tabs" id="chTierTabs" role="group" aria-label="Team goal rarity" hidden><button type="button" data-tf="all" aria-pressed="true">All</button><button type="button" data-tf="bronze" aria-pressed="false"><img class="tier-icon" src="assets/ui/DoubleDigits.webp" alt="" aria-hidden="true"> Bronze <span class="cnt" id="chTierCountBronze"></span></button><button type="button" data-tf="silver" aria-pressed="false"><img class="tier-icon" src="assets/ui/SkilledToon.webp" alt="" aria-hidden="true"> Silver <span class="cnt" id="chTierCountSilver"></span></button><button type="button" data-tf="gold" aria-pressed="false"><img class="tier-icon" src="assets/ui/SuperSkilledPro.webp" alt="" aria-hidden="true"> Gold <span class="cnt" id="chTierCountGold"></span></button><button type="button" data-tf="iridescent" aria-pressed="false"><img class="tier-icon" src="assets/ui/TwistedsFearMe.webp" alt="" aria-hidden="true"> Iridescent <span class="cnt" id="chTierCountIridescent"></span></button></div><div class="filters ch-filters">
@@ -3371,6 +3388,7 @@ function claimBreakRoomReward(floor){
 const SPIN_STOCK_GROUPS=[
  ['toon','Random Toon'],['trinket','Random Trinket'],['choice','Guaranteed Choice'],['mixedchoice','Mixed Choice'],['choicechance','Choice Chance'],['toonchance','Toon Revival Chance'],['trinketchance','Trinket Revival Chance'],['chance','Mixed Revival Chance'],['revival','Guaranteed Mixed Revival'],['target','Revival Choice']
 ];
+let spinInventoryOpen=false;
 function stockEntryDescription(kind,g){
   const odds=clampInt(g.dropOdds,0,100,100),drop=odds===100?'':`${odds}% reward drop · `;
   if(REVIVAL_CHANCE_KINDS.includes(kind))return `${drop}${REVIVAL_CHANCE_LABEL[kind]} · ${chancePctOf(g)}% success`;
@@ -3384,6 +3402,8 @@ function stockEntryDescription(kind,g){
 function renderSpinInventory(){
   const body=$('#spinInventoryBody');if(!body)return;
   const total=run.spins.length;$('#spinInventoryTotal').textContent=String(total);
+  body.hidden=!spinInventoryOpen;
+  const toggle=$('#spinStockToggle');if(toggle)toggle.setAttribute('aria-expanded',String(spinInventoryOpen));
   body.innerHTML=SPIN_STOCK_GROUPS.map(([kind,label])=>{
     const list=run.spins.filter(g=>g.kind===kind);
     return `<details class="spin-stock-kind"><summary>${esc(label)} · ${list.length}</summary><div class="spin-stock-rows">${list.length?list.map(g=>`<div class="chance-row"><span class="chance-row-label">${esc(g.title||label)} · ${esc(stockEntryDescription(kind,g))}</span><button type="button" class="btn ghost sm" data-stock-use="${kind}" data-stock-id="${esc(g.id)}">Use</button></div>`).join(''):'<p class="ch-help">No tokens in this stock.</p>'}</div></details>`;
@@ -3421,6 +3441,7 @@ $('#ccStock').addEventListener('click', e => {
   if (b){ const g = run.spins.find(x => x.id === b.dataset.ccSpin); if (g) startChoiceChanceSpin(null, g); }
 });
 $('#revivalStock').addEventListener('click',e=>{const b=e.target.closest('[data-revival-spin]');if(b){const g=run.spins.find(x=>x.id===b.dataset.revivalSpin&&x.kind==='revival');if(g)startSpin('revival',g.challengeId,g.poolKind||null,g.id);}});
+$('#spinStockToggle').addEventListener('click',()=>{spinInventoryOpen=!spinInventoryOpen;renderSpinPanel();});
 $('#spinInventoryBody').addEventListener('click',e=>{const b=e.target.closest('[data-stock-use]');if(!b)return;useSpinStock(b.dataset.stockUse,b.dataset.stockId);});
 $('#mixedChoiceStock').addEventListener('click',e=>{const b=e.target.closest('[data-mixedchoice-spin]');if(b)startMixedChoice(b.dataset.mixedchoiceSpin);});
 $('.break-room-buttons').addEventListener('click',e=>{const b=e.target.closest('[data-break-room-floor]');if(b)claimBreakRoomReward(Number(b.dataset.breakRoomFloor));});
