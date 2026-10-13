@@ -208,9 +208,9 @@ footer a{color:var(--mint)}
 .spin-sub{margin:6px 0 10px;font-size:13px;font-weight:600;color:#d9c8ee}
 .spin-btns{display:grid;gap:10px}
 .spin-btn-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.spin-btns .btn{min-width:0;justify-content:center;gap:7px;font-size:15px;padding:10px 9px}
-.spin-btns .btn>span:not(.badge){min-width:0}
-.spin-btns .btn .badge{margin-left:auto;flex:none}
+.spin-btns .btn{position:relative;min-width:0;min-height:54px;justify-content:flex-start;gap:5px;font-size:12px;line-height:1.05;padding:8px 20px 8px 7px;white-space:normal}
+.spin-btns .btn>span:not(.badge){flex:1 1 auto;min-width:0;text-align:center;white-space:normal;line-height:1.05}
+.spin-btns .btn .badge{position:absolute;top:4px;right:4px;margin:0;flex:none;font-size:10px;line-height:1;padding:2px 5px}
 .spin-btns .btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:2px 2px 0 var(--ink)}
 .ui-button-icon{width:24px;height:24px;flex:none;object-fit:contain;display:inline-block}
 .wheel-title-icon{width:30px;height:30px;flex:none;object-fit:contain;display:block}
