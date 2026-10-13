@@ -2532,21 +2532,20 @@ function challengeCardMarkup(c, i, listLen, opts){
         ${lockPending?`<div class="lock-overlay"><div class="lock-callout"><strong>🔒 CHALLENGE LOCKED</strong><small>${esc(lockRuleSummary(lockRule))}</small><button type="button" class="btn ghost sm" data-act="edit-lock" data-developer-only>Edit rule</button></div></div>`:''}
       </div>`;
     }
-function sortPinnedWithinRarity(items){
-  const scope=ch=>`${ch.category}:${ch.category==='team'||ch.tierSet?(TEAM_TIERS.includes(ch.teamTier)?ch.teamTier:'bronze'):'unranked'}`;
-  const groups=new Map();
-  for (const ch of items){ const key=scope(ch); if(!groups.has(key)) groups.set(key,[]); groups.get(key).push(ch); }
-  const isPinned=ch=>!isDeveloperMode && playerPins.has(ch.id);
-  for (const group of groups.values()) group.sort((a,b)=>Number(isPinned(b))-Number(isPinned(a)));
-  const offsets=new Map();
-  return items.map(ch=>{ const key=scope(ch), offset=offsets.get(key)||0; offsets.set(key,offset+1); return groups.get(key)[offset]; });
+function sortPinnedFirst(items){
+  // `items` has already been filtered for the active category, rarity, status, and search.
+  // Move pins to the top of that visible set without crossing filter boundaries.
+  if (isDeveloperMode || !playerPins.size) return items;
+  const pinned=[], unpinned=[];
+  for (const ch of items) (playerPins.has(ch.id) ? pinned : unpinned).push(ch);
+  return pinned.concat(unpinned);
 }
 function reorderVisiblePinnedCards(){
   const list=$('#chList'), cards=[...list.querySelectorAll('.ch')];
   const visibleIds=new Set(cards.map(card=>card.dataset.id));
   const visible=run.challenges.filter(ch=>visibleIds.has(ch.id));
   const byId=new Map(cards.map(card=>[card.dataset.id,card]));
-  const ordered=sortPinnedWithinRarity(visible).map(ch=>byId.get(ch.id)).filter(Boolean);
+  const ordered=sortPinnedFirst(visible).map(ch=>byId.get(ch.id)).filter(Boolean);
   for(let i=0;i<ordered.length;i++) if(list.children[i]!==ordered[i]) list.insertBefore(ordered[i],list.children[i]||null);
 }
 function syncVisiblePlayerPinControls(){
@@ -2580,7 +2579,7 @@ function renderChallenges(){
   }
   const searchQuery=($('#chSearch').value||'').trim(), normalizedSearch=searchQuery.toLocaleLowerCase();
   const matching=categoryChallenges.filter(c=>(view.cf==='all' || (view.cf==='done')===challengeCountsDone(c)) && (view.cc!=='team' || view.tf==='all' || c.teamTier===view.tf) && (!normalizedSearch || `${c.title||''} ${c.desc||''}`.toLocaleLowerCase().includes(normalizedSearch)));
-  const shown=sortPinnedWithinRarity(matching);
+  const shown=sortPinnedFirst(matching);
   const addLabel=view.cc==='team' ? 'team goal' : `${view.cc} challenge`;
   $('#addCh').textContent=`＋ Add ${addLabel}`;
   if (!categoryChallenges.length){
