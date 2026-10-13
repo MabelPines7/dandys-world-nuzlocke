@@ -215,7 +215,7 @@ footer a{color:var(--mint)}
 .chance-row-label{font-weight:700;font-size:14px;color:#ffe9f7}
 .cc-stock{margin-top:10px;display:flex;flex-direction:column;gap:6px}
 .cc-stock-title{font-weight:800;font-size:14px;color:#ffe9f7}
-.cc-tiles{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+.cc-tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:8px}
 .cc-tile{display:flex;flex-direction:column;align-items:center;gap:2px;width:108px;padding:8px 4px 6px;background:none;border:0;text-align:center;color:inherit}
 button.cc-tile{cursor:pointer;font:inherit;border-radius:14px}
 button.cc-tile:hover .cc-frame{border-color:#ffb703}
@@ -605,7 +605,7 @@ button.cc-tile:hover .cc-frame{border-color:#ffb703}
           <button type="button" class="btn pink" id="spinChance" data-spin="chance">🎲 Chance spin <span class="badge" id="credChance">0</span></button>
           <button type="button" class="btn sky" id="spinTarget" data-spin="target">🎯 Targeted revival <span class="badge" id="credTarget">0</span></button>
           <button type="button" class="btn mint" id="spinChoice" data-spin="choice">✨ Choice <span class="badge" id="credChoice">0</span></button>
-          <button type="button" class="btn lilac" id="spinChoiceChance" data-spin="choicechance">🎲 Choice chance <span class="badge" id="credChoiceChance">0</span></button></div>
+          <button type="button" class="btn lilac" id="spinChoiceChance" data-spin="choicechance" aria-controls="ccStock" aria-expanded="false">🎲 Choice chance <span class="badge" id="credChoiceChance">0</span></button></div>
         <div class="chance-stock" id="chanceStock" hidden></div>
         <div class="cc-stock" id="ccStock" hidden></div>
         <label class="free"><input type="checkbox" id="freeSpin"> <span>Free spin <small>(spin without using a credit)</small></span></label>
@@ -803,8 +803,42 @@ function clampCCPct(v, d = 50){ const n = Number(v); return Number.isFinite(n) ?
 function fmtPct(p){ const n = Math.round(Number(p) * 10) / 10; return Number.isFinite(n) ? String(n) : '50'; }
 /* Two fixed "mystery" artworks for random gambles in the choice-chance tiles:
    one for a random Toon, one for a random Trinket. */
-const CC_MYSTERY_TOON_IMG = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#43305e"/><circle cx="50" cy="36" r="16" fill="#1d1428"/><path d="M20 92c2-18 13-27 30-27s28 9 30 27z" fill="#1d1428"/><text x="50" y="49" font-family="Verdana,Arial,sans-serif" font-size="30" font-weight="bold" fill="#ffe9f7" text-anchor="middle">?</text></svg>');
-const CC_MYSTERY_TRINKET_IMG = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#274d5e"/><path d="M65 12a16 16 0 0 0-15.4 19.6L24.8 56.4a11 11 0 1 0 15.6 15.6l24.8-24.8A16 16 0 0 0 84.8 31.6l-11.3 11.3-10-2.7-2.7-10z" fill="#101d24"/><text x="76" y="90" font-family="Verdana,Arial,sans-serif" font-size="30" font-weight="bold" fill="#ffe9f7" text-anchor="middle">?</text></svg>');
+const CC_MYSTERY_TOON_IMG = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <rect width="100" height="100" fill="#43305e"/>
+    <g fill="#100a16">
+      <ellipse cx="50" cy="17" rx="14" ry="17"/>
+      <ellipse cx="76" cy="29" rx="14" ry="16"/>
+      <ellipse cx="78" cy="56" rx="14" ry="16"/>
+      <ellipse cx="63" cy="77" rx="14" ry="16"/>
+      <ellipse cx="37" cy="77" rx="14" ry="16"/>
+      <ellipse cx="22" cy="56" rx="14" ry="16"/>
+      <ellipse cx="24" cy="29" rx="14" ry="16"/>
+      <path d="M35 68c-9 5-15 13-17 24h24l8-9 8 9h24c-2-11-8-19-17-24z"/>
+      <circle cx="50" cy="46" r="28"/>
+    </g>
+    <text x="50" y="52" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="52" font-weight="900" fill="#fff" text-anchor="middle">?</text>
+  </svg>`);
+const CC_MYSTERY_TRINKET_IMG = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <rect width="100" height="100" fill="#274d5e"/>
+    <g transform="rotate(-20 50 50)" fill="#10141a" stroke="#10141a" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M39 26 32 10" fill="none" stroke-width="5"/>
+      <circle cx="30" cy="8" r="6" stroke="none"/>
+      <path d="M59 25 67 7" fill="none" stroke-width="5"/>
+      <circle cx="69" cy="6" r="6" stroke="none"/>
+      <path d="M32 25q0-5 6-5h27q6 0 7 6l10 48q1 6-5 9L52 94q-6 2-9-4L29 32q-2-5 3-7z" stroke="none"/>
+      <circle cx="51" cy="39" r="9" fill="#274d5e" stroke="none"/>
+      <circle cx="51" cy="39" r="4"/>
+      <rect x="42" y="54" width="7" height="7" rx="2" fill="#274d5e" stroke="none"/>
+      <rect x="54" y="52" width="7" height="7" rx="2" fill="#274d5e" stroke="none"/>
+      <rect x="44" y="66" width="7" height="7" rx="2" fill="#274d5e" stroke="none"/>
+      <rect x="57" y="64" width="7" height="7" rx="2" fill="#274d5e" stroke="none"/>
+      <rect x="47" y="78" width="7" height="6" rx="2" fill="#274d5e" stroke="none"/>
+      <rect x="60" y="76" width="7" height="6" rx="2" fill="#274d5e" stroke="none"/>
+    </g>
+    <text x="50" y="52" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="52" font-weight="900" fill="#fff" text-anchor="middle">?</text>
+  </svg>`);
 function sanitizeCCEntry(e){
   if (!e || typeof e !== 'object' || !CC_PRIZES.includes(e.prize)) return null;
   const entry = {pct:clampCCPct(e.pct, 50), prize:e.prize};
@@ -1172,7 +1206,7 @@ function saveRun(){
 const exportable = () => { saveRun(); return plainRun(); };
 
 /* ---------- UI state ---------- */
-const view = { tab:'challenges', cf:'all', cc:'toon', tf:'all', friendId:null, free:false, missionId:null, missionSubId:null, missionPicker:false, toons:{q:'',f:'all',cat:'all'}, trinkets:{q:'',f:'all',cat:'all'} };
+const view = { tab:'challenges', cf:'all', cc:'toon', tf:'all', friendId:null, free:false, choiceChanceOpen:false, missionId:null, missionSubId:null, missionPicker:false, toons:{q:'',f:'all',cat:'all'}, trinkets:{q:'',f:'all',cat:'all'} };
 const cats = k => (DATA.catOrder && DATA.catOrder[k]) || [...new Set(DATA[k].flatMap(i => i.cats))];
 
 function buildSection(kind){
@@ -1317,7 +1351,7 @@ function ask({title, msg, input=null, ok='OK', danger=false, check=null, numeric
   });
 }
 
-function switchRun(id){ saveRun(); index.active = id; saveIndex(); loadRun(id); renderAll(); renderSpinPanel(); grpPublishSoon(0); }
+function switchRun(id){ saveRun(); view.choiceChanceOpen = false; index.active = id; saveIndex(); loadRun(id); renderAll(); renderSpinPanel(); grpPublishSoon(0); }
 function addRun(r){ const id = uid(); index.runs.push({id, name:r.name}); store.set(LS_RUN(id), JSON.stringify(r)); index.active = id; saveIndex(); loadRun(id); renderAll(); renderSpinPanel(); grpPublishSoon(0); return id; }
 
 $('#runSelect').addEventListener('change', e => { switchRun(e.target.value); toast(`Switched to “${run.name}”`); });
@@ -2750,10 +2784,14 @@ function renderSpinPanel(){
     : (view.free ? 'Free spin is on — spins won’t use credits.' : 'Complete a challenge or team goal to earn a spin (or turn on Free spin).');
   const spinButtons = {toon:'spinToon', trinket:'spinTrinket', revival:'spinRevival', chance:'spinChance', target:'spinTarget', choice:'spinChoice', choicechance:'spinChoiceChance'};
   for (const k of SPIN_KINDS) $('#' + spinButtons[k]).disabled = !view.free && !credits(k);
-  /* Choice-chance credits carry their own configs and are spent from the
-     list below (the generic button just opens the first one); Free spin
-     has no config to roll, so the button stays disabled in free mode. */
-  const ccBtn = $('#spinChoiceChance'); if (ccBtn) ccBtn.disabled = view.free || !ccn;
+  /* Choice-chance credits carry their own configs. The button expands the
+     inventory; each row spends its own credit. Free spin has no config to roll. */
+  const ccBtn = $('#spinChoiceChance');
+  if (ccBtn){
+    ccBtn.disabled = view.free || !ccn;
+    if (view.free || !ccn) view.choiceChanceOpen = false;
+    ccBtn.setAttribute('aria-expanded', String(!view.free && !!ccn && view.choiceChanceOpen));
+  }
   /* Per-% chance stock list. Free spin doesn't use stock (fixed 50%), so the
      list only shows in normal mode, and only while chance credits are held. */
   const stockEl = $('#chanceStock');
@@ -2762,13 +2800,13 @@ function renderSpinPanel(){
     stockEl.hidden = !stock.length;
     stockEl.innerHTML = stock.map(r => `<div class="chance-row"><span class="chance-row-label">${esc(chanceRowLabel(r))}</span><button type="button" class="btn pink sm" data-chance-pct="${r.pct}">Spin</button></div>`).join('');
   }
-  /* Choice Chance Spins: one row per stocked credit — the configs differ,
-     so unlike plain chance credits they are NOT fungible and each row
-     spends its own credit. Hidden in free mode and when none are stocked. */
+  /* Choice Chance Spins stay tucked away until their button is opened.
+     Credits retain their own configs, so each row spends its own credit. */
   const ccEl = $('#ccStock');
   if (ccEl){
     const list = view.free ? [] : run.spins.filter(g => g.kind === 'choicechance');
-    ccEl.hidden = !list.length;
+    if (!list.length) view.choiceChanceOpen = false;
+    ccEl.hidden = !list.length || !view.choiceChanceOpen;
     ccEl.innerHTML = list.length ? `<div class="cc-stock-title">🎲 Choice Chance Spins</div>` + list.map(g => `<div class="chance-row"><span class="chance-row-label">${esc(ccSummary(g.cc))}</span><button type="button" class="btn pink sm" data-cc-spin="${esc(g.id)}">Spin</button></div>`).join('') : '';
   }
 }
@@ -2787,7 +2825,14 @@ function takeCredit(kind, challengeId){
   if (i < 0) i = run.spins.findIndex(g => g.kind === kind);
   return i < 0 ? null : {grant:run.spins.splice(i,1)[0], index:i};
 }
-document.querySelectorAll('[data-spin]').forEach(b => b.addEventListener('click', () => startSpin(b.dataset.spin)));
+document.querySelectorAll('[data-spin]').forEach(b => b.addEventListener('click', () => {
+  if (b.dataset.spin === 'choicechance'){
+    view.choiceChanceOpen = !view.choiceChanceOpen;
+    renderSpinPanel();
+    return;
+  }
+  startSpin(b.dataset.spin);
+}));
 
 let spinCtx = null, spinAnim = null, tickRaf = 0;
 const stripX = () => { const m = getComputedStyle($('#strip')).transform; if (!m || m === 'none') return 0; const v = m.match(/matrix(3d)?\(([^)]+)\)/); if (!v) return 0; const a = v[2].split(',').map(Number); return v[1] ? a[12] : a[4]; };
