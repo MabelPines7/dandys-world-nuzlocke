@@ -759,6 +759,31 @@ body[data-page-theme="light"]{background:#eee9f1;background-attachment:initial}
 .choice-outcome-help{margin:10px 0 0;font-size:12px;font-weight:700;color:#5d4b6e;line-height:1.4}
 @media(max-width:520px){.choice-outcome{padding:10px 6px}.choice-outcome-frame{width:72px;height:72px}.choice-outcome-editor-row{grid-template-columns:54px minmax(0,1fr) auto}.choice-outcome-editor-row .choice-outcome-frame{width:50px;height:50px}}
 
+
+/* Mission Pack-wide filters and player-local checklist rename controls. */
+.mission-filter-panel{margin:0 0 16px;padding:13px 14px;border:2px solid var(--ink);border-radius:16px;background:#38264a;color:#fff4fb;box-shadow:4px 4px 0 var(--ink)}
+.mission-filter-heading{display:flex;align-items:baseline;gap:10px;margin-bottom:9px;font-size:12px;font-weight:900;letter-spacing:.45px;text-transform:uppercase}
+.mission-filter-heading small{font-size:11px;font-weight:600;letter-spacing:0;text-transform:none;color:#dbcde6}
+.mission-filter-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.mission-filter-row+.mission-filter-row{margin-top:9px}
+.mission-filter-label{font-size:11px;font-weight:900;text-transform:uppercase;color:#dbcde6}
+.mission-tier-buttons,.mission-status-buttons{display:flex;gap:5px;flex-wrap:wrap}
+.mission-tier-buttons button,.mission-status-buttons button{min-height:34px;padding:5px 10px;border:2px solid var(--ink);border-radius:10px;background:#291a38;color:#fff4fb;font:800 12px var(--fb);cursor:pointer}
+.mission-tier-buttons button[aria-pressed="true"],.mission-status-buttons button[aria-pressed="true"]{background:var(--yellow);color:var(--ink)}
+.mission-tier-buttons .mission-filter-count{margin-left:3px;font-size:10px;opacity:.8}
+.mission-search{position:relative;display:flex;align-items:center;flex:1 1 220px;min-width:180px;max-width:380px}
+.mission-search svg{position:absolute;left:11px;width:17px;height:17px;fill:none;stroke:var(--ink);stroke-width:2.5;stroke-linecap:round;pointer-events:none}
+.mission-search input{width:100%;min-width:0;padding:8px 10px 8px 35px;border:3px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink);font:700 14px var(--fb);box-shadow:3px 3px 0 var(--ink)}
+.mission-search input:focus-visible{outline:3px dashed var(--yellow);outline-offset:3px}
+.mission-filter-pinned{min-height:38px;white-space:nowrap}
+.mission-filter-pinned[aria-pressed="true"]{background:#f6a6d6;color:var(--ink)}
+.mission-filter-foot{margin:8px 0 0;font-size:10px;color:#dbcde6}
+.check-rename{flex:none;width:38px;min-width:38px;padding:0;border:2px solid var(--ink);border-radius:10px;background:#e8d8ff;color:var(--ink);font:900 16px var(--fb);cursor:pointer}
+.check-rename:hover{background:#dac3ff}
+.ch-rename-permission{margin-top:11px;padding:10px 12px;border:2px solid var(--ink);border-radius:12px;background:#f2eaff}
+.ch-rename-permission label{display:flex;align-items:center;gap:8px;margin:0;font-weight:900}
+.ch-rename-permission .ch-help{margin:6px 0 0}
+@media(max-width:640px){.mission-filter-row{align-items:flex-start}.mission-search{flex-basis:100%;max-width:none}.mission-filter-heading{align-items:flex-start;flex-direction:column;gap:2px}}
 </style>
 </head>
 <body>
@@ -802,14 +827,12 @@ body[data-page-theme="light"]{background:#eee9f1;background-attachment:initial}
   </div>
 
   <div class="tabs" role="tablist">
-    <button class="tab" role="tab" data-tab="challenges" aria-selected="true" aria-controls="sec-challenges">Challenges <span class="cnt" id="tabChallenges"></span></button>
+    <button class="tab" role="tab" data-tab="missions" aria-selected="true" aria-controls="sec-missions">Mission Packs <span class="cnt" id="tabMissions"></span></button>
     <button class="tab" role="tab" data-tab="toons" aria-selected="false" aria-controls="sec-toons">Toons <span class="cnt" id="tabToons"></span></button>
     <button class="tab" role="tab" data-tab="trinkets" aria-selected="false" aria-controls="sec-trinkets">Trinkets <span class="cnt" id="tabTrinkets"></span></button>
     <button class="tab" role="tab" data-tab="friends" aria-selected="false" aria-controls="sec-friends">Friends <span class="cnt" id="tabFriends"></span></button>
-    <button class="tab" role="tab" data-tab="missions" aria-selected="false" aria-controls="sec-missions">Mission Packs <span class="cnt" id="tabMissions"></span></button>
   </div>
-
-  <section class="panel section" id="sec-challenges" role="tabpanel">
+  <section class="panel section" id="sec-challenges" role="tabpanel" hidden>
     <div class="ch-top">
       <div class="spin-panel">
         <div class="spin-head"><h3><img class="wheel-title-icon" src="assets/ui/gigi.webp" alt="" aria-hidden="true"><span>SPIN THE WHEEL</span></h3><div class="spin-head-actions"><button type="button" class="btn lilac sm spin-stock-toggle" id="spinStockToggle" aria-controls="spinInventoryBody" aria-expanded="false">Stock list</button><span class="credit-total" id="creditTotal">0 spins</span></div></div>
@@ -885,7 +908,7 @@ body[data-page-theme="light"]{background:#eee9f1;background-attachment:initial}
     <div id="friendList" class="fr-list"></div>
     <div id="friendDetail"></div>
   </section>
-  <section class="panel section" id="sec-missions" role="tabpanel" hidden>
+  <section class="panel section" id="sec-missions" role="tabpanel">
     <div id="missionRoot"></div>
   </section>
   <section class="panel section settings-screen" id="sec-settings" role="tabpanel" aria-label="Settings" hidden>
@@ -915,7 +938,7 @@ body[data-page-theme="light"]{background:#eee9f1;background-attachment:initial}
 </div>
 <img id="toonCursor" alt="" aria-hidden="true" hidden>
 
-<!-- Challenge editor --> <dialog id="chDlg" data-developer-only> <form method="dialog" id="chForm"> <div class="mh" style="background:var(--mint)"><div><h2 id="chDlgTitle">New challenge</h2><p id="chDlgHint">Finish it to earn a reward.</p></div></div> <div class="mb"> <label for="chTitle">Title</label> <input type="text" id="chTitle" maxlength="80" required placeholder="e.g. Survive 10 floors with Poppy" autocomplete="off"> <label for="chDesc" style="margin-top:12px">Description <span class="small">(optional · up to 3,000 characters)</span></label> <textarea id="chDesc" maxlength="3000" rows="6" placeholder="Add all the rules and details here…"></textarea> <fieldset class="ch-bg-picker" id="chBgPicker"><legend class="sr-only">Challenge card background</legend><div class="ch-bg-editor"><div><div class="ch-bg-head"><strong>Card background</strong><button type="button" class="btn ghost sm" id="chBgReset">Reset to default</button></div><p class="ch-bg-help">☑ Only changes this challenge card. Toon sprite artwork and its neutral frame stay unchanged.</p><input class="ch-bg-default-radio" type="radio" name="chCardBg" value="default" checked tabindex="-1" aria-label="Use the current default challenge card appearance"><div id="chBgChoiceGroups" role="radiogroup" aria-label="Challenge card background options"></div></div><aside class="ch-bg-preview" aria-label="Background preview"><h4>Sample challenge cards</h4><p class="ch-bg-preview-copy">Each card keeps its own background choice. Toon art stays original and untouched.</p><div class="ch-bg-preview-case"><div class="ch-bg-preview-kicker"><span id="chBgSelectedType">THIS CHALLENGE · DEFAULT</span><span id="chBgSelectedLabel">Default</span></div><div class="ch-bg-demo-card" id="chBgSelectedSample"><span class="ch-bg-demo-tag" id="chBgSelectedTag">Default</span><div class="ch-bg-demo-frame"><img id="chBgPoppy" alt="Poppy"></div><div class="ch-bg-demo-copy"><strong>Collect 10 Ichor</strong><small>Poppy · counter goal</small><div class="ch-bg-demo-progress"><span>3/10</span><span class="ch-bg-demo-bar"><i></i></span></div></div></div></div><div class="ch-bg-preview-case"><div class="ch-bg-preview-kicker"><span>ANOTHER CHALLENGE · GRADIENT</span><span>RAINBOW</span></div><div class="ch-bg-demo-card" id="chBgRainbowSample" style="--ch-surface:linear-gradient(110deg,#ff777e,#ffb85c,#ffe46a,#65d18a,#59b8e8,#9c7be0,#ed8ac2)"><span class="ch-bg-demo-tag">Rainbow</span><div class="ch-bg-demo-frame"><img id="chBgPebble" alt="Pebble"></div><div class="ch-bg-demo-copy"><strong>Survive 5 Floors</strong><small>Pebble · one-time goal</small><div class="ch-bg-demo-progress"><span>2/5</span><span class="ch-bg-demo-bar"><i style="width:40%"></i></span></div></div></div></div><p class="ch-bg-scope">The color is on the card surface; each Toon keeps its original sprite and the same neutral art tile.</p></aside></div></fieldset> <fieldset class="state-pick" id="chCategory"><legend>Challenge tab</legend> <label class="st-unlocked"><input type="radio" name="chCategory" value="toon" checked><span><img class="choice-inline-icon" src="assets/ui/Dandy.webp" alt="" aria-hidden="true">Toon Challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="trinket"><span><img class="choice-inline-icon" src="assets/ui/VeesRemote.webp" alt="" aria-hidden="true">Trinket Challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="team"><span><img class="choice-inline-icon" src="assets/ui/team-goals.png" alt="" aria-hidden="true">Team Goal</span></label> </fieldset> <fieldset class="state-pick" id="teamTierWrap"><legend>Rarity / badge tier</legend> <label class="st-locked" id="tierNoneLabel"><input type="radio" name="teamTier" value="none"><span>None (default title color)</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="bronze" checked><span>🥉 Bronze</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="silver"><span>🥈 Silver</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="gold"><span>🥇 Gold</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="iridescent"><span>🌈 Iridescent</span></label> <p class="ch-help" id="teamTierHint">Bronze badge · no reward.</p> </fieldset> <fieldset class="state-pick" id="chType"><legend>Progress — pick any combination</legend> <label class="st-unlocked"><input type="checkbox" name="chModes" value="goal" checked><span>☑ One-time goal</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="checklist"><span>☑ Checklist</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="counter"><span>🔢 Counters</span></label> <p class="ch-help">Combine modes freely — e.g. Counters with a Checklist attached. At least one mode must stay selected.</p> </fieldset> <div id="chTargetRow" class="counter-editor" hidden><div class="counter-editor-head"><strong>Counter goals</strong><button type="button" class="btn ghost" id="addCounterRow">＋ Add counter</button></div><div id="chCounterRows"></div><p class="ch-help">Add up to 20 counters. Each needs a label and target, and each counter counts as one condition (see “conditions met” below).</p></div> <div id="chChecklistRow" class="checklist-editor"><strong class="chlist-title">Checklists</strong><div id="chListEditors"></div><button type="button" class="btn ghost" id="addChecklistList">＋ Add checklist</button><p class="ch-help">Give each checklist a name and its items, one per line (up to 100 items across all lists). Check off each step as you complete it. Use Exclude for items that do not apply; every included item counts as one condition. On the card, each checklist can be shown or hidden on its own.</p></div> <p id="chGoalHelp" class="ch-help" hidden>Tick the challenge's main checkbox when the goal itself is done — the goal counts as one condition.</p> <div id="chReqRow"><label for="chReqCount">Complete when <input type="number" id="chReqCount" min="0" max="999" step="1" inputmode="numeric" style="width:80px"> conditions are met</label><p class="ch-help">Leave blank (or 0) to require <b>all</b> conditions. Each included checklist item, each counter, and the goal itself each count as one condition — e.g. set 2 to complete when any 2 of 3 conditions are met.</p></div> <fieldset class="state-pick" id="chIconKind"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="chIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="chIconEmojiRow" hidden><label for="chIconEmoji">Emoji</label> <input type="text" id="chIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🔥"></div> <div id="chIconSpriteRow" hidden><label for="chIconSprite">Sprite</label> <select id="chIconSprite"></select></div> <div id="chIconUploadRow" hidden><label for="chIconFile">Custom image</label> <input type="file" id="chIconFile" accept="image/*"> <p class="ch-help" id="chIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the challenge.</p><img id="chIconPreview" class="ch-icon-img" alt="" hidden></div> <fieldset class="state-pick reward-pick" id="chRewardWrap"><legend>Default spin (used when Reward = Default)</legend> <label class="st-unlocked"><input type="radio" name="chReward" value="spin" checked><span><img class="choice-inline-icon" src="assets/ui/Dandy.webp" alt="" aria-hidden="true">Random Toon</span></label> <label class="st-locked"><input type="radio" name="chReward" value="none"><span>No reward</span></label> <p class="ch-help" id="chRewardHint">A completed Toon challenge earns a Random Toon.</p> </fieldset> <fieldset class="state-pick" id="chRewardPickWrap"><legend>Reward</legend> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="default" checked><span>↩ Default for this tab/tier</span></label> <label class="st-locked"><input type="radio" name="chRewardPick" value="none"><span>No reward</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="toon"><span><img class="choice-inline-icon" src="assets/ui/Dandy.webp" alt="" aria-hidden="true">Random Toon</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="trinket"><span><img class="choice-inline-icon" src="assets/ui/VeesRemote.webp" alt="" aria-hidden="true">Random Trinket</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="revival"><span><img class="choice-inline-icon" src="assets/ui/GoldUnstopabblyHealthy.png" alt="" aria-hidden="true">Guaranteed Mixed Revival</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="choice"><span>Guaranteed Choice</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="chance"><span><img class="choice-inline-icon" src="assets/ui/MainCharacter.webp" alt="" aria-hidden="true">Mixed Revival Chance…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="toonchance"><span><img class="choice-inline-icon" src="assets/ui/UnstoppablyHealthy.webp" alt="" aria-hidden="true">Toon Revival Chance…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="trinketchance"><span><img class="choice-inline-icon" src="assets/ui/BronzeUnstoppablyHealthy.png" alt="" aria-hidden="true">Trinket Revival Chance…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="choicechance"><span>🎲 Choice chance…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="toonchoice"><span>Toon Choice</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="trinketchoice"><span>Trinket Choice</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="mixedchoice"><span>Mixed Choice</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="custom"><span>🎁 Custom reward…</span></label> <p class="ch-help">The reward is yours to choose, whatever the rarity — rarity stays as the badge/title color. “Default” keeps the standard reward above (tab spin, or the badge-tier reward for team goals).</p> </fieldset> <div id="chRewardOddsRow" class="reward-odds-row" hidden><label for="chRewardOdds">Reward drop chance</label> <input type="number" id="chRewardOdds" min="0" max="100" step="1" value="100" style="width:80px"> % <p class="ch-help">Chance that this primary reward is awarded. Extra rewards have separate odds; Revival Chance and Choice Chance keep their own success odds.</p></div> <div id="chRewardChanceRow" hidden><label for="chRewardChance">Success odds for each earned token</label> <input type="number" id="chRewardChance" min="0" max="100" step="1" value="" style="width:80px"> % <p class="ch-help">Enter the success odds that will be stored on this individual token. No default chance is applied. On success, the token earns a Guaranteed Mixed Revival or a pool-specific revival; failure uses it up. This is separate from the challenge's drop odds above.</p></div> <div id="chRewardTextRow" hidden><label for="chRewardText">Custom reward text</label> <input type="text" id="chRewardText" maxlength="80" placeholder="e.g. Winner picks tonight's snack" autocomplete="off"> <p class="ch-help">Shown as the earned reward on the challenge card. The site displays it — it can't automate made-up effects.</p></div> <div id="chChoiceChanceRow" class="cc-editor-block" hidden><fieldset class="state-pick" id="chCCModeWrap"><legend>Choice chance — how it plays</legend> <label class="st-unlocked"><input type="radio" name="chCCMode" value="pick" checked><span>🎯 Pick one of them</span></label> <label class="st-unlocked"><input type="radio" name="chCCMode" value="all"><span>🎲 Roll all of them</span></label> </fieldset> <div id="chCCRows" class="cc-entries"></div><button type="button" class="btn ghost" id="addCCRow" data-add-cc>＋ Add gamble</button><p class="ch-help">Each gamble rolls its own % when the credit is spent. A gamble's prize can be a random Toon/Trinket — or one specific item you name. In “Pick one”, the player chooses a single gamble to roll; in “Roll all”, every gamble rolls. 100% always succeeds.</p></div> <fieldset class="state-pick" id="chChoiceOptionsWrap" hidden><legend>Choice options — what “Your choice” can pick</legend> <label class="st-unlocked"><input type="checkbox" name="chChoiceOpt" value="toon"><span><img class="choice-inline-icon" src="assets/ui/Dandy.webp" alt="" aria-hidden="true">Random Toon</span></label> <label class="st-unlocked"><input type="checkbox" name="chChoiceOpt" value="trinket"><span><img class="choice-inline-icon" src="assets/ui/VeesRemote.webp" alt="" aria-hidden="true">Random Trinket</span></label> <p class="ch-help">When this challenge's reward is “Guaranteed Choice”, the player picks one of these. Tick at least one — if none are ticked, Toon + Trinket are used.</p> </fieldset> <div id="chOutcomeChoiceWrap" class="choice-outcome-editor" hidden>
+<!-- Challenge editor --> <dialog id="chDlg" data-developer-only> <form method="dialog" id="chForm"> <div class="mh" style="background:var(--mint)"><div><h2 id="chDlgTitle">New challenge</h2><p id="chDlgHint">Finish it to earn a reward.</p></div></div> <div class="mb"> <label for="chTitle">Title</label> <input type="text" id="chTitle" maxlength="80" required placeholder="e.g. Survive 10 floors with Poppy" autocomplete="off"> <label for="chDesc" style="margin-top:12px">Description <span class="small">(optional · up to 3,000 characters)</span></label> <textarea id="chDesc" maxlength="3000" rows="6" placeholder="Add all the rules and details here…"></textarea> <fieldset class="ch-bg-picker" id="chBgPicker"><legend class="sr-only">Challenge card background</legend><div class="ch-bg-editor"><div><div class="ch-bg-head"><strong>Card background</strong><button type="button" class="btn ghost sm" id="chBgReset">Reset to default</button></div><p class="ch-bg-help">☑ Only changes this challenge card. Toon sprite artwork and its neutral frame stay unchanged.</p><input class="ch-bg-default-radio" type="radio" name="chCardBg" value="default" checked tabindex="-1" aria-label="Use the current default challenge card appearance"><div id="chBgChoiceGroups" role="radiogroup" aria-label="Challenge card background options"></div></div><aside class="ch-bg-preview" aria-label="Background preview"><h4>Sample challenge cards</h4><p class="ch-bg-preview-copy">Each card keeps its own background choice. Toon art stays original and untouched.</p><div class="ch-bg-preview-case"><div class="ch-bg-preview-kicker"><span id="chBgSelectedType">THIS CHALLENGE · DEFAULT</span><span id="chBgSelectedLabel">Default</span></div><div class="ch-bg-demo-card" id="chBgSelectedSample"><span class="ch-bg-demo-tag" id="chBgSelectedTag">Default</span><div class="ch-bg-demo-frame"><img id="chBgPoppy" alt="Poppy"></div><div class="ch-bg-demo-copy"><strong>Collect 10 Ichor</strong><small>Poppy · counter goal</small><div class="ch-bg-demo-progress"><span>3/10</span><span class="ch-bg-demo-bar"><i></i></span></div></div></div></div><div class="ch-bg-preview-case"><div class="ch-bg-preview-kicker"><span>ANOTHER CHALLENGE · GRADIENT</span><span>RAINBOW</span></div><div class="ch-bg-demo-card" id="chBgRainbowSample" style="--ch-surface:linear-gradient(110deg,#ff777e,#ffb85c,#ffe46a,#65d18a,#59b8e8,#9c7be0,#ed8ac2)"><span class="ch-bg-demo-tag">Rainbow</span><div class="ch-bg-demo-frame"><img id="chBgPebble" alt="Pebble"></div><div class="ch-bg-demo-copy"><strong>Survive 5 Floors</strong><small>Pebble · one-time goal</small><div class="ch-bg-demo-progress"><span>2/5</span><span class="ch-bg-demo-bar"><i style="width:40%"></i></span></div></div></div></div><p class="ch-bg-scope">The color is on the card surface; each Toon keeps its original sprite and the same neutral art tile.</p></aside></div></fieldset> <fieldset class="state-pick" id="chCategory"><legend>Challenge tab</legend> <label class="st-unlocked"><input type="radio" name="chCategory" value="toon" checked><span><img class="choice-inline-icon" src="assets/ui/Dandy.webp" alt="" aria-hidden="true">Toon Challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="trinket"><span><img class="choice-inline-icon" src="assets/ui/VeesRemote.webp" alt="" aria-hidden="true">Trinket Challenge</span></label> <label class="st-unlocked"><input type="radio" name="chCategory" value="team"><span><img class="choice-inline-icon" src="assets/ui/team-goals.png" alt="" aria-hidden="true">Team Goal</span></label> </fieldset> <fieldset class="state-pick" id="teamTierWrap"><legend>Rarity / badge tier</legend> <label class="st-locked" id="tierNoneLabel"><input type="radio" name="teamTier" value="none"><span>None (default title color)</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="bronze" checked><span>🥉 Bronze</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="silver"><span>🥈 Silver</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="gold"><span>🥇 Gold</span></label> <label class="st-unlocked"><input type="radio" name="teamTier" value="iridescent"><span>🌈 Iridescent</span></label> <p class="ch-help" id="teamTierHint">Bronze badge · no reward.</p> </fieldset> <fieldset class="state-pick" id="chType"><legend>Progress — pick any combination</legend> <label class="st-unlocked"><input type="checkbox" name="chModes" value="goal" checked><span>☑ One-time goal</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="checklist"><span>☑ Checklist</span></label> <label class="st-unlocked"><input type="checkbox" name="chModes" value="counter"><span>🔢 Counters</span></label> <p class="ch-help">Combine modes freely — e.g. Counters with a Checklist attached. At least one mode must stay selected.</p> </fieldset> <div id="chTargetRow" class="counter-editor" hidden><div class="counter-editor-head"><strong>Counter goals</strong><button type="button" class="btn ghost" id="addCounterRow">＋ Add counter</button></div><div id="chCounterRows"></div><p class="ch-help">Add up to 20 counters. Each needs a label and target, and each counter counts as one condition (see “conditions met” below).</p></div> <div id="chChecklistRow" class="checklist-editor"><strong class="chlist-title">Checklists</strong><div id="chListEditors"></div><button type="button" class="btn ghost" id="addChecklistList">＋ Add checklist</button><p class="ch-help">Give each checklist a name and its items, one per line (up to 100 items across all lists). Check off each step as you complete it. Use Exclude for items that do not apply; every included item counts as one condition. On the card, each checklist can be shown or hidden on its own.</p></div> <div class="ch-rename-permission"><label><input type="checkbox" id="chAllowRename"> Allow players to rename checklist items</label><p class="ch-help">When enabled, players see a pencil beside each item. Personal labels stay in that player’s local run; the shared challenge definition is unchanged.</p></div> <p id="chGoalHelp" class="ch-help" hidden>Tick the challenge's main checkbox when the goal itself is done — the goal counts as one condition.</p> <div id="chReqRow"><label for="chReqCount">Complete when <input type="number" id="chReqCount" min="0" max="999" step="1" inputmode="numeric" style="width:80px"> conditions are met</label><p class="ch-help">Leave blank (or 0) to require <b>all</b> conditions. Each included checklist item, each counter, and the goal itself each count as one condition — e.g. set 2 to complete when any 2 of 3 conditions are met.</p></div> <fieldset class="state-pick" id="chIconKind"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="chIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="chIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="chIconEmojiRow" hidden><label for="chIconEmoji">Emoji</label> <input type="text" id="chIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🔥"></div> <div id="chIconSpriteRow" hidden><label for="chIconSprite">Sprite</label> <select id="chIconSprite"></select></div> <div id="chIconUploadRow" hidden><label for="chIconFile">Custom image</label> <input type="file" id="chIconFile" accept="image/*"> <p class="ch-help" id="chIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the challenge.</p><img id="chIconPreview" class="ch-icon-img" alt="" hidden></div> <fieldset class="state-pick" id="chRewardPickWrap"><legend>Reward</legend> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="default" checked><span>↩ Default for this tab/tier</span></label> <label class="st-locked"><input type="radio" name="chRewardPick" value="none"><span>No reward</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="toon"><span><img class="choice-inline-icon" src="assets/ui/Dandy.webp" alt="" aria-hidden="true">Random Toon</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="trinket"><span><img class="choice-inline-icon" src="assets/ui/VeesRemote.webp" alt="" aria-hidden="true">Random Trinket</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="revival"><span><img class="choice-inline-icon" src="assets/ui/GoldUnstopabblyHealthy.png" alt="" aria-hidden="true">Guaranteed Mixed Revival</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="choice"><span>Guaranteed Choice</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="chance"><span><img class="choice-inline-icon" src="assets/ui/MainCharacter.webp" alt="" aria-hidden="true">Mixed Revival Chance…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="toonchance"><span><img class="choice-inline-icon" src="assets/ui/UnstoppablyHealthy.webp" alt="" aria-hidden="true">Toon Revival Chance…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="trinketchance"><span><img class="choice-inline-icon" src="assets/ui/BronzeUnstoppablyHealthy.png" alt="" aria-hidden="true">Trinket Revival Chance…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="choicechance"><span>🎲 Choice chance…</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="toonchoice"><span>Toon Choice</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="trinketchoice"><span>Trinket Choice</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="mixedchoice"><span>Mixed Choice</span></label> <label class="st-unlocked"><input type="radio" name="chRewardPick" value="custom"><span>🎁 Custom reward…</span></label> <p class="ch-help">The reward is yours to choose, whatever the rarity — rarity stays as the badge/title color. “Default” keeps the standard reward above (tab spin, or the badge-tier reward for team goals).</p> </fieldset> <div id="chRewardOddsRow" class="reward-odds-row" hidden><label for="chRewardOdds">Reward drop chance</label> <input type="number" id="chRewardOdds" min="0" max="100" step="1" value="100" style="width:80px"> % <p class="ch-help">Chance that this primary reward is awarded. Extra rewards have separate odds; Revival Chance and Choice Chance keep their own success odds.</p></div> <div id="chRewardChanceRow" hidden><label for="chRewardChance">Success odds for each earned token</label> <input type="number" id="chRewardChance" min="0" max="100" step="1" value="" style="width:80px"> % <p class="ch-help">Enter the success odds that will be stored on this individual token. No default chance is applied. On success, the token earns a Guaranteed Mixed Revival or a pool-specific revival; failure uses it up. This is separate from the challenge's drop odds above.</p></div> <div id="chRewardTextRow" hidden><label for="chRewardText">Custom reward text</label> <input type="text" id="chRewardText" maxlength="80" placeholder="e.g. Winner picks tonight's snack" autocomplete="off"> <p class="ch-help">Shown as the earned reward on the challenge card. The site displays it — it can't automate made-up effects.</p></div> <div id="chChoiceChanceRow" class="cc-editor-block" hidden><fieldset class="state-pick" id="chCCModeWrap"><legend>Choice chance — how it plays</legend> <label class="st-unlocked"><input type="radio" name="chCCMode" value="pick" checked><span>🎯 Pick one of them</span></label> <label class="st-unlocked"><input type="radio" name="chCCMode" value="all"><span>🎲 Roll all of them</span></label> </fieldset> <div id="chCCRows" class="cc-entries"></div><button type="button" class="btn ghost" id="addCCRow" data-add-cc>＋ Add gamble</button><p class="ch-help">Each gamble rolls its own % when the credit is spent. A gamble's prize can be a random Toon/Trinket — or one specific item you name. In “Pick one”, the player chooses a single gamble to roll; in “Roll all”, every gamble rolls. 100% always succeeds.</p></div> <fieldset class="state-pick" id="chChoiceOptionsWrap" hidden><legend>Choice options — what “Your choice” can pick</legend> <label class="st-unlocked"><input type="checkbox" name="chChoiceOpt" value="toon"><span><img class="choice-inline-icon" src="assets/ui/Dandy.webp" alt="" aria-hidden="true">Random Toon</span></label> <label class="st-unlocked"><input type="checkbox" name="chChoiceOpt" value="trinket"><span><img class="choice-inline-icon" src="assets/ui/VeesRemote.webp" alt="" aria-hidden="true">Random Trinket</span></label> <p class="ch-help">When this challenge's reward is “Guaranteed Choice”, the player picks one of these. Tick at least one — if none are ticked, Toon + Trinket are used.</p> </fieldset> <div id="chOutcomeChoiceWrap" class="choice-outcome-editor" hidden>
 <strong class="chlist-title">Guaranteed Choice outcomes</strong>
 <div id="chOutcomeModeRow"><label for="chOutcomeMode">Pair mode</label> <select id="chOutcomeMode"><option value="specific-specific">Specific vs specific</option><option value="specific-random">Specific vs random</option><option value="random-random">Random vs random</option></select></div>
 <div id="chOutcomeRows" class="choice-outcome-editor-list"></div>
@@ -1203,7 +1226,7 @@ const challengeReward = c => {
   if (c && c.rewardPick && c.rewardPick !== 'default') return c.rewardPick;
   return c.category==='team' ? (TEAM_TIER_REWARD[c.teamTier] || 'none') : (c.reward==='none' ? 'none' : c.category);
 };
-const freshRun = (name) => ({ app:'dandys-world-nuzlocke', version:11, name, created:new Date().toISOString(), updated:new Date().toISOString(), missions:[],
+const freshRun = (name) => ({ app:'dandys-world-nuzlocke', version:11, name, created:new Date().toISOString(), updated:new Date().toISOString(), missions:[], playerChecklistPrefs:{},
   status:{toons:Object.fromEntries(DEFAULT_UNLOCKED.toons.map(n=>[n,'unlocked'])), trinkets:Object.fromEntries(DEFAULT_UNLOCKED.trinkets.map(n=>[n,'unlocked']))},
   challenges:[], spins:[], history:[], spinUnlocks:{toons:{},trinkets:{}}, breakRoomClaims:{'25':false,'50':false} });
 const clampInt = (v, lo, hi, d) => { v = Math.floor(Number(v)); return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
@@ -1224,6 +1247,39 @@ function legacyTypeForModes(modes){
   return modes[0];
 }
 const hasMode = (ch, m) => modesOf(ch).includes(m);
+function checklistPreference(ch,index,prefs=undefined){
+  const item=ch && ch.items && ch.items[index]; if(!item) return null;
+  const source=prefs===undefined ? (run && run.playerChecklistPrefs) : prefs;
+  const byChallenge=source && source[ch.id];
+  const entry=byChallenge && byChallenge[index];
+  return entry && typeof entry==='object' && (entry.baseText==null || entry.baseText===item.text) ? entry : null;
+}
+function checklistItemExcluded(ch,index,prefs=undefined){
+  const pref=checklistPreference(ch,index,prefs);
+  return pref ? !!pref.excluded : !!(ch && ch.items && ch.items[index] && ch.items[index].excluded);
+}
+function checklistItemLabel(ch,index){
+  const item=ch && ch.items && ch.items[index]; if(!item) return '';
+  const pref=checklistPreference(ch,index);
+  return pref && typeof pref.label==='string' && pref.label.trim() ? pref.label.trim().slice(0,160) : item.text;
+}
+function setChecklistPreference(ch,index,patch){
+  const item=ch && ch.items && ch.items[index]; if(!item) return;
+  if(!run.playerChecklistPrefs || typeof run.playerChecklistPrefs!=='object') run.playerChecklistPrefs={};
+  const bucket=run.playerChecklistPrefs[ch.id] || (run.playerChecklistPrefs[ch.id]={});
+  const prev=checklistPreference(ch,index) || {baseText:item.text,label:'',excluded:!!item.excluded};
+  const next={baseText:item.text,label:typeof patch.label==='string'?patch.label.trim().slice(0,160):(prev.label||''),excluded:typeof patch.excluded==='boolean'?patch.excluded:!!prev.excluded};
+  if(!next.label && !next.excluded) delete bucket[index]; else bucket[index]=next;
+  if(!Object.keys(bucket).length) delete run.playerChecklistPrefs[ch.id];
+}
+function pruneChecklistPreferences(challengeId,nextItems){
+  const bucket=run.playerChecklistPrefs && run.playerChecklistPrefs[challengeId]; if(!bucket) return;
+  for(const key of Object.keys(bucket)){
+    const index=Number(key), item=nextItems[index], pref=bucket[key];
+    if(!item || !pref || pref.baseText!==item.text) delete bucket[key];
+  }
+  if(!Object.keys(bucket).length) delete run.playerChecklistPrefs[challengeId];
+}
 function sanitizeIcon(icon){
   if (!icon || typeof icon !== 'object') return null;
   const value = typeof icon.value === 'string' ? icon.value : '';
@@ -1248,16 +1304,16 @@ function entityIconMarkup(entity){
 }
 function packIconMarkup(pack){ return entityIconMarkup(pack); }
 /* One condition = one required checklist item, one counter, or the manual goal flag. */
-function challengeConditions(ch){
+function challengeConditions(ch,prefs=undefined){
   const modes = modesOf(ch);
   let total = 0, met = 0;
   if (modes.includes('counter')) for (const counter of (ch.counters || [])){ total++; if (counter.value >= counter.target) met++; }
-  if (modes.includes('checklist')) for (const item of (ch.items || [])){ if (item.excluded) continue; total++; if (item.done) met++; }
+  if (modes.includes('checklist')) for (const [index,item] of (ch.items || []).entries()){ if (checklistItemExcluded(ch,index,prefs)) continue; total++; if (item.done) met++; }
   if (modes.includes('goal')){ total++; if (ch.goalDone ?? ch.done) met++; }
   return {total, met};
 }
-function computeDone(ch){
-  const {total, met} = challengeConditions(ch);
+function computeDone(ch,prefs=undefined){
+  const {total, met} = challengeConditions(ch,prefs);
   if (!total) return false;
   const req = clampInt(ch.requiredCount, 0, 999, 0);
   return req > 0 ? met >= Math.min(req, total) : met >= total;
@@ -1271,7 +1327,7 @@ function checklistSummary(c, cond){
     const r = Math.min(req, cond.total);
     return {label:`${Math.min(cond.met, r)}/${r} conditions`, pct:Math.min(100, cond.met / r * 100)};
   }
-  const requiredItems = (c.items || []).filter(item => !item.excluded), checkedItems = requiredItems.filter(item => item.done).length;
+  const requiredItems = (c.items || []).filter((item,index) => !checklistItemExcluded(c,index)), checkedItems = requiredItems.filter(item => item.done).length;
   return {label:requiredItems.length ? `${checkedItems}/${requiredItems.length} required` : 'No required items', pct:requiredItems.length ? checkedItems / requiredItems.length * 100 : 0};
 }
 /* Checklist grouping: items stay one flat array; each item's `list` names the
@@ -1334,7 +1390,7 @@ function sanitizeChallenge(o, seen){
   const teamTier = TEAM_TIERS.includes(o.teamTier) ? o.teamTier : 'bronze';
   const requiredCount = clampInt(o.requiredCount, 0, 999, 0);
   const goalDone = hasGoal ? (typeof o.goalDone === 'boolean' ? o.goalDone : (type==='goal' ? !!o.done : !!o.goalDone)) : false;
-  const done = computeDone({modes, counters, items, goalDone, done:!!o.done, requiredCount});
+  const done = computeDone({id, modes, counters, items, goalDone, done:!!o.done, requiredCount},null);
   const reward = category==='team' ? TEAM_TIER_REWARD[teamTier] : (o.reward==='none' ? 'none' : 'spin');
   let counterRestore=null;
   if (hasCounter && done && Array.isArray(o.counterRestore)){
@@ -1377,7 +1433,7 @@ function sanitizeChallenge(o, seen){
   const effReward = challengeReward({category, teamTier, reward, rewardPick});
   const toonName=ITEMS.toons.has(String(o.toonName||'')) ? String(o.toonName) : null;
   const lockRule=sanitizeLockRule(o.lockRule);
-  return {id, title, desc:String(o.desc||'').slice(0,3000), toonName, lockRule, category, teamTier, type:legacyTypeForModes(modes), modes, requiredCount, icon:sanitizeIcon(o.icon), cardBg:sanitizeChallengeCardBg(o.cardBg), goalDone, target, value, counters, counterRestore, checklistRestore, collapsed:!!o.collapsed, itemsCollapsed:!!o.itemsCollapsed, items, listState, done, reward, rewardPick, rewardChance, rewardOdds, rewardText, choiceOptions, choiceChance, choiceReward, extraRewards, extraState, excluded:!!o.excluded, tierSet, claimed:done && effReward!=='none' && !!o.claimed, rewardKind, rewardGrantId:o.rewardGrantId ? String(o.rewardGrantId).slice(0,40) : null};
+  return {id, title, desc:String(o.desc||'').slice(0,3000), toonName, lockRule, category, teamTier, allowPlayerItemRename:!!o.allowPlayerItemRename, type:legacyTypeForModes(modes), modes, requiredCount, icon:sanitizeIcon(o.icon), cardBg:sanitizeChallengeCardBg(o.cardBg), goalDone, target, value, counters, counterRestore, checklistRestore, collapsed:!!o.collapsed, itemsCollapsed:!!o.itemsCollapsed, items, listState, done, reward, rewardPick, rewardChance, rewardOdds, rewardText, choiceOptions, choiceChance, choiceReward, extraRewards, extraState, excluded:!!o.excluded, tierSet, claimed:done && effReward!=='none' && !!o.claimed, rewardKind, rewardGrantId:o.rewardGrantId ? String(o.rewardGrantId).slice(0,40) : null};
 }
 const toMaps = r => ({toons:new Map(Object.entries(r.status.toons)), trinkets:new Map(Object.entries(r.status.trinkets))});
 
@@ -1406,6 +1462,24 @@ function sanitizeMissions(raw, validIds){
   }
   return packs;
 }
+function sanitizePlayerChecklistPrefs(rawPrefs,challenges,rawChallenges){
+  const out={}, saved=rawPrefs && typeof rawPrefs==='object' && !Array.isArray(rawPrefs) ? rawPrefs : {};
+  const rawById=new Map((Array.isArray(rawChallenges)?rawChallenges:[]).filter(c=>c&&typeof c==='object').map(c=>[String(c.id),c]));
+  for(const ch of challenges){
+    const old=rawById.get(ch.id), oldItems=old && (Array.isArray(old.items)?old.items:Array.isArray(old.checklist)?old.checklist:[]);
+    const source=saved[ch.id] && typeof saved[ch.id]==='object' ? saved[ch.id] : {}, bucket={};
+    (ch.items||[]).forEach((item,index)=>{
+      const raw=source[index] && typeof source[index]==='object' ? source[index] : null;
+      const matches=raw && (raw.baseText==null || raw.baseText===item.text);
+      const legacy=oldItems && oldItems[index] && typeof oldItems[index]==='object' ? oldItems[index] : null;
+      const label=matches && typeof raw.label==='string' ? raw.label.trim().slice(0,160) : '';
+      const excluded=matches && typeof raw.excluded==='boolean' ? raw.excluded : !!(legacy && legacy.excluded);
+      if(label || excluded) bucket[index]={baseText:item.text,label,excluded};
+    });
+    if(Object.keys(bucket).length) out[ch.id]=bucket;
+  }
+  return out;
+}
 function normalizeRun(r, fallbackName){
   if (!r || typeof r !== 'object' || Array.isArray(r)) throw new Error('Not a run');
   if (!(r.app==='dandys-world-nuzlocke' || 'status' in r || 'unlocked' in r || 'eliminated' in r || 'notes' in r || 'challenges' in r)) throw new Error('Not a run');
@@ -1427,6 +1501,8 @@ function normalizeRun(r, fallbackName){
   out.challenges = Array.isArray(r.challenges) ? r.challenges.filter(o => o && typeof o==='object' && String(o.title||'').trim()).slice(0,300).map(o => sanitizeChallenge(o, seen)) : [];
   const challengeById = new Map(out.challenges.map(c => [c.id,c]));
   out.missions = sanitizeMissions(r.missions, new Set(out.challenges.map(c => c.id)));
+  out.playerChecklistPrefs = sanitizePlayerChecklistPrefs(r.playerChecklistPrefs,out.challenges,r.challenges);
+  for(const c of out.challenges) for(const item of (c.items||[])) delete item.excluded;
   /* Linked counters take their value from their subgroup's shared counter.
      Reconcile defensively: a linked counter whose challenge is not in a subgroup
      WITH a shared counter materializes with its last synced value and unlinks. */
@@ -1438,7 +1514,7 @@ function normalizeRun(r, fallbackName){
       const sub = locOf.get(c.id);
       if (sub && sub.shared) counter.value = sub.shared.value; else counter.linked = false;
     }
-    for (const c of out.challenges) c.done = computeDone(c);
+    for (const c of out.challenges) c.done = computeDone(c,out.playerChecklistPrefs);
   }
   const migratedSpinKind = g => {
     /* A challenge can hold grants of several kinds at once now (primary +
@@ -1517,7 +1593,7 @@ function normalizeRun(r, fallbackName){
     });
   }
   out.version = 11;
-  out._needsSave = Number(r.version)!==11 || JSON.stringify(out.breakRoomClaims)!==JSON.stringify(r.breakRoomClaims||null) || JSON.stringify(out.status)!==JSON.stringify(r.status||null) || JSON.stringify(out.challenges)!==JSON.stringify(r.challenges||[]) || JSON.stringify(out.spins)!==JSON.stringify(r.spins||[]) || JSON.stringify(out.history)!==JSON.stringify(r.history||[]) || JSON.stringify(out.spinUnlocks)!==JSON.stringify(r.spinUnlocks||null) || JSON.stringify(out.missions)!==JSON.stringify(r.missions||null);
+  out._needsSave = Number(r.version)!==11 || JSON.stringify(out.breakRoomClaims)!==JSON.stringify(r.breakRoomClaims||null) || JSON.stringify(out.status)!==JSON.stringify(r.status||null) || JSON.stringify(out.challenges)!==JSON.stringify(r.challenges||[]) || JSON.stringify(out.spins)!==JSON.stringify(r.spins||[]) || JSON.stringify(out.history)!==JSON.stringify(r.history||[]) || JSON.stringify(out.spinUnlocks)!==JSON.stringify(r.spinUnlocks||null) || JSON.stringify(out.missions)!==JSON.stringify(r.missions||null) || JSON.stringify(out.playerChecklistPrefs)!==JSON.stringify(r.playerChecklistPrefs||{});
   return out;
 }
 
@@ -1568,7 +1644,7 @@ function saveRun(){
 const exportable = () => { saveRun(); return plainRun(); };
 
 /* ---------- UI state ---------- */
-const view = { tab:'challenges', settingsOpen:false, cf:'all', cc:'toon', tf:'all', friendId:null, free:false, choiceChanceOpen:false, missionId:null, missionSubId:null, missionPicker:false, missionRuleId:null, toons:{q:'',f:'all',cat:'all'}, trinkets:{q:'',f:'all',cat:'all'} };
+const view = { tab:'missions', settingsOpen:false, cf:'all', cc:'toon', tf:'all', friendId:null, free:false, choiceChanceOpen:false, missionId:null, missionSubId:null, missionPicker:false, missionFilters:{tier:'all',status:'all',q:'',pinnedOnly:false}, missionRuleId:null, toons:{q:'',f:'all',cat:'all'}, trinkets:{q:'',f:'all',cat:'all'} };
 const cats = k => (DATA.catOrder && DATA.catOrder[k]) || [...new Set(DATA[k].flatMap(i => i.cats))];
 
 function buildSection(kind){
@@ -2368,7 +2444,7 @@ function counterChallengeDone(ch){
   return Array.isArray(ch.counters) && ch.counters.length>0 && ch.counters.every(counter=>counter.value>=counter.target);
 }
 function checklistChallengeDone(ch){
-  const required=(ch.items||[]).filter(item=>!item.excluded);
+  const required=(ch.items||[]).filter((item,index)=>!checklistItemExcluded(ch,index));
   return required.length>0 && required.every(item=>item.done);
 }
 function combinedChallengeDone(ch){ return checklistChallengeDone(ch) && counterChallengeDone(ch); }
@@ -2385,7 +2461,7 @@ async function setDone(ch, done){
         if (hasMode(ch,'checklist')) ch.checklistRestore=oldItems.map((item,index)=>({index,text:item.text,done:!!item.done}));
       }
       if (hasMode(ch,'counter')) ch.counters.forEach(counter=>{ if (!counter.linked) counter.value=Math.max(counter.value,counter.target); });
-      if (hasMode(ch,'checklist')) ch.items.filter(item=>!item.excluded).forEach(item=>item.done=true);
+      if (hasMode(ch,'checklist')) ch.items.forEach((item,index)=>{ if(!checklistItemExcluded(ch,index)) item.done=true; });
     }
     else {
       if (hasMode(ch,'counter')){
@@ -2448,19 +2524,21 @@ async function setValue(ch,index,v){
   if (!accepted){ ch.counters=oldCounters; ch.counterRestore=oldCounterRestore; ch.checklistRestore=oldChecklistRestore; syncLegacyCounterFields(ch); ch.done=was; saveRun(); renderAll(); renderSpinPanel(); }
 }
 async function toggleChecklistItem(ch,index){
-  if (!hasMode(ch,'checklist') || !Number.isInteger(index) || !ch.items[index] || ch.items[index].excluded) return;
+  if (!hasMode(ch,'checklist') || !Number.isInteger(index) || !ch.items[index] || checklistItemExcluded(ch,index)) return;
   const was=ch.done; ch.items[index].done=!ch.items[index].done;
   ch.counterRestore=null; ch.checklistRestore=null; ch.done=computeDone(ch);
   await afterChange(ch,was);
 }
 async function toggleChecklistExcluded(ch,index){
   if (!hasMode(ch,'checklist') || !Number.isInteger(index) || !ch.items[index]) return;
-  const was=ch.done; ch.items[index].excluded=!ch.items[index].excluded;
+  const was=ch.done; setChecklistPreference(ch,index,{excluded:!checklistItemExcluded(ch,index)});
   ch.counterRestore=null; ch.checklistRestore=null; ch.done=computeDone(ch);
   await afterChange(ch,was);
 }
-function checklistItemRow(item, index){
-  return `<div class="checklist-row ${item.excluded?'excluded':''}"><button type="button" class="check-item ${item.done?'checked':''}" data-act="check-item" data-index="${index}" aria-pressed="${item.done}" aria-label="${item.done?'Uncheck':'Check'}: ${esc(item.text)}" ${item.excluded?'disabled':''}><span class="check-square" aria-hidden="true">${item.done?'✓':''}</span><span class="item-label">${esc(item.text)}</span></button><button type="button" class="check-exclude" data-act="exclude-item" data-index="${index}" aria-pressed="${item.excluded}" aria-label="${item.excluded?'Include':'Exclude'}: ${esc(item.text)}">${item.excluded?'Include':'Exclude'}</button></div>`;
+function checklistItemRow(ch,item,index){
+  const excluded=checklistItemExcluded(ch,index), label=checklistItemLabel(ch,index);
+  const rename=ch.allowPlayerItemRename && !isDeveloperMode ? `<button type="button" class="check-rename" data-act="rename-item" data-index="${index}" aria-label="Rename checklist item: ${esc(label)}" title="Rename this item for your run">✎</button>` : '';
+  return `<div class="checklist-row ${excluded?'excluded':''}"><button type="button" class="check-item ${item.done?'checked':''}" data-act="check-item" data-index="${index}" aria-pressed="${item.done}" aria-label="${item.done?'Uncheck':'Check'}: ${esc(label)}" ${excluded?'disabled':''}><span class="check-square" aria-hidden="true">${item.done?'✓':''}</span><span class="item-label">${esc(label)}</span></button>${rename}<button type="button" class="check-exclude" data-act="exclude-item" data-index="${index}" aria-pressed="${excluded}" aria-label="${excluded?'Include':'Exclude'}: ${esc(label)}">${excluded?'Include':'Exclude'}</button></div>`;
 }
 /* Group a challenge's flat items by their `list` tag (first-appearance order),
    one collapsible section per list. Checkboxes keep the FLAT item index. */
@@ -2472,9 +2550,9 @@ function checklistGroupsMarkup(c){
     byName.get(name).entries.push({item, index});
   });
   return groups.map(g => {
-    const req = g.entries.filter(e => !e.item.excluded), doneCount = req.filter(e => e.item.done).length;
+    const req = g.entries.filter(e => !checklistItemExcluded(c,e.index)), doneCount = req.filter(e => e.item.done).length;
     const st = (c.listState || []).find(e => e && e.name === g.name), collapsed = st ? !!st.collapsed : false;
-    return `<div class="checklist-group"><div class="checklist-group-head"><span class="checklist-group-name">${esc(g.name)}</span><span class="checklist-group-count">${doneCount}/${req.length}</span><button type="button" class="ch-collapse" data-act="collapse-list" data-list="${esc(g.name)}" aria-expanded="${!collapsed}" aria-label="${collapsed?'Show':'Hide'} ${esc(g.name)} for ${esc(c.title)}">${collapsed?'Show':'Hide'}</button></div><div class="checklist" ${collapsed?'hidden':''}>${g.entries.map(e => checklistItemRow(e.item, e.index)).join('')}</div></div>`;
+    return `<div class="checklist-group"><div class="checklist-group-head"><span class="checklist-group-name">${esc(g.name)}</span><span class="checklist-group-count">${doneCount}/${req.length}</span><button type="button" class="ch-collapse" data-act="collapse-list" data-list="${esc(g.name)}" aria-expanded="${!collapsed}" aria-label="${collapsed?'Show':'Hide'} ${esc(g.name)} for ${esc(c.title)}">${collapsed?'Show':'Hide'}</button></div><div class="checklist" ${collapsed?'hidden':''}>${g.entries.map(e => checklistItemRow(c,e.item,e.index)).join('')}</div></div>`;
   }).join('');
 }
 /* One challenge card, shared by the Challenges tab and the Missions
@@ -2504,7 +2582,7 @@ function challengeCardMarkup(c, i, listLen, opts){
       }).join('');
       const chooseBtn=(reward==='choice' || CHOICE_REWARD_KINDS.includes(reward)) && c.done && !c.claimed ? `<button type="button" class="btn mint sm" data-act="choose-reward">✨ Choose reward</button>` : '';
       const playerPinned=playerPins.has(c.id);
-      const playerPinBtn=!inMission && !isDeveloperMode ? `<button type="button" class="btn ghost sm ch-player-pin-btn" data-act="toggle-player-pin" data-player-only aria-pressed="${playerPinned}" aria-label="${playerPinned?'Unpin':'Pin'} ${esc(c.title)}">${playerPinned?'Unpin':'Pin'}</button>` : '';
+      const playerPinBtn=!isDeveloperMode ? `<button type="button" class="btn ghost sm ch-player-pin-btn" data-act="toggle-player-pin" data-player-only aria-pressed="${playerPinned}" aria-label="${playerPinned?'Unpin':'Pin'} ${esc(c.title)}">${playerPinned?'Unpin':'Pin'}</button>` : '';
       const excludeBtn=`<button type="button" class="btn ghost sm" data-act="exclude" data-developer-only aria-pressed="${!!c.excluded}">${c.excluded?'Include in totals':'Exclude'}</button>`;
       const unlinkBtn=inMission ? `<button type="button" class="btn ghost sm" data-act="unlink" data-developer-only>Remove from group</button>` : '';
       const lockEditBtn=`<button type="button" class="btn ghost sm" data-act="edit-lock" data-developer-only>${lockRule?'Edit unlock rule':'Add unlock rule'}</button>`;
@@ -2569,7 +2647,7 @@ function renderChallenges(){
   const list=$('#chList'), all=run.challenges, counted=all.filter(c=>!c.excluded), nDone=counted.filter(challengeCountsDone).length;
   $('#chCount').textContent=`${nDone}/${counted.length}`;
   $('#chBar').style.width=(counted.length ? nDone/counted.length*100 : 0)+'%';
-  $('#tabChallenges').textContent=`${nDone}/${counted.length}`;
+  const challengeBadge=$('#tabChallenges'); if(challengeBadge) challengeBadge.textContent=`${nDone}/${counted.length}`;
   for (const category of CHALLENGE_CATEGORIES){
     const group=all.filter(c=>c.category===category && !c.excluded), done=group.filter(challengeCountsDone).length;
     const id=category==='toon' ? '#chToonCount' : category==='trinket' ? '#chTrinketCount' : '#chTeamCount';
@@ -2753,7 +2831,7 @@ function checklistFromText(raw,previous=[]){
   return String(raw).split(/\r?\n/).map(line=>line.trim()).filter(Boolean).map(text=>{
     const match=previous.find(item=>!used.has(item) && item.text.toLocaleLowerCase()===text.toLocaleLowerCase());
     if (match) used.add(match);
-    return {text,done:match ? !!match.done : false,excluded:match ? !!match.excluded : false};
+    return {text,done:match ? !!match.done : false};
   });
 }
 /* Multiple named checklists in the editor: one block per list (name input +
@@ -2828,15 +2906,11 @@ function syncChallengeRewardHint(category=radioVal('chCategory')||'toon', pick=r
 function syncCategoryFields(){
   const _sy=chMbScrollTop();
   const category=radioVal('chCategory')||'toon';
-  $('#teamTierWrap').hidden=false; $('#chRewardWrap').hidden=category==='team'; $('#chToonRow').hidden=category!=='toon';
+  $('#teamTierWrap').hidden=false; $('#chToonRow').hidden=category!=='toon';
   const noneRadio=document.querySelector('input[name="teamTier"][value="none"]');
   if (noneRadio){ noneRadio.disabled=category==='team'; if (noneRadio.parentElement) noneRadio.parentElement.style.display=category==='team' ? 'none' : ''; if (category==='team' && noneRadio.checked) setRadio('teamTier','bronze'); }
   const tier=radioVal('teamTier')||'bronze';
   $('#teamTierHint').textContent=category==='team' ? (TEAM_TIER_HINT[tier]||TEAM_TIER_HINT.bronze) : (tier==='none' ? 'No rarity — the title keeps the default color, and the reward follows the Reward settings.' : `${tier[0].toUpperCase()+tier.slice(1)} rarity — colors this challenge's title to match. It doesn't change the default reward for this tab.`);
-  const kind=category==='trinket' ? 'Trinket' : 'Toon';
-  const spinInput=document.querySelector('input[name="chReward"][value="spin"]');
-  if (spinInput) spinInput.parentElement.querySelector('span').textContent=`${category==='trinket'?'💍':'🎭'} ${kind} spin`;
-  $('#chRewardHint').textContent=category==='team' ? '' : `A completed ${kind} challenge earns a ${kind} spin.`;
   syncChallengeRewardHint(category);
   syncChoiceOptions();
   syncRewardOddsRow();
@@ -2899,7 +2973,7 @@ $('#chOutcomeRows').addEventListener('click',e=>{
 });
 function syncRewardOddsRow(){
   const pick=radioVal('chRewardPick')||'default', category=radioVal('chCategory')||'toon', tier=radioVal('teamTier')||'bronze';
-  const reward=pick==='default' ? (category==='team' ? (TEAM_TIER_REWARD[tier]||'none') : (radioVal('chReward')==='none'?'none':category)) : pick;
+  const reward=pick==='default' ? (category==='team' ? (TEAM_TIER_REWARD[tier]||'none') : category) : pick;
   const row=$('#chRewardOddsRow'); if (row) row.hidden=reward==='none';
 }
 function syncRewardPick(){
@@ -3103,7 +3177,7 @@ function syncMissionLinkState(){
 $('#chMission').addEventListener('change',syncMissionLinkState);
 document.querySelectorAll('input[name="chIconKind"]').forEach(r=>r.addEventListener('change',syncIconRow));
 document.querySelectorAll('input[name="chCategory"],input[name="teamTier"]').forEach(r=>r.addEventListener('change',syncCategoryFields));
-document.querySelectorAll('input[name="chCategory"],input[name="teamTier"],input[name="chReward"]').forEach(r=>r.addEventListener('change',syncRewardOddsRow));
+document.querySelectorAll('input[name="chCategory"],input[name="teamTier"]').forEach(r=>r.addEventListener('change',syncRewardOddsRow));
 let chIconUploadData='';
 (function buildIconSpriteOptions(){
   const sel=$('#chIconSprite'); if (!sel) return;
@@ -3157,7 +3231,7 @@ function openChEditor(ch, missionTarget=null){
   renderChecklistEditor(editorListsFor(ch));
   const counters=ch && Array.isArray(ch.counters) && ch.counters.length ? ch.counters : [{id:uid(),label:'Counter 1',target:10,value:0}];
   renderCounterEditor(counters);
-  setRadio('chReward',ch && ch.reward==='none' ? 'none' : 'spin'); $('#chErr').textContent='';
+  $('#chErr').textContent='';
   setRadio('chRewardPick',ch ? (ch.rewardPick || 'default') : 'default');
   choiceOutcomeDrafts={}; activeChoiceOutcomeKind=null;
   if(ch && ch.choiceReward && CHOICE_REWARD_KINDS.includes(ch.choiceReward.kind)) choiceOutcomeDrafts[ch.choiceReward.kind]=sanitizeChoiceReward(ch.choiceReward,ch.choiceReward.kind);
@@ -3170,7 +3244,7 @@ function openChEditor(ch, missionTarget=null){
   setRadio('chCCMode', editCC.mode);
   renderCCEntries($('#chCCRows'), editCC.entries);
   renderExtraEditor(ch ? (ch.extraRewards || []) : []);
-  $('#chExcluded').checked=ch ? !!ch.excluded : false;
+  $('#chExcluded').checked=ch ? !!ch.excluded : false; $('#chAllowRename').checked=ch ? !!ch.allowPlayerItemRename : false;
   buildMissionOptions();
   const curLoc=ch ? missionLoc(ch.id) : null;
   $('#chMission').value=curLoc ? `${curLoc.pack.id}|${curLoc.sub.id}` : (missionTarget ? `${missionTarget.packId}|${missionTarget.subId}` : '');
@@ -3353,9 +3427,9 @@ $('#chForm').addEventListener('submit',async e=>{
      if (row.querySelector('[data-extra-kind]').value==='custom' && !row.querySelector('[data-extra-text]').value.trim()){ $('#chErr').textContent='Type the text for each custom extra reward, or remove that extra reward.'; row.querySelector('[data-extra-text]').focus(); return; }
   }
   const extraRewards=readExtraEditor();
-  const excluded=$('#chExcluded').checked;
+  const excluded=$('#chExcluded').checked, allowPlayerItemRename=$('#chAllowRename').checked;
   const cardBg=sanitizeChallengeCardBg(radioVal('chCardBg'));
-  const modes=selectedModes(), type=legacyTypeForModes(modes), reward=category==='team' ? TEAM_TIER_REWARD[teamTier] : (radioVal('chReward')==='none' ? 'none' : 'spin');
+  const modes=selectedModes(), type=legacyTypeForModes(modes), reward=category==='team' ? TEAM_TIER_REWARD[teamTier] : ((chEditing && chById(chEditing)?.reward==='none') ? 'none' : 'spin');
   if (!modes.length){ $('#chErr').textContent='Pick at least one progress mode.'; return; }
   let ch=chEditing && chById(chEditing); const isNew=!ch, before=ch ? {...ch} : null;
   const editorLists=readChecklistEditor();
@@ -3393,27 +3467,29 @@ $('#chForm').addEventListener('submit',async e=>{
   else if (iconKind==='upload'){ if (!chIconUploadData){ $('#chErr').textContent='Choose an image for the icon, or choose a different icon option.'; return; } icon={kind:'upload',value:chIconUploadData}; }
   icon=sanitizeIcon(icon);
   if (iconKind!=='none' && !icon){ $('#chErr').textContent='That icon could not be saved — try a different one.'; return; }
-  if (isNew){ ch={id:uid(),title,desc:'',toonName,lockRule:null,category,teamTier,tierSet,type,modes,requiredCount,icon,goalDone:false,target:10,value:0,counters:counterConfigs,counterRestore:null,collapsed:false,itemsCollapsed:false,listState:[],items:[],done:false,reward,rewardPick,rewardChance,rewardOdds,rewardText,choiceOptions,choiceChance,choiceReward,extraRewards,extraState:[],excluded,cardBg,claimed:false,rewardKind:null,rewardGrantId:null,checklistRestore:null}; run.challenges.push(ch); }
+  if (isNew){ ch={id:uid(),title,desc:'',toonName,lockRule:null,category,teamTier,tierSet,allowPlayerItemRename,type,modes,requiredCount,icon,goalDone:false,target:10,value:0,counters:counterConfigs,counterRestore:null,collapsed:false,itemsCollapsed:false,listState:[],items:[],done:false,reward,rewardPick,rewardChance,rewardOdds,rewardText,choiceOptions,choiceChance,choiceReward,extraRewards,extraState:[],excluded,cardBg,claimed:false,rewardKind:null,rewardGrantId:null,checklistRestore:null}; run.challenges.push(ch); }
   const was=ch.done, previousReward=challengeReward(ch), counterConfigChanged=ch.type!==type || JSON.stringify(modesOf(ch))!==JSON.stringify(modes) || (ch.counters||[]).length!==counterConfigs.length || (ch.counters||[]).some((counter,index)=>counter.id!==counterConfigs[index]?.id || counter.target!==counterConfigs[index]?.target);
   const nextItems=modes.includes('checklist') ? checklistItems : ch.items;
-  const checklistConfigChanged=(ch.items||[]).length!==nextItems.length || (ch.items||[]).some((item,index)=>item.text!==nextItems[index]?.text || item.excluded!==nextItems[index]?.excluded || (item.list||'Checklist')!==(nextItems[index]?.list||'Checklist'));
-   Object.assign(ch,{title,desc:$('#chDesc').value.trim().slice(0,3000),toonName,category,teamTier,tierSet,type,modes,requiredCount,icon,counters:counterConfigs,items:nextItems,reward,rewardPick,rewardChance,rewardOdds,rewardText,choiceOptions,choiceChance,choiceReward,extraRewards,cardBg,excluded});
+  const checklistConfigChanged=(ch.items||[]).length!==nextItems.length || (ch.items||[]).some((item,index)=>item.text!==nextItems[index]?.text || (item.list||'Checklist')!==(nextItems[index]?.list||'Checklist'));
+   Object.assign(ch,{title,desc:$('#chDesc').value.trim().slice(0,3000),toonName,category,teamTier,tierSet,allowPlayerItemRename,type,modes,requiredCount,icon,counters:counterConfigs,items:nextItems,reward,rewardPick,rewardChance,rewardOdds,rewardText,choiceOptions,choiceChance,choiceReward,extraRewards,cardBg,excluded});
+   pruneChecklistPreferences(ch.id,nextItems);
   if (modes.includes('checklist') && Array.isArray(ch.listState)){ const listNames=new Set(nextItems.map(item=>item.list||'Checklist')); ch.listState=ch.listState.filter(e=>e && listNames.has(e.name)); }
   if (counterConfigChanged) ch.counterRestore=null;
   if (counterConfigChanged || checklistConfigChanged) ch.checklistRestore=null;
   syncLegacyCounterFields(ch);
   ch.done=computeDone(ch);
   $('#chDlg').close();
+  if(isNew) await applyMembership(ch,selectedMissionTarget());
   const accepted=await afterChange(ch,was,previousReward);
   if (!accepted){
-    if (isNew) run.challenges=run.challenges.filter(x=>x!==ch); else Object.assign(ch,before);
+    if (isNew){ detachFromMissions(ch.id); run.challenges=run.challenges.filter(x=>x!==ch); } else Object.assign(ch,before);
     saveRun(); renderAll(); renderSpinPanel();
     return;
   }
   const liveGrant=ch.rewardGrantId ? run.spins.find(g=>g.id===ch.rewardGrantId) : null;
   if (liveGrant && REVIVAL_CHANCE_KINDS.includes(liveGrant.kind)) liveGrant.pct=rewardChance;
   if (liveGrant && liveGrant.kind==='choicechance') liveGrant.cc=choiceChance;
-  await applyMembership(ch, selectedMissionTarget());
+  if (!isNew) await applyMembership(ch, selectedMissionTarget());
   if (isNew) toast(`Added “${title}”`);
 });
 /* ================= Spin =================
@@ -4104,15 +4180,42 @@ function missionManageActions(kind,id,index,last){
   const drag=pack?`<span class="drag-handle" data-drag-pack title="Drag to reorder" aria-label="Drag to reorder packs">⠿</span>`:`<span class="drag-handle" data-drag-sub title="Drag to reorder" aria-label="Drag to reorder subgroups">⠿</span>`;
   return `<div class="manual-card-actions" data-developer-only>${drag}<button type="button" class="btn ghost sm" data-mact="edit-${kind}" data-${pack?'pid':'sid'}="${esc(id)}">✎ Edit</button><button type="button" class="btn ghost sm" data-mact="del-${kind}" data-${pack?'pid':'sid'}="${esc(id)}">Delete</button><button type="button" class="ibtn" data-mact="${kind}-up" data-${pack?'pid':'sid'}="${esc(id)}" aria-label="Move ${kind} up" ${index===0?'disabled':''}>▲</button><button type="button" class="ibtn" data-mact="${kind}-down" data-${pack?'pid':'sid'}="${esc(id)}" aria-label="Move ${kind} down" ${index===last?'disabled':''}>▼</button></div>`;
 }
+const MISSION_RARITIES=['bronze','silver','gold','iridescent'];
+function missionFilterMatches(ch,skip={}){
+  if(!ch) return false;
+  const f=view.missionFilters || {tier:'all',status:'all',q:'',pinnedOnly:false};
+  if(!skip.status && f.status==='active' && challengeCountsDone(ch)) return false;
+  if(!skip.status && f.status==='completed' && !challengeCountsDone(ch)) return false;
+  if(!skip.tier && f.tier!=='all' && (!(ch.category==='team'||ch.tierSet) || ch.teamTier!==f.tier)) return false;
+  const q=String(f.q||'').trim().toLocaleLowerCase();
+  if(!skip.q && q && !`${ch.title||''} ${ch.desc||''}`.toLocaleLowerCase().includes(q)) return false;
+  if(!skip.pinned && f.pinnedOnly && !playerPins.has(ch.id)) return false;
+  return true;
+}
+function missionFiltersActive(){
+  const f=view.missionFilters||{};
+  return f.tier!=='all'||f.status!=='all'||!!String(f.q||'').trim()||!!f.pinnedOnly;
+}
+function missionFilterBar(){
+  const f=view.missionFilters || (view.missionFilters={tier:'all',status:'all',q:'',pinnedOnly:false});
+  const all=run.challenges.filter(c=>missionFilterMatches(c,{tier:true,status:true})).length;
+  const tierButton=(tier,label,count)=>`<button type="button" data-mission-tier="${tier}" aria-pressed="${f.tier===tier}">${label}<span class="mission-filter-count">${count}</span></button>`;
+  const tiers=tierButton('all','All',all)+MISSION_RARITIES.map(t=>tierButton(t,t[0].toUpperCase()+t.slice(1),run.challenges.filter(c=>missionFilterMatches(c,{tier:true,status:true})&&(c.category==='team'||c.tierSet)&&c.teamTier===t).length)).join('');
+  const statusCount=status=>run.challenges.filter(c=>missionFilterMatches(c,{status:true})&&(status==='all'||(status==='completed'?challengeCountsDone(c):!challengeCountsDone(c)))).length;
+  const statusButton=(status,label)=>`<button type="button" data-mission-status="${status}" aria-pressed="${f.status===status}">${label}<span class="mission-filter-count">${statusCount(status)}</span></button>`;
+  return `<section class="mission-filter-panel" aria-label="Mission challenge filters"><div class="mission-filter-heading">Filters <small>available at pack home, in every group, and inside every subgroup</small></div><div class="mission-filter-row"><span class="mission-filter-label">Rarity</span><div class="mission-tier-buttons" role="group" aria-label="Filter by rarity">${tiers}</div></div><div class="mission-filter-row"><div class="mission-status-buttons" role="group" aria-label="Filter by completion">${statusButton('all','All')}${statusButton('active','Active')}${statusButton('completed','Completed')}</div><label class="mission-search"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg><input type="search" data-mission-search placeholder="Search mission packs…" aria-label="Search mission pack challenges" autocomplete="off" value="${esc(f.q||'')}"></label><button type="button" class="btn ghost sm mission-filter-pinned" data-mission-pinned aria-pressed="${!!f.pinnedOnly}">📌 Pinned only</button></div><p class="mission-filter-foot">Filters stay in place as you browse; pins and checklist changes belong to this run.</p></section>`;
+}
+function matchingMissionIds(ids){return (ids||[]).filter(id=>{const ch=chById(id);return ch&&missionFilterMatches(ch);});}
 function missionPackCardMarkup(p,i,last){
-  let done=0,total=0; for (const sub of p.subs){ const pr=missionProgress(sub.challengeIds); done+=pr.done; total+=pr.total; }
-  const index=String(i+1).padStart(2,'0'), groups=p.subs.length;
-  return `<div class="fr-card" data-pid="${esc(p.id)}"><button type="button" class="manual-card-open" data-mact="open-pack" data-pid="${esc(p.id)}"><span class="manual-index-number">${index}</span><span class="manual-card-copy"><strong>${packIconMarkup(p)}${esc(p.title)}</strong><small>${groups} subgroup${groups===1?'':'s'} · ${total} linked challenge${total===1?'':'s'}</small><span class="manual-card-progress">${done} / ${total} complete</span></span>${missionCompleteMark({done,total})}<span class="manual-card-arrow" aria-hidden="true">›</span></button>${missionManageActions('pack',p.id,i,last)}</div>`;
+  const visibleSubs=p.subs.map(sub=>({sub,ids:matchingMissionIds(sub.challengeIds)})).filter(entry=>entry.ids.length||!missionFiltersActive());
+  const ids=visibleSubs.flatMap(entry=>entry.ids), pr=missionProgress(ids), groups=missionFiltersActive()?visibleSubs.length:p.subs.length;
+  const index=String(i+1).padStart(2,'0');
+  return `<div class="fr-card" data-pid="${esc(p.id)}"><button type="button" class="manual-card-open" data-mact="open-pack" data-pid="${esc(p.id)}"><span class="manual-index-number">${index}</span><span class="manual-card-copy"><strong>${packIconMarkup(p)}${esc(p.title)}</strong><small>${groups} subgroup${groups===1?'':'s'} · ${pr.total} matching challenge${pr.total===1?'':'s'}</small><span class="manual-card-progress">${pr.done} / ${pr.total} complete</span></span>${missionCompleteMark(pr)}<span class="manual-card-arrow" aria-hidden="true">›</span></button>${missionManageActions('pack',p.id,i,last)}</div>`;
 }
 function missionSubCardMarkup(sub,i,last){
-  const pr=missionProgress(sub.challengeIds), index=String(i+1).padStart(2,'0');
+  const ids=matchingMissionIds(sub.challengeIds), pr=missionProgress(ids), index=String(i+1).padStart(2,'0');
   const safeBg=sanitizeChallengeCardBg(sub.cardBg), bg=CHALLENGE_CARD_BG_BY_ID[safeBg], bgStyle=bg?` style="--ch-surface:${bg.surface};${bg.dark?'--ch-card-ink:#fff;--ch-desc-ink:#f4eef8;':''}"`:'';
-  return `<div class="fr-card${safeBg!=='default'?' subgroup-colored':''}" data-card-bg="${safeBg}" data-sid="${esc(sub.id)}"${bgStyle}><button type="button" class="manual-card-open" data-mact="open-sub" data-sid="${esc(sub.id)}"><span class="manual-index-number">${index}</span><span class="manual-card-copy"><strong>${entityIconMarkup(sub)}${esc(sub.title)}</strong><small>${sub.shared?`Shared counter · ${esc(sub.shared.label)} (${sub.shared.value})`:`${pr.total} linked challenge${pr.total===1?'':'s'}`}</small><span class="manual-card-progress">${pr.done} / ${pr.total} complete</span></span>${missionCompleteMark(pr)}<span class="manual-card-arrow" aria-hidden="true">›</span></button>${missionManageActions('sub',sub.id,i,last)}</div>`;
+  return `<div class="fr-card${safeBg!=='default'?' subgroup-colored':''}" data-card-bg="${safeBg}" data-sid="${esc(sub.id)}"${bgStyle}><button type="button" class="manual-card-open" data-mact="open-sub" data-sid="${esc(sub.id)}"><span class="manual-index-number">${index}</span><span class="manual-card-copy"><strong>${entityIconMarkup(sub)}${esc(sub.title)}</strong><small>${sub.shared?`Shared counter · ${esc(sub.shared.label)} (${sub.shared.value})`:`${pr.total} matching challenge${pr.total===1?'':'s'}`}</small><span class="manual-card-progress">${pr.done} / ${pr.total} complete</span></span>${missionCompleteMark(pr)}<span class="manual-card-arrow" aria-hidden="true">›</span></button>${missionManageActions('sub',sub.id,i,last)}</div>`;
 }
 function lockPathMarkup(challenge,target){
   const locked=isChallengeLocked(challenge), selected=challenge.id===target.id;
@@ -4178,26 +4281,29 @@ function renderMissions(){
   const badge=$('#tabMissions');
   if (badge){ const t=missionTotals(); badge.textContent=`${t.done}/${t.total}`; }
   const root=$('#missionRoot'); if (!root) return;
-  const packs=run.missions||[];
+  const packs=run.missions||[], modeLabel=isDeveloperMode?'DEVELOPER VIEW':'PLAYER VIEW';
   if (view.missionRuleId){ const target=chById(view.missionRuleId); if (target){ renderMissionRuleEditor(root,target); return; } view.missionRuleId=null; lockEditingId=null; lockDraft=null; lockOriginal=null; }
   let pack=view.missionId?missionPackById(view.missionId):null;
   if (view.missionId&&!pack){ view.missionId=null; view.missionSubId=null; view.missionPicker=false; }
   let sub=null;
   if (pack&&view.missionSubId){ sub=pack.subs.find(x=>x.id===view.missionSubId)||null; if(!sub){ view.missionSubId=null; view.missionPicker=false; } }
   if (!pack){
-    root.innerHTML=`${missionHeader('MISSION PACKS · FIELD MANUAL','Choose your next chapter','Select a mission-pack rectangle to browse its subgroups. Linked challenges stay together as one connected chain.',`${run.name} · ${packs.length} pack${packs.length===1?'':'s'}`)}<div class="manual-toolbar"><button type="button" class="btn mint" data-mact="new-pack" data-developer-only>＋ New mission pack</button></div>`+
-      (packs.length?`<div id="missionPacks">${packs.map((p,i)=>missionPackCardMarkup(p,i,packs.length-1)).join('')}</div>`:`<div class="ch-empty"><span class="big">🗺</span>No mission packs yet.<br>Create one to group related challenges — like a “Survive Floors” series — across rarities.</div>`);
+    const visiblePacks=packs.filter(p=>!missionFiltersActive()||p.subs.some(s=>matchingMissionIds(s.challengeIds).length));
+    root.innerHTML=`${missionHeader(`MISSION PACKS · ${modeLabel}`,'Your challenge path','Browse mission packs and subgroups with your own progress, filters, and pins.',`${run.name} · ${packs.length} pack${packs.length===1?'':'s'}`)}${missionFilterBar()}<div class="manual-toolbar"><strong>YOUR MISSION PACKS</strong><span class="howto">Choose a group · filters stay in place as you browse</span><button type="button" class="btn mint" data-mact="new-pack" data-developer-only>＋ New mission pack</button></div>`+
+      (packs.length?visiblePacks.length?`<div id="missionPacks">${visiblePacks.map((p,i)=>missionPackCardMarkup(p,i,visiblePacks.length-1)).join('')}</div>`:`<div class="ch-empty" role="status">No mission packs match these filters.<br><button type="button" class="btn ghost sm" data-mission-clear>Clear filters</button></div>`:`<div class="ch-empty"><span class="big">🗺</span>No mission packs yet.<br>Create one to group related challenges — like a “Survive Floors” series — across rarities.</div>`);
     return;
   }
   if (!sub){
-    root.innerHTML=`${missionHeader(`MISSION PACKS · ${pack.title}`,pack.title,'Choose a subgroup rectangle to open its linked challenge path.',`${pack.subs.length} subgroup${pack.subs.length===1?'':'s'}`)}<div class="manual-toolbar"><button type="button" class="btn ghost" data-mact="back">← Back to field manual</button><button type="button" class="btn mint" data-mact="new-sub" data-developer-only>＋ New subgroup</button></div>`+
-      (pack.subs.length?`<div id="missionSubs">${pack.subs.map((item,i)=>missionSubCardMarkup(item,i,pack.subs.length-1)).join('')}</div>`:`<div class="ch-empty">No subgroups in this pack yet. Add one to start grouping challenges.</div>`);
+    const visibleSubs=pack.subs.filter(item=>!missionFiltersActive()||matchingMissionIds(item.challengeIds).length);
+    root.innerHTML=`${missionHeader(`MISSION PACKS · ${pack.title} · ${modeLabel}`,pack.title,'Choose a subgroup to open its linked challenge path.',`${pack.subs.length} subgroup${pack.subs.length===1?'':'s'}`)}${missionFilterBar()}<div class="manual-toolbar"><button type="button" class="btn ghost" data-mact="back">← Back to field manual</button><strong>SUBGROUPS</strong><button type="button" class="btn mint" data-mact="new-sub" data-developer-only>＋ New subgroup</button></div>`+
+      (pack.subs.length?visibleSubs.length?`<div id="missionSubs">${visibleSubs.map((item,i)=>missionSubCardMarkup(item,i,visibleSubs.length-1)).join('')}</div>`:`<div class="ch-empty" role="status">No subgroups in this group match these filters.<br><button type="button" class="btn ghost sm" data-mission-clear>Clear filters</button></div>`:`<div class="ch-empty">No subgroups in this pack yet. Add one to start grouping challenges.</div>`);
     return;
   }
-  const pr=missionProgress(sub.challengeIds), members=sub.challengeIds.map(chById).filter(Boolean);
+  const allMembers=sub.challengeIds.map(chById).filter(Boolean), members=sortPinnedFirst(allMembers.filter(c=>missionFilterMatches(c)));
+  const pr=missionProgress(members.map(c=>c.id));
   const unaffiliated=run.challenges.filter(c=>!missionLoc(c.id));
   const picker=view.missionPicker?`<div class="mission-picker">${unaffiliated.length?unaffiliated.map(c=>`<button type="button" class="btn ghost sm mission-pick" data-mact="pick-ch" data-developer-only data-cid="${esc(c.id)}">${esc(c.title)}</button>`).join(''):'<p class="ch-help">Every challenge is already in a subgroup.</p>'}</div>`:'';
-  root.innerHTML=`${missionHeader(`MISSION PACKS · ${pack.title} · ${sub.title}`,'Challenge path & lock rules','Challenges in a subgroup stay in one connected chain. Add individual unlock rules from each challenge card.',`${pr.done} / ${pr.total} complete`)}<div class="manual-toolbar"><button type="button" class="btn ghost" data-mact="back">← Back to ${esc(pack.title)}</button><button type="button" class="btn ghost sm" data-mact="edit-sub" data-developer-only>Edit subgroup</button><button type="button" class="btn mint" data-mact="add-new-ch" data-developer-only>＋ New challenge</button><button type="button" class="btn sky" data-mact="add-existing" data-developer-only aria-expanded="${!!view.missionPicker}">＋ Add existing challenge</button></div>${picker}<div id="missionCards" class="ch-list">${members.length?members.map((c,i)=>challengeCardMarkup(c,i,members.length,{mission:true})).join(''):'<div class="ch-empty">No challenges in this subgroup yet. Add a new one, or bring in an existing challenge.</div>'}</div>`;
+  root.innerHTML=`${missionHeader(`MISSION PACKS · ${pack.title} · ${sub.title} · ${modeLabel}`,'Challenge path & lock rules','Checklist labels, exclusions, progress, and pins stay personal to this run.',`${pr.done} / ${pr.total} shown · ${allMembers.length} total`)}${missionFilterBar()}<div class="manual-toolbar"><button type="button" class="btn ghost" data-mact="back">← Back to ${esc(pack.title)}</button><button type="button" class="btn ghost sm" data-mact="edit-sub" data-developer-only>Edit subgroup</button><button type="button" class="btn mint" data-mact="add-new-ch" data-developer-only>＋ New challenge</button><button type="button" class="btn sky" data-mact="add-existing" data-developer-only aria-expanded="${!!view.missionPicker}">＋ Add existing challenge</button></div>${picker}<div id="missionCards" class="ch-list">${members.length?members.map((c,i)=>challengeCardMarkup(c,i,members.length,{mission:true})).join(''):allMembers.length?`<div class="ch-empty" role="status">No challenges in this subgroup match these filters.<br><button type="button" class="btn ghost sm" data-mission-clear>Clear filters</button></div>`:'<div class="ch-empty">No challenges in this subgroup yet. Add a challenge or link an existing one.</div>'}</div>`;
 }
 /* Card actions inside the subgroup view: same behavior as the Challenges tab,
    except reorder edits the subgroup's order and there is a Remove-from-group. */
@@ -4205,6 +4311,19 @@ async function missionCardAction(b, sub){
   const act = b.dataset.act;
   const card = b.closest('.ch'); if (!card) return;
   const ch = chById(card.dataset.id); if (!ch) return;
+  if (act==='toggle-player-pin'){
+    if(isDeveloperMode)return;
+    if(playerPins.has(ch.id))playerPins.delete(ch.id);else playerPins.add(ch.id);
+    savePlayerPins();renderMissions();return;
+  }
+  if (act==='rename-item'){
+    const index=Number(b.dataset.index), item=ch.items && ch.items[index];
+    if(!ch.allowPlayerItemRename || isDeveloperMode || !item)return;
+    const current=checklistItemLabel(ch,index);
+    const value=await ask({title:'Rename checklist item',msg:'This label is personal to your run. Leave it blank to use the shared item name.',input:current,ok:'Save label'});
+    if(value===null)return;
+    setChecklistPreference(ch,index,{label:String(value).trim().slice(0,160)});saveRun();renderAll();return;
+  }
   if (act==='edit-lock'){ beginLockEditor(ch.id); return; }
   if (isChallengeLocked(ch) && ch.lockRule && ch.lockRule.actionsDisabled) return;
   if (act === 'collapse'){ ch.collapsed = !ch.collapsed; saveRun(); renderMissions(); return; }
@@ -4240,6 +4359,20 @@ async function missionCardAction(b, sub){
   }
   if (act === 'add') return;
 }
+$('#missionRoot').addEventListener('click',e=>{
+  const tier=e.target.closest('[data-mission-tier]'), status=e.target.closest('[data-mission-status]'), pinned=e.target.closest('[data-mission-pinned]'), clear=e.target.closest('[data-mission-clear]');
+  if(tier){view.missionFilters.tier=tier.dataset.missionTier;renderMissions();return;}
+  if(status){view.missionFilters.status=status.dataset.missionStatus;renderMissions();return;}
+  if(pinned){view.missionFilters.pinnedOnly=!view.missionFilters.pinnedOnly;renderMissions();return;}
+  if(clear){view.missionFilters={tier:'all',status:'all',q:'',pinnedOnly:false};renderMissions();return;}
+});
+$('#missionRoot').addEventListener('input',e=>{
+  const input=e.target.closest('[data-mission-search]'); if(!input)return;
+  view.missionFilters.q=input.value;
+  const a=input.selectionStart,b=input.selectionEnd;
+  renderMissions();
+  const next=$('#missionRoot [data-mission-search]'); if(next){next.focus({preventScroll:true});try{next.setSelectionRange(a,b);}catch{}}
+});
 $('#missionRoot').addEventListener('click', async e => {
   const b = e.target.closest('[data-mact],[data-act]'); if (!b) return;
   const pack = view.missionId ? missionPackById(view.missionId) : null;
