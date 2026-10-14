@@ -1600,13 +1600,13 @@ function normalizeRun(r, fallbackName){
 let index, run;
 let playerPins = new Set();
 let lockStateCache=null, lockStateRun=null;
-function loadIndex(){
+function loadIndex(persist=true){
   try { index = JSON.parse(store.get(LS_INDEX)); } catch { index = null; }
   if (!index || !Array.isArray(index.runs)) index = {runs:[], active:null};
   index.runs = index.runs.filter(r => store.get(LS_RUN(r.id)));
   if (!index.runs.length){ const id=uid(); index.runs.push({id,name:'My Nuzlocke'}); store.set(LS_RUN(id), JSON.stringify(freshRun('My Nuzlocke'))); }
   if (!index.runs.some(r=>r.id===index.active)) index.active = index.runs[0].id;
-  saveIndex();
+  if (persist) saveIndex();
 }
 const saveIndex = () => store.set(LS_INDEX, JSON.stringify(index));
 function loadPlayerPins(id){
@@ -5025,7 +5025,7 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () =>
   view.tab=t.dataset.tab; view.settingsOpen=false; showActiveScreen();
 }));
 /* sync across tabs/windows */
-window.addEventListener('storage', e => { if (e.key===LS_UI_PREFS){ uiPrefs=readUiPrefs(); applyUiPrefs(); renderSettings(); return; } if (e.key?.startsWith('dwNuzlocke:playerPins:')) { if(e.key===LS_PLAYER_PINS(index.active)){ loadPlayerPins(index.active); if(!isDeveloperMode) syncVisiblePlayerPinControls(); } return; } if (e.key && e.key.startsWith('dwNuzlocke:')) { loadIndex(); loadRun(index.active); loadFriends(); renderAll(); } });
+window.addEventListener('storage', e => { if (e.key===LS_UI_PREFS){ uiPrefs=readUiPrefs(); applyUiPrefs(); renderSettings(); return; } if (e.key?.startsWith('dwNuzlocke:playerPins:')) { if(e.key===LS_PLAYER_PINS(index.active)){ loadPlayerPins(index.active); if(!isDeveloperMode) syncVisiblePlayerPinControls(); } return; } if (e.key && e.key.startsWith('dwNuzlocke:')) { loadIndex(false); loadRun(index.active); loadFriends(); renderAll(); } });
 
 KINDS.forEach(buildSection);
 loadIndex(); loadRun(index.active); renderAll(); renderSpinPanel(); renderSettings(); showActiveScreen();
