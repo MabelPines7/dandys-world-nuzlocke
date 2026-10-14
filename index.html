@@ -660,6 +660,8 @@ body[data-page-theme="light"]{background:#eee9f1;background-attachment:initial}
 .manual-card-copy strong{display:flex;align-items:center;gap:3px;font-family:var(--fh);font-size:17px;font-weight:400;line-height:1.1;color:var(--ink)}
 .manual-card-copy small{font-size:12px;font-weight:600;color:#5d4b6e;line-height:1.25}
 .manual-card-progress{justify-self:start;padding:2px 8px;border-radius:999px;background:var(--ink);color:var(--yellow);font-size:11px;font-weight:900}
+.manual-card-complete{display:grid;place-items:center;width:28px;height:28px;flex:none;color:#2fae72}
+.manual-card-complete svg{display:block;width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
 .manual-card-arrow{color:#765a86;font-size:26px;font-weight:900;line-height:1}
 .manual-card-actions{display:flex;align-items:center;justify-content:flex-end;gap:5px;flex-wrap:wrap}
 .manual-card-actions .drag-handle{padding:3px 5px}
@@ -2017,6 +2019,11 @@ function missionProgress(ids){
   let done = 0, total = 0;
   for (const id of ids){ const c = chById(id);     if (!c || c.excluded) continue; total++; if (challengeCountsDone(c)) done++; }
   return {done, total};
+}
+function missionCompleteMark(progress){
+  return progress && progress.total > 0 && progress.done === progress.total
+    ? '<span class="manual-card-complete" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="m4.5 12.5 5 5L20 6.5"/></svg></span>'
+    : '';
 }
 function rollRewardDrop(pct){ const odds=clampInt(pct,0,100,100); return odds>=100 || (odds>0 && Math.random()*100<odds); }
 function grantFor(ch, kind){
@@ -4100,12 +4107,12 @@ function missionManageActions(kind,id,index,last){
 function missionPackCardMarkup(p,i,last){
   let done=0,total=0; for (const sub of p.subs){ const pr=missionProgress(sub.challengeIds); done+=pr.done; total+=pr.total; }
   const index=String(i+1).padStart(2,'0'), groups=p.subs.length;
-  return `<div class="fr-card" data-pid="${esc(p.id)}"><button type="button" class="manual-card-open" data-mact="open-pack" data-pid="${esc(p.id)}"><span class="manual-index-number">${index}</span><span class="manual-card-copy"><strong>${packIconMarkup(p)}${esc(p.title)}</strong><small>${groups} subgroup${groups===1?'':'s'} · ${total} linked challenge${total===1?'':'s'}</small><span class="manual-card-progress">${done} / ${total} complete</span></span><span class="manual-card-arrow" aria-hidden="true">›</span></button>${missionManageActions('pack',p.id,i,last)}</div>`;
+  return `<div class="fr-card" data-pid="${esc(p.id)}"><button type="button" class="manual-card-open" data-mact="open-pack" data-pid="${esc(p.id)}"><span class="manual-index-number">${index}</span><span class="manual-card-copy"><strong>${packIconMarkup(p)}${esc(p.title)}</strong><small>${groups} subgroup${groups===1?'':'s'} · ${total} linked challenge${total===1?'':'s'}</small><span class="manual-card-progress">${done} / ${total} complete</span></span>${missionCompleteMark({done,total})}<span class="manual-card-arrow" aria-hidden="true">›</span></button>${missionManageActions('pack',p.id,i,last)}</div>`;
 }
 function missionSubCardMarkup(sub,i,last){
   const pr=missionProgress(sub.challengeIds), index=String(i+1).padStart(2,'0');
   const safeBg=sanitizeChallengeCardBg(sub.cardBg), bg=CHALLENGE_CARD_BG_BY_ID[safeBg], bgStyle=bg?` style="--ch-surface:${bg.surface};${bg.dark?'--ch-card-ink:#fff;--ch-desc-ink:#f4eef8;':''}"`:'';
-  return `<div class="fr-card${safeBg!=='default'?' subgroup-colored':''}" data-card-bg="${safeBg}" data-sid="${esc(sub.id)}"${bgStyle}><button type="button" class="manual-card-open" data-mact="open-sub" data-sid="${esc(sub.id)}"><span class="manual-index-number">${index}</span><span class="manual-card-copy"><strong>${entityIconMarkup(sub)}${esc(sub.title)}</strong><small>${sub.shared?`Shared counter · ${esc(sub.shared.label)} (${sub.shared.value})`:`${pr.total} linked challenge${pr.total===1?'':'s'}`}</small><span class="manual-card-progress">${pr.done} / ${pr.total} complete</span></span><span class="manual-card-arrow" aria-hidden="true">›</span></button>${missionManageActions('sub',sub.id,i,last)}</div>`;
+  return `<div class="fr-card${safeBg!=='default'?' subgroup-colored':''}" data-card-bg="${safeBg}" data-sid="${esc(sub.id)}"${bgStyle}><button type="button" class="manual-card-open" data-mact="open-sub" data-sid="${esc(sub.id)}"><span class="manual-index-number">${index}</span><span class="manual-card-copy"><strong>${entityIconMarkup(sub)}${esc(sub.title)}</strong><small>${sub.shared?`Shared counter · ${esc(sub.shared.label)} (${sub.shared.value})`:`${pr.total} linked challenge${pr.total===1?'':'s'}`}</small><span class="manual-card-progress">${pr.done} / ${pr.total} complete</span></span>${missionCompleteMark(pr)}<span class="manual-card-arrow" aria-hidden="true">›</span></button>${missionManageActions('sub',sub.id,i,last)}</div>`;
 }
 function lockPathMarkup(challenge,target){
   const locked=isChallengeLocked(challenge), selected=challenge.id===target.id;
