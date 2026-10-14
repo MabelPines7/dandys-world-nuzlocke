@@ -1385,10 +1385,10 @@ function sanitizeMissions(raw, validIds){
   const packs = [], used = new Set(), seenIds = new Set();
   const freshId = (v) => { let id = String(v || uid()).slice(0,40); while (seenIds.has(id)) id = uid(); seenIds.add(id); return id; };
   if (!Array.isArray(raw)) return packs;
-  for (const p of raw.slice(0,30)){
+  for (const p of raw){
     if (!p || typeof p !== 'object') continue;
     const pack = {id:freshId(p.id), title:String(p.title || 'Mission pack').trim().slice(0,60) || 'Mission pack', icon:sanitizeIcon(p.icon), subs:[]};
-    const rawSubs = Array.isArray(p.subs) ? p.subs.slice(0,30) : [];
+    const rawSubs = Array.isArray(p.subs) ? p.subs : [];
     for (const s of rawSubs){
       if (!s || typeof s !== 'object') continue;
       const sub = {id:freshId(s.id), title:String(s.title || 'Subgroup').trim().slice(0,60) || 'Subgroup', icon:sanitizeIcon(s.icon), cardBg:sanitizeChallengeCardBg(s.cardBg), shared:null, challengeIds:[]};
