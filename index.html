@@ -314,10 +314,10 @@ button.cc-tile:hover .cc-frame{border-color:#ffb703}
 .tile.fail{background:#574b66}
 .tile .tile-verdict{font-size:20px;font-weight:900;color:#fff;letter-spacing:.5px}
 .ch .meta-row{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-top:6px}
-.rew{font-size:12px;font-weight:800;border:2px solid var(--ink);border-radius:999px;padding:1px 8px;background:var(--yellow);text-transform:uppercase;letter-spacing:.3px}
+.rew{font-size:12px;font-weight:800;color:#000;border:2px solid var(--ink);border-radius:999px;padding:1px 8px;background:var(--yellow);text-transform:uppercase;letter-spacing:.3px}
 .rew.claimed{background:#c9f2df}
 .small-note{font-size:12px;margin:8px 0 0;color:#bfaed4}
-.rew.none{background:#e6dcef;color:#5d4b6e}
+.rew.none{background:#e6dcef;color:#000}
 .counter{display:flex;align-items:center;gap:8px;margin-top:8px}
 .counter .cbtn{width:40px;height:40px;border-radius:12px;border:3px solid var(--ink);background:var(--sky);font-size:22px;font-weight:900;cursor:pointer;box-shadow:2px 2px 0 var(--ink);padding:0;color:var(--ink);line-height:1}
 .counter .cbtn:active{transform:translate(2px,2px);box-shadow:none}
@@ -660,6 +660,8 @@ body[data-page-theme="light"]{background:#eee9f1;background-attachment:initial}
 .manual-card-copy strong{display:flex;align-items:center;gap:3px;font-family:var(--fh);font-size:17px;font-weight:400;line-height:1.1;color:var(--ink)}
 .manual-card-copy small{font-size:12px;font-weight:600;color:#5d4b6e;line-height:1.25}
 .manual-card-progress{justify-self:start;padding:2px 8px;border-radius:999px;background:var(--ink);color:var(--yellow);font-size:11px;font-weight:900}
+/* Progress-pill text stays white against its dark fill on every card surface. */
+.manual-card-progress,.fr-card[data-card-bg]:not([data-card-bg="default"]) .manual-card-progress{color:#fff}
 .manual-card-complete{display:grid;place-items:center;width:28px;height:28px;flex:none;color:#2fae72}
 .manual-card-complete svg{display:block;width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
 .manual-card-arrow{color:#765a86;font-size:26px;font-weight:900;line-height:1}
