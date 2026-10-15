@@ -533,7 +533,12 @@ button.cc-tile:hover .cc-frame{border-color:#ffb703}
 .ch[data-card-bg="black"] .t.tier-bronze,.ch[data-card-bg="black"] .t.tier-silver,.ch[data-card-bg="black"] .t.tier-gold,.ch[data-card-bg="black"] .t.tier-iridescent,.ch[data-card-bg="black"].done .t{color:#fff}
 #chDlg{width:min(1160px,calc(100vw - 24px))}
 #chDlg .ch-bg-editor{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(310px,.9fr);gap:14px;align-items:start}
-#chDlg .ch-bg-picker{margin:14px 0;padding:10px 12px;border:2px solid #c9bdd4;border-radius:16px;background:#fff9fc}
+#packDlg{max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px)}
+#packDlg form{display:flex;flex-direction:column;min-height:0;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px)}
+#packDlg .mh,#packDlg .mf{flex:none}
+#packDlg .mb{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+#chDlg .ch-bg-picker,#packDlg .ch-bg-picker{margin:14px 0;padding:10px 12px;border:2px solid #c9bdd4;border-radius:16px;background:#fff9fc}
+#packDlg .ch-bg-grid.solid{grid-template-columns:repeat(5,minmax(0,1fr))}
 .sub-bg-picker{margin:14px 0;padding:10px 12px;border:2px solid #c9bdd4;border-radius:16px;background:#fff9fc}
 .ch-bg-picker legend{padding:0}
 .ch-bg-picker .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
@@ -574,7 +579,7 @@ button.cc-tile:hover .cc-frame{border-color:#ffb703}
 .ch-bg-scope{margin:8px 0 0;padding-left:8px;border-left:2px solid #b6a7bd;color:#5d4b6e;font-size:10px;line-height:1.3}
 .ch-bg-default-radio{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 @media(max-width:820px){#chDlg .ch-bg-editor{grid-template-columns:minmax(0,1fr)}.ch-bg-grid.solid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(max-width:560px){.ch-bg-grid.solid{grid-template-columns:repeat(3,minmax(0,1fr))}.ch-bg-grid.finish{grid-template-columns:repeat(2,minmax(0,1fr))}.ch-bg-grid.gradient{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.ch-bg-grid.solid{grid-template-columns:repeat(3,minmax(0,1fr))}.ch-bg-grid.finish{grid-template-columns:repeat(2,minmax(0,1fr))}.ch-bg-grid.gradient{grid-template-columns:repeat(2,minmax(0,1fr))}#packDlg .ch-bg-grid.solid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .ch-help{margin:7px 0 0;color:#5d4b6e;font-size:13px;line-height:1.35;}
 .revival-dlg{width:min(460px,calc(100vw - 28px));}
 .revival-dlg .mb p{line-height:1.4;}
@@ -629,6 +634,14 @@ body[data-page-theme="light"]{background:#eee9f1;background-attachment:initial}
 .settings-kicker{display:inline-flex;margin-left:8px;vertical-align:middle;padding:3px 9px;border-radius:999px;background:var(--ink);color:var(--mint);font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.4px}
 .settings-help{font-size:12px;font-weight:600;color:#d9c8ee;line-height:1.4;margin:5px 0 0}
 .settings-controls{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.settings-audio-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 0;border-top:1px solid #5b456f}
+.settings-audio-copy{flex:1 1 230px;min-width:190px}
+.settings-audio-controls{flex:0 1 auto;gap:9px}
+.settings-volume-button{min-width:76px;white-space:nowrap}
+.settings-volume{width:min(190px,19vw);min-width:135px;accent-color:var(--yellow);cursor:pointer}
+.settings-volume:focus-visible{outline:3px solid #8fd3ff;outline-offset:3px;border-radius:999px}
+.settings-volume-value{min-width:42px;text-align:right;color:#fff4fb;font-size:13px;font-weight:900}
+@media(max-width:760px){.settings-audio-row{align-items:flex-start;flex-direction:column;gap:8px}.settings-audio-copy{flex-basis:auto}.settings-audio-controls{justify-content:flex-start;width:100%}.settings-volume{width:min(220px,42vw);min-width:120px}}
 .settings-choice{min-width:76px;justify-content:center;background:#fff4fb}
 .settings-choice[aria-pressed="true"]{outline:3px solid var(--yellow);outline-offset:1px}
 .settings-link{border:0;background:none;padding:5px 2px;color:#e2d2f7;text-decoration:underline;text-underline-offset:3px;font:700 12px var(--fb);cursor:pointer}
@@ -939,6 +952,14 @@ body[data-page-theme="light"]{background:#eee9f1;background-attachment:initial}
         <div class="settings-controls" id="themeControls" role="group" aria-label="Page background theme"><button type="button" class="btn settings-choice" data-theme-choice="light" aria-pressed="false">Light</button><button type="button" class="btn settings-choice" data-theme-choice="default" aria-pressed="true">Dark</button></div>
       </div>
     </section>
+    <section class="settings-box" aria-labelledby="settingsAudioTitle">
+      <h3 id="settingsAudioTitle">AUDIO</h3>
+      <p class="settings-help">Each track has its own mute and volume control. Preferences stay on this device and are separate from runs and exports.</p>
+      <div class="settings-audio-row" role="group" aria-labelledby="clickSfxTitle"><div class="settings-audio-copy"><strong class="settings-label" id="clickSfxTitle">Button click</strong><p class="settings-help">Player-only button click sound.</p></div><div class="settings-controls settings-audio-controls"><button type="button" class="btn settings-choice" id="clickSfxMute" aria-pressed="false" aria-label="Mute button click sound">Mute</button><button type="button" class="btn settings-choice settings-volume-button" id="clickSfxVolumeButton">Volume</button><input class="settings-volume" id="clickSfxVolume" type="range" min="0" max="100" step="1" value="100" aria-label="Button click sound volume"><output class="settings-volume-value" id="clickSfxVolumeValue" for="clickSfxVolume">100%</output></div></div>
+      <div class="settings-audio-row" role="group" aria-labelledby="spinSfxTitle"><div class="settings-audio-copy"><strong class="settings-label" id="spinSfxTitle">Spin sound</strong><p class="settings-help">Player-only; the reel animation matches the 5.352-second track.</p></div><div class="settings-controls settings-audio-controls"><button type="button" class="btn settings-choice" id="spinSfxMute" aria-pressed="false" aria-label="Mute spin sound">Mute</button><button type="button" class="btn settings-choice settings-volume-button" id="spinSfxVolumeButton">Volume</button><input class="settings-volume" id="spinSfxVolume" type="range" min="0" max="100" step="1" value="100" aria-label="Spin sound volume"><output class="settings-volume-value" id="spinSfxVolumeValue" for="spinSfxVolume">100%</output></div></div>
+      <div class="settings-audio-row" role="group" aria-labelledby="bgmTitle"><div class="settings-audio-copy"><strong class="settings-label" id="bgmTitle">Background music</strong><p class="settings-help">Loops continuously in Player and Developer views.</p></div><div class="settings-controls settings-audio-controls"><button type="button" class="btn settings-choice" id="bgmMute" aria-pressed="false" aria-label="Mute background music">Mute</button><button type="button" class="btn settings-choice settings-volume-button" id="bgmVolumeButton">Volume</button><input class="settings-volume" id="bgmVolume" type="range" min="0" max="100" step="1" value="35" aria-label="Background music volume"><output class="settings-volume-value" id="bgmVolumeValue" for="bgmVolume">35%</output></div></div>
+      <div class="settings-audio-row" role="group" aria-labelledby="completionSfxTitle"><div class="settings-audio-copy"><strong class="settings-label" id="completionSfxTitle">Challenge completed</strong><p class="settings-help">Player-only; plays once when a non-excluded challenge becomes complete.</p></div><div class="settings-controls settings-audio-controls"><button type="button" class="btn settings-choice" id="completionSfxMute" aria-pressed="false" aria-label="Mute challenge completion sound">Mute</button><button type="button" class="btn settings-choice settings-volume-button" id="completionSfxVolumeButton">Volume</button><input class="settings-volume" id="completionSfxVolume" type="range" min="0" max="100" step="1" value="100" aria-label="Challenge completion sound volume"><output class="settings-volume-value" id="completionSfxVolumeValue" for="completionSfxVolume">100%</output></div></div>
+    </section>
     <section class="settings-box" aria-labelledby="settingsCursorTitle">
       <h3 id="settingsCursorTitle">TOON CURSOR</h3>
       <div class="cursor-intro"><div><strong class="settings-label">Choose a Toon to follow your pointer</strong><p class="settings-help">Your regular system cursor stays visible; a small Toon sprite sits immediately beneath it.</p><p class="settings-help"><b>40 current tracker Toons · scroll to browse every option</b></p></div>
@@ -978,7 +999,7 @@ body[data-page-theme="light"]{background:#eee9f1;background-attachment:initial}
 <div id="chOutcomeRows" class="choice-outcome-editor-list"></div>
 <button type="button" class="btn ghost" id="addChoiceOutcome">＋ Add outcome</button>
 <p class="ch-help">Configure 2–4 outcomes. The player chooses exactly one guaranteed outcome. Random options stay shown as random; an item is drawn only after that random option is selected.</p>
-</div> <div id="chExtrasWrap" style="margin-top:14px"><strong class="chlist-title">Extra rewards <span class="small">(optional · up to 3 · granted in addition to the reward above)</span></strong><div id="chExtraRows"></div><button type="button" class="btn ghost" id="addExtraReward">＋ Add reward</button><p class="ch-help">Extra rewards are granted when the challenge is completed, alongside the main reward. A “Choice” extra becomes a Choice spin in the wheel panel — use it there to pick from its options. A targeted revival lets the player pick the exact Toon or Trinket to revive.</p></div> <div id="chToonRow" hidden><label for="chToon">Toon this challenge is for <span class="small">(optional · used by Toon unlock rules)</span></label> <select id="chToon"></select> <p class="ch-help">Assign a specific Toon to this challenge so another challenge can require all of that Toon's challenges.</p></div> <div id="chMissionRow"><label for="chMission">Mission pack group <span class="small">(optional)</span></label> <select id="chMission"></select> <p class="ch-help">Put this challenge in a Mission Pack category (see the Mission Packs tab). While it is in a category with a shared counter, its counters can link to that shared counter.</p></div> <div id="chExcludeRow"><label><input type="checkbox" id="chExcluded"> Exclude from completion totals</label> <p class="ch-help">An excluded challenge still works and earns its reward — it just doesn't count toward 100% completion anywhere.</p></div> <p class="small" id="chErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"> <button type="button" class="btn ghost" id="chCancel">Cancel</button> <button type="submit" class="btn mint" id="chSave">Save</button> </div> </form> </dialog> <!-- Mission pack editor --> <dialog id="packDlg" data-developer-only> <form method="dialog" id="packForm"> <div class="mh" style="background:var(--lilac)"><div><h2 id="packDlgTitle">New mission pack</h2><p id="packDlgHint">Name the pack, and give it an icon if you like.</p></div></div> <div class="mb"> <label for="packName">Pack name</label> <input type="text" id="packName" maxlength="60" autocomplete="off" placeholder="e.g. Floor Milestones"> <fieldset class="state-pick" id="packIconKindWrap"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="packIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="packIconEmojiRow" hidden><label for="packIconEmoji">Emoji</label> <input type="text" id="packIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🗺"></div> <div id="packIconSpriteRow" hidden><label for="packIconSprite">Sprite</label> <select id="packIconSprite"></select></div> <div id="packIconUploadRow" hidden><label for="packIconFile">Custom image</label> <input type="file" id="packIconFile" accept="image/*"> <p class="ch-help" id="packIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the pack.</p><img id="packIconPreview" class="ch-icon-img" alt="" hidden></div> <p class="small" id="packErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"><button type="button" class="btn ghost" id="packCancel">Cancel</button><button type="submit" class="btn mint" id="packSave">Save pack</button></div> </form> </dialog> <!-- Subgroup editor --> <dialog id="subDlg" data-developer-only> <form method="dialog" id="subForm"> <div class="mh" style="background:var(--sky)"><div><h2 id="subDlgTitle">Edit category</h2><p id="subDlgHint">Rename the category, and manage its shared counter if it has one.</p></div></div> <div class="mb"> <label for="subName">Category name</label> <input type="text" id="subName" maxlength="60" autocomplete="off" placeholder="e.g. Survival"> <fieldset id="subSharedWrap"><legend>Shared counter (optional)</legend> <label for="subSharedLabel">Label</label> <input type="text" id="subSharedLabel" maxlength="40" autocomplete="off" placeholder="e.g. Floors Survived — leave empty for none"> <label for="subSharedValue">Value</label> <input type="number" id="subSharedValue" min="0" max="1000000" step="1" inputmode="numeric"> <p class="ch-help" id="subSharedNote">One shared value drives every 🔗 linked counter in this category. Changing the value updates the linked challenges right away.</p> <button type="button" class="btn ghost sm" id="subSharedRemove" hidden>Remove shared counter</button> </fieldset> <fieldset class="ch-bg-picker sub-bg-picker"><legend>Category card background</legend><p class="ch-bg-help">Choose from the same 24 solid colors, rarity finishes, and gradients used by challenge cards. The saved choice colors this category card; Reset uses the default background.</p><div class="ch-bg-head"><strong>Background palette</strong><button type="button" class="btn ghost sm" id="subBgReset">Reset</button></div><div class="ch-bg-groups" id="subBgChoiceGroups"></div></fieldset> <fieldset id="subIconKindWrap"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="subIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="subIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="subIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="subIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="subIconEmojiRow" hidden><label for="subIconEmoji">Emoji</label> <input type="text" id="subIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🗺"></div> <div id="subIconSpriteRow" hidden><label for="subIconSprite">Sprite</label> <select id="subIconSprite"></select></div> <div id="subIconUploadRow" hidden><label for="subIconFile">Custom image</label> <input type="file" id="subIconFile" accept="image/*"> <p class="ch-help" id="subIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the category.</p><img id="subIconPreview" class="ch-icon-img" alt="" hidden></div> <p class="small" id="subErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"><button type="button" class="btn ghost" id="subCancel">Cancel</button><button type="submit" class="btn mint" id="subSave">Save category</button></div> </form> </dialog> <dialog id="revivalDlg" class="revival-dlg"><form method="dialog" id="revivalForm"><div class="mh" style="background:var(--pink)"><div><h2 id="revivalDialogTitle">Choose your spin</h2><p id="revivalDialogPrompt">Pick a Toon or Random Trinket for this completed challenge.</p></div></div><div class="mb"><p id="revivalSourceRow">Reward from <strong id="revivalChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="revivalKind" value="toon"><span><img class="choice-inline-icon" src="assets/ui/Dandy.webp" alt="" aria-hidden="true">Random Toon</span></label><label><input type="radio" name="revivalKind" value="trinket"><span><img class="choice-inline-icon" src="assets/ui/VeesRemote.webp" alt="" aria-hidden="true">Random Trinket</span></label></fieldset><p class="small" id="revivalErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="revivalCancel">Cancel</button><button type="submit" class="btn mint" id="revivalChoose">Earn this spin</button></div></form></dialog> <dialog id="choiceDlg" class="revival-dlg"><form method="dialog" id="choiceForm"><div class="mh" style="background:var(--pink)"><div><h2 id="choiceDialogTitle">Choose your Iridescent reward</h2><p id="choiceDialogPrompt">Pick a New Toon or a New Random Trinket for this completed team goal.</p></div></div><div class="mb"><p>Reward from <strong id="choiceChallenge"></strong></p><fieldset class="revival-choices" id="choiceOptions"><legend class="small">Choose one</legend><label><input type="radio" name="choiceKind" value="toon"><span><img class="choice-inline-icon" src="assets/ui/Dandy.webp" alt="" aria-hidden="true">Random Toon</span></label><label><input type="radio" name="choiceKind" value="trinket"><span><img class="choice-inline-icon" src="assets/ui/VeesRemote.webp" alt="" aria-hidden="true">Random Trinket</span></label></fieldset><p class="small" id="choiceErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="choiceCancel">Choose later</button><button type="submit" class="btn mint" id="choiceChoose">Earn this reward</button></div></form></dialog> <dialog id="outcomeChoiceDlg" class="revival-dlg outcome-choice-dialog">
+</div> <div id="chExtrasWrap" style="margin-top:14px"><strong class="chlist-title">Extra rewards <span class="small">(optional · up to 3 · granted in addition to the reward above)</span></strong><div id="chExtraRows"></div><button type="button" class="btn ghost" id="addExtraReward">＋ Add reward</button><p class="ch-help">Extra rewards are granted when the challenge is completed, alongside the main reward. A “Choice” extra becomes a Choice spin in the wheel panel — use it there to pick from its options. A targeted revival lets the player pick the exact Toon or Trinket to revive.</p></div> <div id="chToonRow" hidden><label for="chToon">Toon this challenge is for <span class="small">(optional · used by Toon unlock rules)</span></label> <select id="chToon"></select> <p class="ch-help">Assign a specific Toon to this challenge so another challenge can require all of that Toon's challenges.</p></div> <div id="chMissionRow"><label for="chMission">Mission pack group <span class="small">(optional)</span></label> <select id="chMission"></select> <p class="ch-help">Put this challenge in a Mission Pack category (see the Mission Packs tab). While it is in a category with a shared counter, its counters can link to that shared counter.</p></div> <div id="chExcludeRow"><label><input type="checkbox" id="chExcluded"> Exclude from completion totals</label> <p class="ch-help">An excluded challenge still works and earns its reward — it just doesn't count toward 100% completion anywhere.</p></div> <p class="small" id="chErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"> <button type="button" class="btn ghost" id="chCancel">Cancel</button> <button type="submit" class="btn mint" id="chSave">Save</button> </div> </form> </dialog> <!-- Mission pack editor --> <dialog id="packDlg" data-developer-only> <form method="dialog" id="packForm"> <div class="mh" style="background:var(--lilac)"><div><h2 id="packDlgTitle">New mission pack</h2><p id="packDlgHint">Name the pack, and give it an icon if you like.</p></div></div> <div class="mb"> <label for="packName">Pack name</label> <input type="text" id="packName" maxlength="60" autocomplete="off" placeholder="e.g. Floor Milestones"> <fieldset class="state-pick" id="packIconKindWrap"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="packIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="packIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="packIconEmojiRow" hidden><label for="packIconEmoji">Emoji</label> <input type="text" id="packIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🗺"></div> <div id="packIconSpriteRow" hidden><label for="packIconSprite">Sprite</label> <select id="packIconSprite"></select></div> <div id="packIconUploadRow" hidden><label for="packIconFile">Custom image</label> <input type="file" id="packIconFile" accept="image/*"> <p class="ch-help" id="packIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the pack.</p><img id="packIconPreview" class="ch-icon-img" alt="" hidden></div> <fieldset class="ch-bg-picker" id="packBgPicker"><legend class="sr-only">Mission Pack card background</legend><div class="ch-bg-head"><strong>Card background</strong><button type="button" class="btn ghost sm" id="packBgReset">Reset to default</button></div><p class="ch-bg-help">Choose from all 24 solid colors, rarity finishes, and gradients used by challenge cards. Only the pack card background changes; its name and icon stay unchanged.</p><input class="ch-bg-default-radio" type="radio" name="packCardBg" value="default" checked tabindex="-1" aria-label="Use the default Mission Pack card appearance"><div id="packBgChoiceGroups" role="radiogroup" aria-label="Mission Pack card background options"></div></fieldset> <p class="small" id="packErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"><button type="button" class="btn ghost" id="packCancel">Cancel</button><button type="submit" class="btn mint" id="packSave">Save pack</button></div> </form> </dialog> <!-- Subgroup editor --> <dialog id="subDlg" data-developer-only> <form method="dialog" id="subForm"> <div class="mh" style="background:var(--sky)"><div><h2 id="subDlgTitle">Edit category</h2><p id="subDlgHint">Rename the category, and manage its shared counter if it has one.</p></div></div> <div class="mb"> <label for="subName">Category name</label> <input type="text" id="subName" maxlength="60" autocomplete="off" placeholder="e.g. Survival"> <fieldset id="subSharedWrap"><legend>Shared counter (optional)</legend> <label for="subSharedLabel">Label</label> <input type="text" id="subSharedLabel" maxlength="40" autocomplete="off" placeholder="e.g. Floors Survived — leave empty for none"> <label for="subSharedValue">Value</label> <input type="number" id="subSharedValue" min="0" max="1000000" step="1" inputmode="numeric"> <p class="ch-help" id="subSharedNote">One shared value drives every 🔗 linked counter in this category. Changing the value updates the linked challenges right away.</p> <button type="button" class="btn ghost sm" id="subSharedRemove" hidden>Remove shared counter</button> </fieldset> <fieldset class="ch-bg-picker sub-bg-picker"><legend>Category card background</legend><p class="ch-bg-help">Choose from the same 24 solid colors, rarity finishes, and gradients used by challenge cards. The saved choice colors this category card; Reset uses the default background.</p><div class="ch-bg-head"><strong>Background palette</strong><button type="button" class="btn ghost sm" id="subBgReset">Reset</button></div><div class="ch-bg-groups" id="subBgChoiceGroups"></div></fieldset> <fieldset id="subIconKindWrap"><legend>Icon (optional)</legend> <label class="st-unlocked"><input type="radio" name="subIconKind" value="none" checked><span>None</span></label> <label class="st-unlocked"><input type="radio" name="subIconKind" value="emoji"><span>😀 Emoji</span></label> <label class="st-unlocked"><input type="radio" name="subIconKind" value="sprite"><span>🎭 Sprite</span></label> <label class="st-unlocked"><input type="radio" name="subIconKind" value="upload"><span>🖼 Upload</span></label> </fieldset> <div id="subIconEmojiRow" hidden><label for="subIconEmoji">Emoji</label> <input type="text" id="subIconEmoji" maxlength="8" autocomplete="off" placeholder="e.g. 🗺"></div> <div id="subIconSpriteRow" hidden><label for="subIconSprite">Sprite</label> <select id="subIconSprite"></select></div> <div id="subIconUploadRow" hidden><label for="subIconFile">Custom image</label> <input type="file" id="subIconFile" accept="image/*"> <p class="ch-help" id="subIconUploadInfo">Pick an image — it is shrunk to at most 128×128 and stored inside the category.</p><img id="subIconPreview" class="ch-icon-img" alt="" hidden></div> <p class="small" id="subErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p> </div> <div class="mf"><button type="button" class="btn ghost" id="subCancel">Cancel</button><button type="submit" class="btn mint" id="subSave">Save category</button></div> </form> </dialog> <dialog id="revivalDlg" class="revival-dlg"><form method="dialog" id="revivalForm"><div class="mh" style="background:var(--pink)"><div><h2 id="revivalDialogTitle">Choose your spin</h2><p id="revivalDialogPrompt">Pick a Toon or Random Trinket for this completed challenge.</p></div></div><div class="mb"><p id="revivalSourceRow">Reward from <strong id="revivalChallenge"></strong></p><fieldset class="revival-choices"><legend class="small">Choose one</legend><label><input type="radio" name="revivalKind" value="toon"><span><img class="choice-inline-icon" src="assets/ui/Dandy.webp" alt="" aria-hidden="true">Random Toon</span></label><label><input type="radio" name="revivalKind" value="trinket"><span><img class="choice-inline-icon" src="assets/ui/VeesRemote.webp" alt="" aria-hidden="true">Random Trinket</span></label></fieldset><p class="small" id="revivalErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="revivalCancel">Cancel</button><button type="submit" class="btn mint" id="revivalChoose">Earn this spin</button></div></form></dialog> <dialog id="choiceDlg" class="revival-dlg"><form method="dialog" id="choiceForm"><div class="mh" style="background:var(--pink)"><div><h2 id="choiceDialogTitle">Choose your Iridescent reward</h2><p id="choiceDialogPrompt">Pick a New Toon or a New Random Trinket for this completed team goal.</p></div></div><div class="mb"><p>Reward from <strong id="choiceChallenge"></strong></p><fieldset class="revival-choices" id="choiceOptions"><legend class="small">Choose one</legend><label><input type="radio" name="choiceKind" value="toon"><span><img class="choice-inline-icon" src="assets/ui/Dandy.webp" alt="" aria-hidden="true">Random Toon</span></label><label><input type="radio" name="choiceKind" value="trinket"><span><img class="choice-inline-icon" src="assets/ui/VeesRemote.webp" alt="" aria-hidden="true">Random Trinket</span></label></fieldset><p class="small" id="choiceErr" style="color:#c0233a;font-weight:700;margin:8px 0 0"></p></div><div class="mf"><button type="button" class="btn ghost" id="choiceCancel">Choose later</button><button type="submit" class="btn mint" id="choiceChoose">Earn this reward</button></div></form></dialog> <dialog id="outcomeChoiceDlg" class="revival-dlg outcome-choice-dialog">
 <form method="dialog" id="outcomeChoiceForm">
 <div class="mh" style="background:var(--pink)"><div><h2 id="outcomeChoiceTitle">Choose your reward</h2><p id="outcomeChoicePrompt">Pick one guaranteed outcome. Random candidates are not shown in advance.</p></div></div>
 <div class="mb">
@@ -1049,19 +1070,39 @@ const PALETTE = ['#ff8fc8','#ffe066','#7ef0c4','#8fd3ff','#c9a2ff','#ffb066','#f
 const $ = s => document.querySelector(s);
 const isDeveloperMode = new URLSearchParams(location.search).get("mode")?.toLowerCase() === "developer";
 document.body.dataset.mode = isDeveloperMode ? "developer" : "player";
-if (!isDeveloperMode){
-  const playerButtonClickSfx=new Audio('assets/024.Choice.mp3');
-  playerButtonClickSfx.preload='auto';
-  playerButtonClickSfx.loop=false;
-  document.addEventListener('click',event=>{
-    const button=event.target instanceof Element ? event.target.closest('button') : null;
-    if(!button || button.disabled || button.getAttribute('aria-disabled')==='true') return;
-    playerButtonClickSfx.pause();
-    try { playerButtonClickSfx.currentTime=0; } catch {}
-    const playback=playerButtonClickSfx.play();
-    if(playback && typeof playback.catch==='function') playback.catch(()=>{});
-  },true);
+const SPIN_SOUND_DURATION_MS=5352;
+const AUDIO_TRACKS={
+  click:{src:'assets/024.Choice.mp3',loop:false,defaultVolume:1,playerOnly:true},
+  spin:{src:'assets/062.Gigi-Ability.mp3',loop:false,defaultVolume:1,playerOnly:true},
+  bgm:{src:'assets/070.Halloween2025Floor-LockedAway.mp3',loop:true,defaultVolume:.35,playerOnly:false},
+  completion:{src:'assets/188.PurchaseSkin.mp3',loop:false,defaultVolume:1,playerOnly:true}
+};
+const audioPlayers={};
+for(const [key,config] of Object.entries(AUDIO_TRACKS)){
+  if(config.playerOnly&&isDeveloperMode)continue;
+  const audio=new Audio(config.src); audio.preload='auto'; audio.loop=!!config.loop; audioPlayers[key]=audio;
 }
+function playOneShotAudio(key,durationMs=null){
+  const audio=audioPlayers[key],pref=uiPrefs&&uiPrefs.audio&&uiPrefs.audio[key],config=AUDIO_TRACKS[key];
+  if(!audio||!pref||!config||config.loop||isDeveloperMode||pref.muted||pref.volume<=0)return false;
+  audio.pause(); try{audio.currentTime=0;}catch{} audio.loop=false; audio.muted=false; audio.volume=Math.min(1,Math.max(0,pref.volume));
+  try{audio.playbackRate=durationMs>0?SPIN_SOUND_DURATION_MS/durationMs:1;}catch{}
+  const playback=audio.play(); if(playback&&typeof playback.catch==='function')playback.catch(()=>{}); return true;
+}
+function stopOneShotAudio(key){
+  const audio=audioPlayers[key]; if(!audio)return;
+  audio.pause(); try{audio.currentTime=0; audio.playbackRate=1;}catch{}
+}
+function startBackgroundMusic(){
+  const audio=audioPlayers.bgm,pref=uiPrefs&&uiPrefs.audio&&uiPrefs.audio.bgm;
+  if(!audio||!pref||pref.muted||pref.volume<=0||!audio.paused)return;
+  const playback=audio.play(); if(playback&&typeof playback.catch==='function')playback.catch(()=>{});
+}
+if(!isDeveloperMode)document.addEventListener('click',event=>{
+  const button=event.target&&event.target.closest?event.target.closest('button'):null;
+  if(!button||button.disabled||button.getAttribute('aria-disabled')==='true')return;
+  playOneShotAudio('click');
+},true);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const LOCK_SVG = '<svg viewBox="0 0 24 24"><path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" stroke="#1a1022" stroke-width="3.2" stroke-linecap="round"/><path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" stroke="#ffe066" stroke-width="1.4" stroke-linecap="round"/><rect x="4" y="10" width="16" height="12" rx="3.5" fill="#ffe066" stroke="#1a1022" stroke-width="2"/><circle cx="12" cy="15.3" r="1.8" fill="#1a1022"/><path d="M12 16v3" stroke="#1a1022" stroke-width="2" stroke-linecap="round"/></svg>';
 const SKULL_SVG = '<svg viewBox="0 0 24 24"><path d="M12 2.5c-5 0-8.5 3.4-8.5 8 0 2.6 1.2 4.6 3 5.8V19a1.5 1.5 0 0 0 1.5 1.5h8A1.5 1.5 0 0 0 17.5 19v-2.7c1.8-1.2 3-3.2 3-5.8 0-4.6-3.5-8-8.5-8z" fill="#fff4fb" stroke="#1a1022" stroke-width="2"/><circle cx="8.6" cy="11.2" r="2.3" fill="#1a1022"/><circle cx="15.4" cy="11.2" r="2.3" fill="#1a1022"/><path d="M12 13.6l-1.3 2.4h2.6z" fill="#1a1022"/><path d="M9.5 20.5v-2.2M12 20.5v-2.2M14.5 20.5v-2.2" stroke="#1a1022" stroke-width="1.6"/></svg>';
@@ -1087,28 +1128,74 @@ const store = {
 };
 
 const LS_UI_PREFS = 'dwNuzlocke:ui:preferences';
+const AUDIO_SETTINGS_CONTROLS={
+  click:{mute:'clickSfxMute',volumeButton:'clickSfxVolumeButton',slider:'clickSfxVolume',output:'clickSfxVolumeValue',label:'button click sound'},
+  spin:{mute:'spinSfxMute',volumeButton:'spinSfxVolumeButton',slider:'spinSfxVolume',output:'spinSfxVolumeValue',label:'spin sound'},
+  bgm:{mute:'bgmMute',volumeButton:'bgmVolumeButton',slider:'bgmVolume',output:'bgmVolumeValue',label:'background music'},
+  completion:{mute:'completionSfxMute',volumeButton:'completionSfxVolumeButton',slider:'completionSfxVolume',output:'completionSfxVolumeValue',label:'challenge completion sound'}
+};
 function readUiPrefs(){
-  try { const p=JSON.parse(store.get(LS_UI_PREFS)); return {theme:p && p.theme==='light'?'light':'default', cursor:p && ITEMS.toons.has(p.cursor)?p.cursor:null}; }
-  catch { return {theme:'default',cursor:null}; }
+  try{
+    const p=JSON.parse(store.get(LS_UI_PREFS))||{},audio={};
+    for(const [key,config] of Object.entries(AUDIO_TRACKS)){
+      const saved=p.audio&&p.audio[key]&&typeof p.audio[key]==='object'?p.audio[key]:{};
+      const legacyVolume=key==='click'&&typeof p.clickSfxVolume==='number'?p.clickSfxVolume:config.defaultVolume;
+      const volume=typeof saved.volume==='number'&&Number.isFinite(saved.volume)?saved.volume:legacyVolume;
+      const muted=typeof saved.muted==='boolean'?saved.muted:(key==='click'&&typeof p.clickSfxMuted==='boolean'?p.clickSfxMuted:false);
+      audio[key]={muted:!!muted,volume:Math.min(1,Math.max(0,volume))};
+    }
+    return {theme:p.theme==='light'?'light':'default',cursor:p.cursor&&ITEMS.toons.has(p.cursor)?p.cursor:null,audio};
+  }catch{
+    const audio={}; for(const [key,config] of Object.entries(AUDIO_TRACKS))audio[key]={muted:false,volume:config.defaultVolume};
+    return {theme:'default',cursor:null,audio};
+  }
 }
-let uiPrefs = readUiPrefs();
-function saveUiPrefs(){ store.set(LS_UI_PREFS, JSON.stringify({theme:uiPrefs.theme,cursor:uiPrefs.cursor})); applyUiPrefs(); renderSettings(); }
+let uiPrefs=readUiPrefs();
+function saveUiPrefs(){
+  const audio=Object.fromEntries(Object.entries(uiPrefs.audio).map(([key,pref])=>[key,{muted:!!pref.muted,volume:Math.min(1,Math.max(0,pref.volume))}]));
+  store.set(LS_UI_PREFS,JSON.stringify({theme:uiPrefs.theme,cursor:uiPrefs.cursor,audio})); applyUiPrefs(); renderSettings();
+}
+function applyAudioPrefs(){
+  for(const [key,config] of Object.entries(AUDIO_TRACKS)){
+    const audio=audioPlayers[key],pref=uiPrefs.audio[key]; if(!audio||!pref)continue;
+    audio.loop=!!config.loop; audio.volume=Math.min(1,Math.max(0,pref.volume)); audio.muted=!!pref.muted;
+    if(key==='bgm'){ if(pref.muted||pref.volume<=0)audio.pause(); else startBackgroundMusic(); }
+  }
+}
 function applyUiPrefs(){
-  if (!document.body) return;
-  if (uiPrefs.theme==='light') document.body.dataset.pageTheme='light'; else delete document.body.dataset.pageTheme;
-  const sprite=uiPrefs.cursor ? ITEMS.toons.get(uiPrefs.cursor) : null, img=$('#toonCursor');
-  if (img){ if (sprite){ img.src=sprite.src; img.hidden=false; } else { img.removeAttribute('src'); img.hidden=true; img.classList.remove('is-visible'); } }
+  if(!document.body)return;
+  if(uiPrefs.theme==='light')document.body.dataset.pageTheme='light';else delete document.body.dataset.pageTheme;
+  const sprite=uiPrefs.cursor?ITEMS.toons.get(uiPrefs.cursor):null,img=$('#toonCursor');
+  if(img){if(sprite){img.src=sprite.src;img.hidden=false;}else{img.removeAttribute('src');img.hidden=true;img.classList.remove('is-visible');}}
   const preview=$('#cursorPreview');
-  if (preview){ if (sprite){ preview.src=sprite.src; preview.alt=''; preview.hidden=false; $('#cursorPreviewLabel').innerHTML='System pointer stays visible<br>'+esc(uiPrefs.cursor)+' directly underneath'; } else { preview.removeAttribute('src'); preview.alt=''; preview.hidden=true; $('#cursorPreviewLabel').innerHTML='System pointer stays visible<br>No Toon selected'; } }
+  if(preview){if(sprite){preview.src=sprite.src;preview.alt='';preview.hidden=false;$('#cursorPreviewLabel').innerHTML='System pointer stays visible<br>'+esc(uiPrefs.cursor)+' directly underneath';}else{preview.removeAttribute('src');preview.alt='';preview.hidden=true;$('#cursorPreviewLabel').innerHTML='System pointer stays visible<br>No Toon selected';}}
+  applyAudioPrefs();
+}
+function renderAudioSettings(){
+  for(const [key,ids] of Object.entries(AUDIO_SETTINGS_CONTROLS)){
+    const pref=uiPrefs.audio[key],mute=$('#'+ids.mute),slider=$('#'+ids.slider),output=$('#'+ids.output);
+    if(mute){mute.setAttribute('aria-pressed',String(!!pref.muted));mute.setAttribute('aria-label',`${pref.muted?'Unmute':'Mute'} ${ids.label}`);mute.textContent=pref.muted?'Muted':'Mute';}
+    if(slider){slider.value=String(Math.round(pref.volume*100));}
+    if(output&&slider)output.textContent=`${slider.value}%`;
+  }
 }
 function renderSettings(){
-  const grid=$('#cursorGrid'); if (!grid) return;
+  renderAudioSettings();
+  const grid=$('#cursorGrid'); if(!grid){applyUiPrefs();return;}
   const toons=DATA.toons.slice().sort(byName);
   grid.innerHTML=toons.map(t=>`<button type="button" class="cursor-option" data-cursor-toon="${esc(t.name)}" aria-pressed="${uiPrefs.cursor===t.name}" aria-label="Follow pointer with ${esc(t.name)}"><img src="${t.src}" alt="" loading="lazy" decoding="async"><span>${esc(t.name)}</span>${uiPrefs.cursor===t.name?'<span class="cursor-check" aria-hidden="true">✓</span>':''}</button>`).join('');
   $('#cursorCount').textContent=`${toons.length} of ${toons.length} sprites included · scroll the picker to reach every Toon`;
   $('#themeControls').querySelectorAll('[data-theme-choice]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.themeChoice===uiPrefs.theme)));
   applyUiPrefs();
 }
+for(const [key,ids] of Object.entries(AUDIO_SETTINGS_CONTROLS)){
+  $('#'+ids.mute).addEventListener('click',()=>{uiPrefs.audio[key].muted=!uiPrefs.audio[key].muted;saveUiPrefs();});
+  $('#'+ids.volumeButton).addEventListener('click',()=>$('#'+ids.slider).focus());
+  $('#'+ids.slider).addEventListener('input',e=>{uiPrefs.audio[key].volume=Math.min(1,Math.max(0,Number(e.target.value)/100));saveUiPrefs();});
+}
+document.addEventListener('pointerdown',startBackgroundMusic,{capture:true,passive:true});
+document.addEventListener('keydown',startBackgroundMusic,{capture:true});
+applyUiPrefs();
 function showActiveScreen(){
   const settings=!!view.settingsOpen;
   if(!['friends','missions',...KINDS].includes(view.tab)) view.tab='missions';
@@ -1505,7 +1592,7 @@ function sanitizeMissions(raw, validIds){
   if (!Array.isArray(raw)) return packs;
   for (const p of raw){
     if (!p || typeof p !== 'object') continue;
-    const pack = {id:freshId(p.id), title:String(p.title || 'Mission pack').trim().slice(0,60) || 'Mission pack', icon:sanitizeIcon(p.icon), subs:[]};
+    const pack = {id:freshId(p.id), title:String(p.title || 'Mission pack').trim().slice(0,60) || 'Mission pack', icon:sanitizeIcon(p.icon), cardBg:sanitizeChallengeCardBg(p.cardBg), subs:[]};
     const rawSubs = Array.isArray(p.subs) ? p.subs : [];
     for (const s of rawSubs){
       if (!s || typeof s !== 'object') continue;
@@ -2530,8 +2617,9 @@ async function startTargetRevive(challengeId = null, grantWanted = null){
     saveRun(); renderAll(); renderHistory(); renderSpinPanel();
   }, 'Undo');
 }
-async function afterChange(ch, wasDone, previousReward=challengeReward(ch)){
+async function afterChange(ch, wasDone, previousReward=challengeReward(ch), options={}){
   const reward=challengeReward(ch), completedNow=ch.done&&!wasDone, rewardChanged=ch.done&&wasDone&&reward!==previousReward;
+  if(completedNow&&options.playCompletionSound!==false&&!isDeveloperMode&&!ch.excluded)playOneShotAudio('completion');
   let granted=null,pendingChoice=false,primaryMissed=false,extraGranted=[];
   if ((!ch.done&&wasDone)||rewardChanged) revokeChallengeReward(ch);
   if (ch.done&&(completedNow||rewardChanged)){
@@ -2663,7 +2751,7 @@ async function toggleChecklistExcluded(ch,index){
   if(!isDeveloperMode && ch.allowPlayerItemExclude===false) return;
   const was=ch.done; setChecklistPreference(ch,index,{excluded:!checklistItemExcluded(ch,index)});
   ch.counterRestore=null; ch.checklistRestore=null; ch.done=computeDone(ch);
-  await afterChange(ch,was);
+  await afterChange(ch,was,undefined,{playCompletionSound:false});
 }
 function checklistItemRow(ch,item,index){
   const excluded=checklistItemExcluded(ch,index), label=checklistItemLabel(ch,index);
@@ -2950,6 +3038,15 @@ function buildSubgroupCardBgPicker(){
   $('#subBgReset').addEventListener('click',()=>setRadio('subCardBg','default'));
 }
 buildSubgroupCardBgPicker();
+function buildPackCardBgPicker(){
+  $('#packBgChoiceGroups').innerHTML=CHALLENGE_CARD_BG_GROUPS.map(group=>{
+    const count=group.options.length,detail=group.id==='gradient'?`${count} options · includes Rainbow`:group.id==='finish'?`${count} finishes`:`${count} options`;
+    return `<section><h4 class="ch-bg-group-title">${esc(group.label)} <span class="ch-bg-count">${detail}</span></h4><div class="ch-bg-grid ${group.id}">${group.options.map(option=>`<label class="ch-bg-option"><input type="radio" name="packCardBg" value="${esc(option.id)}"><span class="ch-bg-choice"><i style="background:${option.surface}"></i><span>${esc(option.label)}</span><b aria-hidden="true">✓</b></span></label>`).join('')}</div></section>`;
+  }).join('');
+  $('#packBgReset').addEventListener('click',()=>setRadio('packCardBg','default'));
+}
+buildPackCardBgPicker();
+
 function selectedModes(){ return CH_MODES.filter(m=>document.querySelector(`input[name="chModes"][value="${m}"]`)?.checked); }
 function syncTargetRow(){
   const _sy=chMbScrollTop();
@@ -3419,6 +3516,7 @@ function openPackEditor(pack){
   packEditing=pack ? pack.id : null;
   $('#packDlgTitle').textContent=pack ? 'Edit mission pack' : 'New mission pack';
   $('#packName').value=pack ? pack.title : '';
+  setRadio('packCardBg',pack ? sanitizeChallengeCardBg(pack.cardBg) : 'default');
   setRadio('packIconKind', pack && pack.icon ? pack.icon.kind : 'none');
   $('#packIconEmoji').value=pack && pack.icon && pack.icon.kind==='emoji' ? pack.icon.value : '';
   if (pack && pack.icon && pack.icon.kind==='sprite') $('#packIconSprite').value=pack.icon.value;
@@ -3433,6 +3531,7 @@ $('#packCancel').addEventListener('click',()=>{ packEditing=null; $('#packDlg').
 $('#packForm').addEventListener('submit',e=>{
   e.preventDefault();
   const title=$('#packName').value.trim().slice(0,60);
+  const cardBg=sanitizeChallengeCardBg(radioVal('packCardBg'));
   if (!title){ $('#packErr').textContent='Give your pack a name.'; $('#packName').focus(); return; }
   const iconKind=radioVal('packIconKind')||'none';
   let icon=null;
@@ -3443,8 +3542,8 @@ $('#packForm').addEventListener('submit',e=>{
   if (iconKind!=='none' && !icon){ $('#packErr').textContent='That icon could not be saved — try a different one.'; return; }
   if (!Array.isArray(run.missions)) run.missions=[];
   const existing=packEditing ? missionPackById(packEditing) : null;
-  if (existing){ existing.title=title; existing.icon=icon; }
-  else run.missions.push({id:uid(), title, icon, subs:[]});
+  if (existing){ existing.title=title; existing.icon=icon; existing.cardBg=cardBg; }
+  else run.missions.push({id:uid(), title, icon, cardBg, subs:[]});
   packEditing=null;
   $('#packDlg').close();
   saveRun(); renderMissions();
@@ -3813,13 +3912,14 @@ async function startSpin(kind, challengeId = null, fixedPoolKind = null, grantId
   const jitter = (randInt(70) - 35) / 100 * tileW * 0.6;          // land a bit off-centre, like a real reel
   const x = -(W_INDEX * step) + (reel.clientWidth / 2 - tileW / 2) + jitter;
   const over = rm ? 0 : -Math.min(step * 0.28, 40);               // overshoot then settle back
-  const dur = rm ? 1800 : 3500;
+  const dur = rm ? 1800 : SPIN_SOUND_DURATION_MS;
   strip.style.transform = 'translateX(0px)';
   const frames = rm
     ? [{transform:'translateX(0px)', easing:'cubic-bezier(.35,.1,.2,1)'}, {transform:`translateX(${x}px)`}]
     : [{transform:'translateX(0px)', easing:'cubic-bezier(.32,.08,.12,1)', offset:0},
        {transform:`translateX(${x + over}px)`, easing:'cubic-bezier(.4,0,.4,1)', offset:.86},
        {transform:`translateX(${x}px)`, offset:1}];
+  playOneShotAudio('spin',dur);
   if (typeof strip.animate === 'function'){
     spinAnim = strip.animate(frames, {duration:dur, fill:'forwards'});
     spinAnim.onfinish = () => { if (spinCtx !== myCtx) return; strip.style.transform = `translateX(${x}px)`; spinAnim = null; landSpin(); };
@@ -3859,13 +3959,14 @@ function animateVerdictReel(success, pct, onLand){
   const jitter = (randInt(70) - 35) / 100 * tileW * 0.6;
   const x = -(W_INDEX * step) + (reel.clientWidth / 2 - tileW / 2) + jitter;
   const over = rm ? 0 : -Math.min(step * 0.28, 40);
-  const dur = rm ? 1800 : 3500;
+  const dur = rm ? 1800 : SPIN_SOUND_DURATION_MS;
   strip.style.transform = 'translateX(0px)';
   const frames = rm
     ? [{transform:'translateX(0px)', easing:'cubic-bezier(.35,.1,.2,1)'}, {transform:`translateX(${x}px)`}]
     : [{transform:'translateX(0px)', easing:'cubic-bezier(.32,.08,.12,1)', offset:0},
        {transform:`translateX(${x + over}px)`, easing:'cubic-bezier(.4,0,.4,1)', offset:.86},
        {transform:`translateX(${x}px)`, offset:1}];
+  playOneShotAudio('spin',dur);
   if (typeof strip.animate === 'function'){
     spinAnim = strip.animate(frames, {duration:dur, fill:'forwards'});
     spinAnim.onfinish = () => { if (spinCtx !== myCtx) return; strip.style.transform = `translateX(${x}px)`; spinAnim = null; onLand(); };
@@ -3903,7 +4004,7 @@ async function startChanceSpin(challengeId=null,pctWanted=null,kind='chance',gra
   renderSpinPanel();spinCtx={kind,chanceRoll:true,chanceType:kind,poolKind,pct,success,credit};animateVerdictReel(success,pct,landChanceSpin);
 }
 async function landChanceSpin(){
-  stopTicks();if(!spinCtx||!spinCtx.chanceRoll||spinCtx.landed)return;spinCtx.landed=true;
+  stopTicks();if(!spinCtx||!spinCtx.chanceRoll||spinCtx.landed)return;stopOneShotAudio('spin');spinCtx.landed=true;
   const {pct,success,credit,chanceType='chance',poolKind=null}=spinCtx,label=REVIVAL_CHANCE_LABEL[chanceType]||REVIVAL_CHANCE_LABEL.chance;
   $('#spinSkip').hidden=true;$('#reel').classList.add('landed');const w=$('#strip .winner');if(w)w.classList.add('win');$('#spinUndo').hidden=true;$('#spinAgain').hidden=!run.spins.some(g=>g.kind===chanceType);$('#spinImg').hidden=true;
   if(!success){
@@ -4074,6 +4175,7 @@ function ccNextRoll(){
 function landCCReel(){
   stopTicks();
   if (!spinCtx || !spinCtx.ccRoll || spinCtx.landed) return;
+  stopOneShotAudio('spin');
   spinCtx.landed = true;
   const {entry, success, src} = spinCtx;
   $('#spinSkip').hidden = true;
@@ -4205,6 +4307,7 @@ function landSpin(){
   /* Verdict-reel contexts (chance / choice-chance rolls) have no win: a
      stray landing call against one must be a no-op, never mark it landed. */
   if (!spinCtx || spinCtx.landed || !spinCtx.win) return;
+  stopOneShotAudio('spin');
   spinCtx.landed = true;
   const {win, credit} = spinCtx, it = win.item;
   $('#spinSkip').hidden = true;
@@ -4354,7 +4457,7 @@ function missionPackCardMarkup(p,i,last){
   const visibleSubs=p.subs.map(sub=>({sub,ids:matchingMissionIds(sub.challengeIds)})).filter(entry=>entry.ids.length||!missionFiltersActive());
   const ids=visibleSubs.flatMap(entry=>entry.ids), pr=missionProgress(ids), groups=missionFiltersActive()?visibleSubs.length:p.subs.length;
   const index=String(i+1).padStart(2,'0');
-  return `<div class="fr-card" data-pid="${esc(p.id)}"><button type="button" class="manual-card-open" data-mact="open-pack" data-pid="${esc(p.id)}"><span class="manual-index-number">${index}</span><span class="manual-card-copy"><strong>${packIconMarkup(p)}${esc(p.title)}</strong><small>${groups} categor${groups===1?'y':'ies'} · ${pr.total} Challenge${pr.total===1?'':'s'}</small><span class="manual-card-progress">${pr.done} / ${pr.total} complete</span></span>${missionCompleteMark(pr)}<span class="manual-card-arrow" aria-hidden="true">›</span></button>${missionManageActions('pack',p.id,i,last)}</div>`;
+  const safeBg=sanitizeChallengeCardBg(p.cardBg), bg=CHALLENGE_CARD_BG_BY_ID[safeBg], bgStyle=bg?` style="--ch-surface:${bg.surface};${bg.dark?'--ch-card-ink:#fff;--ch-desc-ink:#f4eef8;':''}"`:``; return `<div class="fr-card" data-pid="${esc(p.id)}" data-card-bg="${safeBg}"${bgStyle}><button type="button" class="manual-card-open" data-mact="open-pack" data-pid="${esc(p.id)}"><span class="manual-index-number">${index}</span><span class="manual-card-copy"><strong>${packIconMarkup(p)}${esc(p.title)}</strong><small>${groups} categor${groups===1?'y':'ies'} · ${pr.total} Challenge${pr.total===1?'':'s'}</small><span class="manual-card-progress">${pr.done} / ${pr.total} complete</span></span>${missionCompleteMark(pr)}<span class="manual-card-arrow" aria-hidden="true">›</span></button>${missionManageActions('pack',p.id,i,last)}</div>`;
 }
 function missionSubCardMarkup(sub,i,last){
   const ids=matchingMissionIds(sub.challengeIds), pr=missionProgress(ids), index=String(i+1).padStart(2,'0');
